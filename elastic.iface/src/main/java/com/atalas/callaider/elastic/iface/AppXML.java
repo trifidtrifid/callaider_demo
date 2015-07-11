@@ -2,6 +2,7 @@ package com.atalas.callaider.elastic.iface;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +31,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import com.atalas.callaider.elastic.iface.PDMLParser.FieldMapping;
+import com.atalas.callaider.elastic.iface.PDMLParser.FieldMapping.Type;
 import com.atalas.callaider.elastic.iface.PDMLParser.PacketListener;
 
 public class AppXML {
@@ -65,7 +67,7 @@ public class AppXML {
 		        }
 		        contentBuilder.endObject();
 		        indexRequestBuilder.setSource(contentBuilder);
-		        logger.debug(documentType+" described as:"+contentBuilder.toString());
+		        logger.debug(documentType+" described as:"+contentBuilder.string());
 		        IndexResponse actionGet = indexRequestBuilder.execute().actionGet();
 		        logger.debug(documentType+"created with ID:"+actionGet.getId());
 	        } catch (Exception e){
@@ -80,11 +82,11 @@ public class AppXML {
 					processField(contentBuilder, obj, name); 
 				}
 			} if( value instanceof Map ) {
-				for( Map.Entry<String,Object> obje: ((Map<String,Object>)value).entrySet() ){
-					contentBuilder.startObject(name);
-					processField(contentBuilder, obje.getValue(), obje.getKey()); 
-					contentBuilder.endObject();
+				contentBuilder.startObject(name);
+				for( Map.Entry<String,Object> obje: ((Map<String,Object>)value).entrySet() ){					
+					processField(contentBuilder, obje.getValue(), obje.getKey()); 					
 				}
+				contentBuilder.endObject();
 			} else { //it's a simple field				
 				contentBuilder.field(name, value);
 			}
@@ -93,18 +95,15 @@ public class AppXML {
 	
 	public static void main( String[] args )
     {
+		if( args.length < 1 ){
+			System.err.println("USage java -jar xxx.jar <input file name or - (stdin)> <fields.map.file>");
+		}
     	BasicConfigurator.configure();
     	
-    	String argsLine = "";
-    	for( String arg: args){argsLine+= " '" + arg +"'";}
-    	System.out.println("========= Args.length="+args.length+" args: "+argsLine );
-    	
     	Client client = getClient();
-		
-    	try{
-    		InputStream is = args.length == 0 || args[0].equals("-") ? System.in : new FileInputStream(args[0]);
-        	
-    		FieldMapping mapping = rewriteMapping(client);
+		try{
+    		InputStream is = args[0].equals("-") ? System.in : new FileInputStream(args[0]);
+			FieldMapping mapping = rewriteMapping(client, args[1]);
      		PDMLParser pdmlP = new PDMLParser(is, mapping);
      		PacketProcessor pp = new PacketProcessor(client);
     		pdmlP.parse(pp);
@@ -117,8 +116,8 @@ public class AppXML {
     	}
     }
 
-	private static FieldMapping rewriteMapping(Client client) {
-		FieldMapping mapping = loadFieldMapping(); 
+	private static FieldMapping rewriteMapping(Client client, String fileldsFileName) throws IOException {
+		FieldMapping mapping = loadFieldMapping(fileldsFileName); 
 		
 		final IndicesExistsResponse res = client.admin().indices().prepareExists(indexName).execute().actionGet();
 		if (res.isExists()) {
@@ -139,27 +138,33 @@ public class AppXML {
 		return mapping;
 	}
 
-	private static FieldMapping loadFieldMapping() {
-		FieldMapping ftFrame = new FieldMapping( FieldMapping.Type.CONTAINER, new HashMap<String, PDMLParser.FieldMapping>());
-		ftFrame.lowerLevelMap.put("frame.time", new FieldMapping( FieldMapping.Type.STRING, null));
-		ftFrame.lowerLevelMap.put("frame.protocols", new FieldMapping( FieldMapping.Type.STRING, null));
+	private static FieldMapping loadFieldMapping( String fileName) throws IOException {
 		
-		FieldMapping ftIP = new FieldMapping( FieldMapping.Type.CONTAINER, new HashMap<String, PDMLParser.FieldMapping>());
-		ftIP.lowerLevelMap.put("ip.version", new FieldMapping( FieldMapping.Type.INT, null));
-		ftIP.lowerLevelMap.put("ip.src", new FieldMapping( FieldMapping.Type.STRING, null));
-		ftIP.lowerLevelMap.put("ip.dst", new FieldMapping( FieldMapping.Type.STRING, null));
-		ftIP.lowerLevelMap.put("ip.proto", new FieldMapping( FieldMapping.Type.INT, null));
-		
-		FieldMapping ftSCTP = new FieldMapping( FieldMapping.Type.CONTAINER, new HashMap<String, PDMLParser.FieldMapping>());
-		ftSCTP.lowerLevelMap.put("sctp.srcport", new FieldMapping( FieldMapping.Type.INT, null));
-		ftSCTP.lowerLevelMap.put("sctp.dstport", new FieldMapping( FieldMapping.Type.INT, null));
-		ftSCTP.lowerLevelMap.put("sctp.port", new FieldMapping( FieldMapping.Type.INT, null));
-		ftSCTP.lowerLevelMap.put("sctp.assoc_index", new FieldMapping( FieldMapping.Type.INT, null));
-		
+		BufferedReader br = 
+                new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
+		String line;
 		FieldMapping ftRoot = new FieldMapping( FieldMapping.Type.CONTAINER, new HashMap<String, PDMLParser.FieldMapping>());
-		ftRoot.lowerLevelMap.put( "frame", ftFrame );
-		ftRoot.lowerLevelMap.put( "sctp", ftSCTP );
-		ftRoot.lowerLevelMap.put( "ip", ftIP );
+		while( null!=(line=br.readLine())){
+			parseString( line, ftRoot );
+		}
 		return ftRoot;
+		
+	}
+	private static void parseString( String descLine, FieldMapping currentMapping ){
+		String[] parts = descLine.split("[ ]");
+		postThePart(currentMapping, parts, 0);		
+	}
+
+	private static void postThePart(FieldMapping currentMapping, String[] parts, int offset) {
+		if( parts.length - offset == 2 ){ //field name and field type
+			currentMapping.lowerLevelMap.put( "\"\"".equals(parts[offset]) ? "x" : parts[offset], new FieldMapping(Type.valueOf(parts[offset+1]), null));
+		} if( parts.length - offset > 2 ){
+			FieldMapping childMap = currentMapping.lowerLevelMap.get(parts[offset]);
+			if( null == childMap ){
+				childMap = new FieldMapping(Type.CONTAINER, new HashMap<String, FieldMapping>());
+				currentMapping.lowerLevelMap.put(parts[offset],childMap);				
+			}
+			postThePart(childMap, parts, offset+1);
+		}
 	}
 }

@@ -1,0 +1,21 @@
+tshark_fields=(
+                                        frame.time        #timestamp
+        #GSM
+                                        gsm_old.localValue      #opcode
+                                        gsm_map.address.digits  #opcode
+        #TCAP
+                                        tcap.otid
+                                        tcap.dtid
+                                        tcap.returnResultLast_element
+                                        tcap.reject_element
+                                        tcap.returnError_element
+                                        tcap.begin_element
+                                        tcap.abort_element
+                                        tcap.continue_element
+                                        tcap.dialogueAbort_element
+                                        tcap.dialogueRequest_element
+                                        tcap.end_element
+        #SCCP
+                                        sccp.called.digits
+                                        sccp.calling.digits
+        )

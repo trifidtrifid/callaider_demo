@@ -1,0 +1,624 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="pdml2html.xsl"?>
+<!-- You can find pdml2html.xsl in /root/wireshark-1.12.6/install/share/wireshark or at http://anonsvn.wireshark.org/trunk/wireshark/pdml2html.xsl. -->
+<pdml version="0" creator="wireshark/1.12.6" time="Wed Jul  8 17:29:28 2015" capture_file="sctp.cap">
+<packet>
+  <proto name="geninfo" pos="0" showname="General information" size="264">
+    <field name="num" pos="0" show="1" showname="Number" value="1" size="264"/>
+    <field name="len" pos="0" show="264" showname="Frame Length" value="108" size="264"/>
+    <field name="caplen" pos="0" show="264" showname="Captured Length" value="108" size="264"/>
+    <field name="timestamp" pos="0" show="Apr 25, 2014 10:53:47.040659000 CEST" showname="Captured Time" value="1398416027.040659000" size="264"/>
+  </proto>
+  <proto name="frame" showname="Frame 1: 264 bytes on wire (2112 bits), 264 bytes captured (2112 bits)" size="264" pos="0">
+    <field name="frame.encap_type" showname="Encapsulation type: Linux cooked-mode capture (25)" size="0" pos="0" show="25"/>
+    <field name="frame.time" showname="Arrival Time: Apr 25, 2014 10:53:47.040659000 CEST" size="0" pos="0" show="Apr 25, 2014 10:53:47.040659000 CEST"/>
+    <field name="frame.offset_shift" showname="Time shift for this packet: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.time_epoch" showname="Epoch Time: 1398416027.040659000 seconds" size="0" pos="0" show="1398416027.040659000"/>
+    <field name="frame.time_delta" showname="Time delta from previous captured frame: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.time_delta_displayed" showname="Time delta from previous displayed frame: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.time_relative" showname="Time since reference or first frame: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.number" showname="Frame Number: 1" size="0" pos="0" show="1"/>
+    <field name="frame.len" showname="Frame Length: 264 bytes (2112 bits)" size="0" pos="0" show="264"/>
+    <field name="frame.cap_len" showname="Capture Length: 264 bytes (2112 bits)" size="0" pos="0" show="264"/>
+    <field name="frame.marked" showname="Frame is marked: False" size="0" pos="0" show="0"/>
+    <field name="frame.ignored" showname="Frame is ignored: False" size="0" pos="0" show="0"/>
+    <field name="frame.protocols" showname="Protocols in frame: sll:ethertype:ip:sctp:m3ua:sccp:tcap:gsm_map:gsm_map" size="0" pos="0" show="sll:ethertype:ip:sctp:m3ua:sccp:tcap:gsm_map:gsm_map"/>
+  </proto>
+  <proto name="sll" showname="Linux cooked capture" size="16" pos="0">
+    <field name="sll.pkttype" showname="Packet type: Unicast to us (0)" size="2" pos="0" show="0" value="0000"/>
+    <field name="sll.hatype" showname="Link-layer address type: 1" size="2" pos="2" show="1" value="0001"/>
+    <field name="sll.halen" showname="Link-layer address length: 6" size="2" pos="4" show="6" value="0006"/>
+    <field name="sll.src.eth" showname="Source: Cisco_61:9c:80 (00:17:0f:61:9c:80)" size="6" pos="6" show="00:17:0f:61:9c:80" value="00170f619c80"/>
+    <field name="sll.etype" showname="Protocol: IP (0x0800)" size="2" pos="14" show="2048" value="0800"/>
+  </proto>
+  <proto name="ip" showname="Internet Protocol Version 4, Src: 10.78.154.138 (10.78.154.138), Dst: 10.78.183.45 (10.78.183.45)" size="20" pos="16">
+    <field name="ip.version" showname="Version: 4" size="1" pos="16" show="4" value="45"/>
+    <field name="ip.hdr_len" showname="Header Length: 20 bytes" size="1" pos="16" show="20" value="45"/>
+    <field name="ip.dsfield" showname="Differentiated Services Field: 0x80 (DSCP 0x20: Class Selector 4; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))" size="1" pos="17" show="128" value="80">
+      <field name="ip.dsfield.dscp" showname="1000 00.. = Differentiated Services Codepoint: Class Selector 4 (0x20)" size="1" pos="17" show="32" value="20" unmaskedvalue="80"/>
+      <field name="ip.dsfield.ecn" showname=".... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)" size="1" pos="17" show="0" value="0" unmaskedvalue="80"/>
+    </field>
+    <field name="ip.len" showname="Total Length: 248" size="2" pos="18" show="248" value="00f8"/>
+    <field name="ip.id" showname="Identification: 0x913a (37178)" size="2" pos="20" show="37178" value="913a"/>
+    <field name="ip.flags" showname="Flags: 0x02 (Don&apos;t Fragment)" size="1" pos="22" show="2" value="40">
+      <field name="ip.flags.rb" showname="0... .... = Reserved bit: Not set" size="1" pos="22" show="0" value="40"/>
+      <field name="ip.flags.df" showname=".1.. .... = Don&apos;t fragment: Set" size="1" pos="22" show="1" value="40"/>
+      <field name="ip.flags.mf" showname="..0. .... = More fragments: Not set" size="1" pos="22" show="0" value="40"/>
+    </field>
+    <field name="ip.frag_offset" showname="Fragment offset: 0" size="2" pos="22" show="0" value="4000"/>
+    <field name="ip.ttl" showname="Time to live: 254" size="1" pos="24" show="254" value="fe"/>
+    <field name="ip.proto" showname="Protocol: SCTP (132)" size="1" pos="25" show="132" value="84"/>
+    <field name="ip.checksum" showname="Header checksum: 0x8373 [validation disabled]" size="2" pos="26" show="33651" value="8373">
+      <field name="ip.checksum_good" showname="Good: False" size="2" pos="26" show="0" value="8373"/>
+      <field name="ip.checksum_bad" showname="Bad: False" size="2" pos="26" show="0" value="8373"/>
+    </field>
+    <field name="ip.src" showname="Source: 10.78.154.138 (10.78.154.138)" size="4" pos="28" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.addr" showname="Source or Destination Address: 10.78.154.138 (10.78.154.138)" hide="yes" size="4" pos="28" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.src_host" showname="Source Host: 10.78.154.138" hide="yes" size="4" pos="28" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.host" showname="Source or Destination Host: 10.78.154.138" hide="yes" size="4" pos="28" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.dst" showname="Destination: 10.78.183.45 (10.78.183.45)" size="4" pos="32" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.addr" showname="Source or Destination Address: 10.78.183.45 (10.78.183.45)" hide="yes" size="4" pos="32" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.dst_host" showname="Destination Host: 10.78.183.45" hide="yes" size="4" pos="32" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.host" showname="Source or Destination Host: 10.78.183.45" hide="yes" size="4" pos="32" show="10.78.183.45" value="0a4eb72d"/>
+  </proto>
+  <proto name="sctp" showname="Stream Control Transmission Protocol, Src Port: 2905 (2905), Dst Port: 1034 (1034)" size="28" pos="36">
+    <field name="sctp.srcport" showname="Source port: 2905" size="2" pos="36" show="2905" value="0b59"/>
+    <field name="sctp.dstport" showname="Destination port: 1034" size="2" pos="38" show="1034" value="040a"/>
+    <field name="sctp.verification_tag" showname="Verification tag: 0xf1a67eae" size="4" pos="40" show="4054220462" value="f1a67eae"/>
+    <field name="sctp.assoc_index" showname="Assocation index: 0" size="0" pos="36" show="0"/>
+    <field name="sctp.port" showname="Port: 2905" hide="yes" size="2" pos="36" show="2905" value="0b59"/>
+    <field name="sctp.port" showname="Port: 1034" hide="yes" size="2" pos="38" show="1034" value="040a"/>
+    <field name="sctp.checksum" showname="Checksum: 0x87eeff61 (not verified)" size="4" pos="44" show="2280587105" value="87eeff61"/>
+    <field name="" show="DATA chunk(ordered, complete segment, TSN: 471753, SID: 1, SSN: 47681, PPID: 3, payload length: 200 bytes)" size="16" pos="48" value="000300d8000732c90001ba4100000003">
+      <field name="sctp.chunk_type" showname="Chunk type: DATA (0)" size="1" pos="48" show="0" value="00">
+        <field name="sctp.chunk_bit_1" showname="0... .... = Bit: Stop processing of the packet" size="1" pos="48" show="0" value="0" unmaskedvalue="00"/>
+        <field name="sctp.chunk_bit_2" showname=".0.. .... = Bit: Do not report" size="1" pos="48" show="0" value="0" unmaskedvalue="00"/>
+      </field>
+      <field name="sctp.chunk_flags" showname="Chunk flags: 0x03" size="1" pos="49" show="3" value="03">
+        <field name="sctp.data_e_bit" showname=".... ...1 = E-Bit: Last segment" size="1" pos="49" show="1" value="1" unmaskedvalue="03"/>
+        <field name="sctp.data_b_bit" showname=".... ..1. = B-Bit: First segment" size="1" pos="49" show="1" value="1" unmaskedvalue="03"/>
+        <field name="sctp.data_u_bit" showname=".... .0.. = U-Bit: Ordered delivery" size="1" pos="49" show="0" value="0" unmaskedvalue="03"/>
+        <field name="sctp.data_i_bit" showname=".... 0... = I-Bit: Possibly delay SACK" size="1" pos="49" show="0" value="0" unmaskedvalue="03"/>
+      </field>
+      <field name="sctp.chunk_length" showname="Chunk length: 216" size="2" pos="50" show="216" value="00d8"/>
+      <field name="sctp.data_tsn" showname="TSN: 471753" size="4" pos="52" show="471753" value="000732c9"/>
+      <field name="sctp.data_sid" showname="Stream Identifier: 0x0001" size="2" pos="56" show="1" value="0001"/>
+      <field name="sctp.data_ssn" showname="Stream sequence number: 47681" size="2" pos="58" show="47681" value="ba41"/>
+      <field name="sctp.data_payload_proto_id" showname="Payload protocol identifier: M3UA (3)" size="4" pos="60" show="3" value="00000003"/>
+    </field>
+  </proto>
+  <proto name="m3ua" showname="MTP 3 User Adaptation Layer" size="200" pos="64">
+    <field name="m3ua.version" showname="Version: Release 1 (1)" size="1" pos="64" show="1" value="01"/>
+    <field name="m3ua.reserved" showname="Reserved: 0x00" size="1" pos="65" show="0" value="00"/>
+    <field name="m3ua.message_class" showname="Message class: Transfer messages (1)" size="1" pos="66" show="1" value="01"/>
+    <field name="m3ua.message_type" showname="Message Type: Payload data (DATA) (1)" size="1" pos="67" show="1" value="01"/>
+    <field name="m3ua.message_length" showname="Message length: 200" size="4" pos="68" show="200" value="000000c8"/>
+    <field name="" show="Network appearance (12)" size="8" pos="72" value="020000080000000c">
+      <field name="m3ua.parameter_tag" showname="Parameter Tag: Network appearance (512)" size="2" pos="72" show="512" value="0200"/>
+      <field name="m3ua.parameter_length" showname="Parameter length: 8" size="2" pos="74" show="8" value="0008"/>
+      <field name="m3ua.network_appearance" showname="Network appearance: 12" size="4" pos="76" show="12" value="0000000c"/>
+    </field>
+    <field name="" show="Protocol data (SS7 message of 165 bytes)" size="16" pos="80" value="021000b500003a9d000036e00303000d">
+      <field name="m3ua.parameter_tag" showname="Parameter Tag: Protocol data (528)" size="2" pos="80" show="528" value="0210"/>
+      <field name="m3ua.parameter_length" showname="Parameter length: 181" size="2" pos="82" show="181" value="00b5"/>
+      <field name="m3ua.protocol_data_opc" showname="OPC: 15005" size="4" pos="84" show="15005" value="00003a9d"/>
+      <field name="m3ua.protocol_data_dpc" showname="DPC: 14048" size="4" pos="88" show="14048" value="000036e0"/>
+      <field name="m3ua.protocol_data_si" showname="SI: SCCP (3)" size="1" pos="92" show="3" value="03"/>
+      <field name="m3ua.protocol_data_ni" showname="NI: Reserved for national use (3)" size="1" pos="93" show="3" value="03"/>
+      <field name="m3ua.protocol_data_mp" showname="MP: 0" size="1" pos="94" show="0" value="00"/>
+      <field name="m3ua.protocol_data_sls" showname="SLS: 13" size="1" pos="95" show="13" value="0d"/>
+      <field name="" show="MTP3 equivalents" size="0" pos="80">
+        <field name="mtp3.opc" showname="OPC: 15005" size="4" pos="84" show="15005" value="00003a9d"/>
+        <field name="mtp3.dpc" showname="DPC: 14048" size="4" pos="88" show="14048" value="000036e0"/>
+        <field name="mtp3.pc" showname="PC: 15005" size="4" pos="84" show="15005" value="00003a9d"/>
+        <field name="mtp3.pc" showname="PC: 14048" size="4" pos="88" show="14048" value="000036e0"/>
+        <field name="mtp3.ni" showname="NI: 3" size="1" pos="93" show="3" value="03"/>
+        <field name="mtp3.sls" showname="SLS: 13" size="1" pos="95" show="13" value="0d"/>
+      </field>
+      <field name="m3ua.parameter_padding" showname="Padding: 000000" size="3" pos="261" show="00:00:00" value="000000"/>
+    </field>
+  </proto>
+  <proto name="sccp" showname="Signalling Connection Control Part" size="165" pos="96">
+    <field name="sccp.message_type" showname="Message Type: Unitdata (0x09)" size="1" pos="96" show="9" value="09"/>
+    <field name="sccp.class" showname=".... 0000 = Class: 0x00" size="1" pos="97" show="0" value="0" unmaskedvalue="80"/>
+    <field name="sccp.handling" showname="1000 .... = Message handling: Return message on error (0x08)" size="1" pos="97" show="8" value="8" unmaskedvalue="80"/>
+    <field name="sccp.variable_pointer1" showname="Pointer to first Mandatory Variable parameter: 3" size="1" pos="98" show="3" value="03"/>
+    <field name="sccp.variable_pointer2" showname="Pointer to second Mandatory Variable parameter: 14" size="1" pos="99" show="14" value="0e"/>
+    <field name="sccp.variable_pointer3" showname="Pointer to third Mandatory Variable parameter: 25" size="1" pos="100" show="25" value="19"/>
+    <field name="sccp.parameter_length" showname="Called Party Address length: 11" hide="yes" size="1" pos="101" show="11" value="0b"/>
+    <field name="" show="Called Party address (11 bytes)" size="11" pos="102" value="1208001104971299009006">
+      <field name="" show="Address Indicator" size="1" pos="102" value="12">
+        <field name="sccp.called.reserved" showname="0... .... = Reserved for national use: 0x00" size="1" pos="102" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.called.ri" showname=".0.. .... = Routing Indicator: Route on GT (0x00)" size="1" pos="102" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.called.gti" showname="..01 00.. = Global Title Indicator: Translation Type, Numbering Plan, Encoding Scheme, and Nature of Address Indicator included (0x04)" size="1" pos="102" show="4" value="4" unmaskedvalue="12"/>
+        <field name="sccp.called.ssni" showname=".... ..1. = SubSystem Number Indicator: SSN present (0x01)" size="1" pos="102" show="1" value="1" unmaskedvalue="12"/>
+        <field name="sccp.called.pci" showname=".... ...0 = Point Code Indicator: Point Code not present (0x00)" size="1" pos="102" show="0" value="0" unmaskedvalue="12"/>
+      </field>
+      <field name="sccp.called.ssn" showname="SubSystem Number: MSC (Mobile Switching Center) (8)" size="1" pos="103" show="8" value="08"/>
+      <field name="sccp.ssn" showname="Called or Calling SubSystem Number: MSC (Mobile Switching Center) (8)" hide="yes" size="1" pos="103" show="8" value="08"/>
+      <field name="" show="Linked to TCAP, TCAP SSN linked to GSM_MAP" size="1" pos="103" value="08"/>
+      <field name="" show="Global Title 0x4 (9 bytes)" size="9" pos="104" value="001104971299009006">
+        <field name="sccp.called.tt" showname="Translation Type: 0x00" size="1" pos="104" show="0" value="00"/>
+        <field name="sccp.called.np" showname="0001 .... = Numbering Plan: ISDN/telephony (0x01)" size="1" pos="105" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.called.es" showname=".... 0001 = Encoding Scheme: BCD, odd number of digits (0x01)" size="1" pos="105" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.called.nai" showname=".000 0100 = Nature of Address Indicator: International number (0x04)" size="1" pos="106" show="4" value="4" unmaskedvalue="04"/>
+        <field name="sccp.called.digits" showname="Called Party Digits: 79219900096" size="6" pos="107" show="79219900096" value="971299009006">
+          <field name="sccp.digits" showname="Called or Calling GT Digits: 79219900096" size="6" pos="107" show="79219900096" value="971299009006"/>
+          <field name="sccp.called.digits.length" showname="Number of Called Party Digits: 11" size="6" pos="107" show="11" value="971299009006"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="107" value="97"/>
+        </field>
+      </field>
+    </field>
+    <field name="sccp.parameter_length" showname="Calling Party Address length: 11" hide="yes" size="1" pos="113" show="11" value="0b"/>
+    <field name="" show="Calling Party address (11 bytes)" size="11" pos="114" value="1206001104971269001009">
+      <field name="" show="Address Indicator" size="1" pos="114" value="12">
+        <field name="sccp.calling.reserved" showname="0... .... = Reserved for national use: 0x00" size="1" pos="114" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.calling.ri" showname=".0.. .... = Routing Indicator: Route on GT (0x00)" size="1" pos="114" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.calling.gti" showname="..01 00.. = Global Title Indicator: Translation Type, Numbering Plan, Encoding Scheme, and Nature of Address Indicator included (0x04)" size="1" pos="114" show="4" value="4" unmaskedvalue="12"/>
+        <field name="sccp.calling.ssni" showname=".... ..1. = SubSystem Number Indicator: SSN present (0x01)" size="1" pos="114" show="1" value="1" unmaskedvalue="12"/>
+        <field name="sccp.calling.pci" showname=".... ...0 = Point Code Indicator: Point Code not present (0x00)" size="1" pos="114" show="0" value="0" unmaskedvalue="12"/>
+      </field>
+      <field name="sccp.calling.ssn" showname="SubSystem Number: HLR (Home Location Register) (6)" size="1" pos="115" show="6" value="06"/>
+      <field name="sccp.ssn" showname="Called or Calling SubSystem Number: HLR (Home Location Register) (6)" hide="yes" size="1" pos="115" show="6" value="06"/>
+      <field name="" show="Linked to TCAP, TCAP SSN linked to GSM_MAP" size="1" pos="115" value="06"/>
+      <field name="" show="Global Title 0x4 (9 bytes)" size="9" pos="116" value="001104971269001009">
+        <field name="sccp.calling.tt" showname="Translation Type: 0x00" size="1" pos="116" show="0" value="00"/>
+        <field name="sccp.calling.np" showname="0001 .... = Numbering Plan: ISDN/telephony (0x01)" size="1" pos="117" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.calling.es" showname=".... 0001 = Encoding Scheme: BCD, odd number of digits (0x01)" size="1" pos="117" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.calling.nai" showname=".000 0100 = Nature of Address Indicator: International number (0x04)" size="1" pos="118" show="4" value="4" unmaskedvalue="04"/>
+        <field name="sccp.calling.digits" showname="Calling Party Digits: 79219600019" size="6" pos="119" show="79219600019" value="971269001009">
+          <field name="sccp.digits" showname="Called or Calling GT Digits: 79219600019" size="6" pos="119" show="79219600019" value="971269001009"/>
+          <field name="sccp.calling.digits.length" showname="Number of Calling Party Digits: 11" size="6" pos="119" show="11" value="971269001009"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="119" value="97"/>
+        </field>
+      </field>
+    </field>
+    <field name="sccp.parameter_length" showname="Data length: 135" hide="yes" size="1" pos="125" show="135" value="87"/>
+  </proto>
+  <proto name="tcap" showname="Transaction Capabilities Application Part" size="135" pos="126">
+    <field name="tcap.end_element" showname="end" size="132" pos="129" show="" value="">
+      <field name="" show="Destination Transaction ID" size="6" pos="129" value="490480d22811">
+        <field name="tcap.tid" showname="Transaction Id: 80d22811" hide="yes" size="4" pos="131" show="80:d2:28:11" value="80d22811"/>
+        <field name="tcap.dtid" showname="dtid: 80d22811" size="4" pos="131" show="80:d2:28:11" value="80d22811"/>
+      </field>
+      <field name="tcap.oid" showname="oid: 0.0.17.773.1.1.1 (id-as-dialogue)" size="7" pos="141" show="0.0.17.773.1.1.1" value="00118605010101"/>
+      <field name="tcap.dialogueResponse_element" showname="dialogueResponse" size="27" pos="152" show="" value="">
+        <field name="ber.bitstring.padding" showname="Padding: 7" size="1" pos="154" show="7" value="07"/>
+        <field name="tcap.protocol_version" showname="protocol-version: 80 (version1)" size="1" pos="155" show="80" value="80">
+          <field name="tcap.version1" showname="1... .... = version1: True" size="1" pos="155" show="1" value="1" unmaskedvalue="80"/>
+        </field>
+        <field name="tcap.application_context_name" showname="application-context-name: 0.4.0.0.1.0.5.3 (locationInfoRetrievalContext-v3)" size="7" pos="160" show="0.4.0.0.1.0.5.3" value="04000001000503"/>
+        <field name="tcap.result" showname="result: accepted (0)" size="1" pos="171" show="0" value="00"/>
+        <field name="tcap.result_source_diagnostic" showname="result-source-diagnostic: dialogue-service-user (1)" size="3" pos="176" show="1" value="020100">
+          <field name="tcap.dialogue_service_user" showname="dialogue-service-user: null (0)" size="1" pos="178" show="0" value="00"/>
+        </field>
+      </field>
+      <field name="tcap.components" showname="components: 1 item" size="80" pos="181" show="1" value="a24e0201ff3049020116a344890852000247300172f60407919702560052f4a70ba0098107919702910086f1a503830111a00fa00d300b06022207e0058a010a8e008f0205e0b7080a010104030401a0">
+        <field name="tcap.Component" showname="Component: returnResultLast (2)" size="78" pos="183" show="2" value="0201ff3049020116a344890852000247300172f60407919702560052f4a70ba0098107919702910086f1a503830111a00fa00d300b06022207e0058a010a8e008f0205e0b7080a010104030401a0">
+          <field name="tcap.returnResultLast_element" showname="returnResultLast" size="78" pos="183" show="" value="">
+            <field name="tcap.invokeID" showname="invokeID: -1" size="1" pos="185" show="-1" value="ff"/>
+            <field name="tcap.resultretres_element" showname="resultretres" size="75" pos="186" show="" value="">
+              <field name="tcap.opCode" showname="opCode: localValue (0)" size="3" pos="188" show="0" value="020116">
+                <field name="tcap.localValue" showname="localValue: 22" size="1" pos="190" show="22" value="16"/>
+              </field>
+              <field name="" show="CONSTRUCTOR" size="70" pos="191" value="a344890852000247300172f60407919702560052f4a70ba0098107919702910086f1a503830111a00fa00d300b06022207e0058a010a8e008f0205e0b7080a010104030401a0">
+                <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="191" show="3" value="a3"/>
+                <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="191" show="2" value="a3"/>
+                <field name="tcap.len" showname="Length: 68" size="1" pos="192" show="68" value="44"/>
+                <field name="" show="Parameter (0x09)" size="10" pos="193" value="890852000247300172f6">
+                  <field name="tcap.msgtype" showname="Tag: 0x09" size="1" pos="193" show="9" value="89"/>
+                  <field name="tcap.len" showname="Length: 8" size="1" pos="194" show="8" value="08"/>
+                </field>
+                <field name="tcap.data" showname="Data: 52" size="1" pos="195" show="52" value="52"/>
+                <field name="" show="Parameter (0x04)" size="9" pos="203" value="0407919702560052f4">
+                  <field name="tcap.msgtype" showname="Tag: 0x04" size="1" pos="203" show="4" value="04"/>
+                  <field name="tcap.len" showname="Length: 7" size="1" pos="204" show="7" value="07"/>
+                </field>
+                <field name="tcap.data" showname="Data: 91" size="1" pos="205" show="91" value="91"/>
+                <field name="" show="CONSTRUCTOR" size="13" pos="212" value="a70ba0098107919702910086f1">
+                  <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="212" show="7" value="a7"/>
+                  <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="212" show="2" value="a7"/>
+                  <field name="tcap.len" showname="Length: 11" size="1" pos="213" show="11" value="0b"/>
+                  <field name="" show="CONSTRUCTOR" size="11" pos="214" value="a0098107919702910086f1">
+                    <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="214" show="0" value="a0"/>
+                    <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="214" show="2" value="a0"/>
+                    <field name="tcap.len" showname="Length: 9" size="1" pos="215" show="9" value="09"/>
+                    <field name="" show="Parameter (0x01)" size="9" pos="216" value="8107919702910086f1">
+                      <field name="tcap.msgtype" showname="Tag: 0x01" size="1" pos="216" show="1" value="81"/>
+                      <field name="tcap.len" showname="Length: 7" size="1" pos="217" show="7" value="07"/>
+                    </field>
+                    <field name="tcap.data" showname="Data: 91" size="1" pos="218" show="91" value="91"/>
+                  </field>
+                </field>
+                <field name="" show="CONSTRUCTOR" size="5" pos="225" value="a503830111">
+                  <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="225" show="5" value="a5"/>
+                  <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="225" show="2" value="a5"/>
+                  <field name="tcap.len" showname="Length: 3" size="1" pos="226" show="3" value="03"/>
+                  <field name="" show="Parameter (0x03)" size="3" pos="227" value="830111">
+                    <field name="tcap.msgtype" showname="Tag: 0x03" size="1" pos="227" show="3" value="83"/>
+                    <field name="tcap.len" showname="Length: 1" size="1" pos="228" show="1" value="01"/>
+                  </field>
+                  <field name="tcap.data" showname="Data: 11" size="1" pos="229" show="11" value="11"/>
+                </field>
+                <field name="" show="CONSTRUCTOR" size="17" pos="230" value="a00fa00d300b06022207e0058a010a8e00">
+                  <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="230" show="0" value="a0"/>
+                  <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="230" show="2" value="a0"/>
+                  <field name="tcap.len" showname="Length: 15" size="1" pos="231" show="15" value="0f"/>
+                  <field name="" show="CONSTRUCTOR" size="15" pos="232" value="a00d300b06022207e0058a010a8e00">
+                    <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="232" show="0" value="a0"/>
+                    <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="232" show="2" value="a0"/>
+                    <field name="tcap.len" showname="Length: 13" size="1" pos="233" show="13" value="0d"/>
+                    <field name="" show="CONSTRUCTOR" size="13" pos="234" value="300b06022207e0058a010a8e00">
+                      <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="234" show="16" value="30"/>
+                      <field name="tcap.msgtype" showname="Tag: 0x00" size="1" pos="234" show="0" value="30"/>
+                      <field name="tcap.len" showname="Length: 11" size="1" pos="235" show="11" value="0b"/>
+                      <field name="" show="Parameter (0x06)" size="4" pos="236" value="06022207">
+                        <field name="tcap.msgtype" showname="Tag: 0x06" size="1" pos="236" show="6" value="06"/>
+                        <field name="tcap.len" showname="Length: 2" size="1" pos="237" show="2" value="02"/>
+                      </field>
+                      <field name="tcap.data" showname="Data: 22" size="1" pos="238" show="22" value="22"/>
+                      <field name="" show="CONSTRUCTOR" size="7" pos="240" value="e0058a010a8e00">
+                        <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="240" show="0" value="e0"/>
+                        <field name="tcap.msgtype" showname="Tag: 0x03" size="1" pos="240" show="3" value="e0"/>
+                        <field name="tcap.len" showname="Length: 5" size="1" pos="241" show="5" value="05"/>
+                        <field name="" show="Parameter (0x0a)" size="3" pos="242" value="8a010a">
+                          <field name="tcap.msgtype" showname="Tag: 0x0a" size="1" pos="242" show="10" value="8a"/>
+                          <field name="tcap.len" showname="Length: 1" size="1" pos="243" show="1" value="01"/>
+                        </field>
+                        <field name="tcap.data" showname="Data: 0a" size="1" pos="244" show="0a" value="0a"/>
+                        <field name="" show="Parameter (0x0e)" size="2" pos="245" value="8e00">
+                          <field name="tcap.msgtype" showname="Tag: 0x0e" size="1" pos="245" show="14" value="8e"/>
+                          <field name="tcap.len" showname="Length: 0" size="1" pos="246" show="0" value="00"/>
+                        </field>
+                      </field>
+                    </field>
+                  </field>
+                </field>
+                <field name="" show="Parameter (0x0f)" size="4" pos="247" value="8f0205e0">
+                  <field name="tcap.msgtype" showname="Tag: 0x0f" size="1" pos="247" show="15" value="8f"/>
+                  <field name="tcap.len" showname="Length: 2" size="1" pos="248" show="2" value="02"/>
+                </field>
+                <field name="tcap.data" showname="Data: 05" size="1" pos="249" show="05" value="05"/>
+                <field name="" show="CONSTRUCTOR" size="10" pos="251" value="b7080a010104030401a0">
+                  <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="251" show="23" value="b7"/>
+                  <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="251" show="2" value="b7"/>
+                  <field name="tcap.len" showname="Length: 8" size="1" pos="252" show="8" value="08"/>
+                  <field name="" show="Parameter (0x0a)" size="3" pos="253" value="0a0101">
+                    <field name="tcap.msgtype" showname="Tag: 0x0a" size="1" pos="253" show="10" value="0a"/>
+                    <field name="tcap.len" showname="Length: 1" size="1" pos="254" show="1" value="01"/>
+                  </field>
+                  <field name="tcap.data" showname="Data: 01" size="1" pos="255" show="01" value="01"/>
+                  <field name="" show="Parameter (0x04)" size="5" pos="256" value="04030401a0">
+                    <field name="tcap.msgtype" showname="Tag: 0x04" size="1" pos="256" show="4" value="04"/>
+                    <field name="tcap.len" showname="Length: 3" size="1" pos="257" show="3" value="03"/>
+                  </field>
+                  <field name="tcap.data" showname="Data: 04" size="1" pos="258" show="04" value="04"/>
+                </field>
+              </field>
+            </field>
+          </field>
+        </field>
+      </field>
+    </field>
+  </proto>
+  <proto name="gsm_map" showname="GSM Mobile Application" size="80" pos="181">
+    <field name="gsm_map.old.Component" showname="Component: returnResultLast (2)" size="78" pos="183" show="2" value="0201ff3049020116a344890852000247300172f60407919702560052f4a70ba0098107919702910086f1a503830111a00fa00d300b06022207e0058a010a8e008f0205e0b7080a010104030401a0">
+      <field name="gsm_old.returnResultLast_element" showname="returnResultLast" size="78" pos="183" show="" value="">
+        <field name="gsm_old.invokeID" showname="invokeID: -1" size="1" pos="185" show="-1" value="ff"/>
+        <field name="gsm_old.resultretres_element" showname="resultretres" size="75" pos="186" show="" value="">
+          <field name="gsm_old.opCode" showname="opCode: localValue (0)" size="3" pos="188" show="0" value="020116">
+            <field name="gsm_old.localValue" showname="localValue: sendRoutingInfo (22)" size="1" pos="190" show="22" value="16"/>
+          </field>
+          <field name="gsm_map.ch.imsi" showname="imsi: 52000247300172f6" size="8" pos="195" show="52:00:02:47:30:01:72:f6" value="52000247300172f6"/>
+          <field name="gsm_map.tbcd_digits" showname="TBCD digits: 250020740310276" size="8" pos="195" show="250020740310276" value="52000247300172f6"/>
+          <field name="gsm_map.ch.extendedRoutingInfo" showname="extendedRoutingInfo: routingInfo (0)" size="9" pos="203" show="0" value="0407919702560052f4">
+            <field name="gsm_map.ch.routingInfo" showname="routingInfo: roamingNumber (0)" size="9" pos="203" show="0" value="0407919702560052f4">
+              <field name="gsm_map.ch.roamingNumber" showname="roamingNumber: 919702560052f4" size="7" pos="205" show="91:97:02:56:00:52:f4" value="919702560052f4">
+                <field name="gsm_map.extension" showname="1... .... = Extension: No Extension" size="1" pos="205" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.nature_of_number" showname=".001 .... = Nature of number: International Number (0x01)" size="1" pos="205" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.number_plan" showname=".... 0001 = Number plan: ISDN/Telephony Numbering (Rec ITU-T E.164) (0x01)" size="1" pos="205" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.address.digits" showname="Address digits: 79206500254" size="6" pos="206" show="79206500254" value="9702560052f4"/>
+                <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="206" value="97"/>
+              </field>
+            </field>
+          </field>
+          <field name="gsm_map.ch.subscriberInfo_element" showname="subscriberInfo" size="11" pos="214" show="" value="">
+            <field name="gsm_map.ms.locationInformation_element" showname="locationInformation" size="9" pos="216" show="" value="">
+              <field name="gsm_map.ms.vlr_number" showname="vlr-number: 919702910086f1" size="7" pos="218" show="91:97:02:91:00:86:f1" value="919702910086f1">
+                <field name="gsm_map.extension" showname="1... .... = Extension: No Extension" size="1" pos="218" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.nature_of_number" showname=".001 .... = Nature of number: International Number (0x01)" size="1" pos="218" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.number_plan" showname=".... 0001 = Number plan: ISDN/Telephony Numbering (Rec ITU-T E.164) (0x01)" size="1" pos="218" show="1" value="1" unmaskedvalue="91"/>
+                <field name="gsm_map.address.digits" showname="Address digits: 79201900681" size="6" pos="219" show="79201900681" value="9702910086f1"/>
+                <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="219" value="97"/>
+              </field>
+            </field>
+          </field>
+          <field name="gsm_map.ch.basicService" showname="basicService: ext-Teleservice (3)" size="1" pos="229" show="3" value="11">
+            <field name="gsm_map.ext_Teleservice" showname="ext-Teleservice: telephony (17)" size="1" pos="229" show="17" value="11"/>
+          </field>
+          <field name="gsm_map.ch.extensionContainer_element" showname="extensionContainer" size="15" pos="232" show="" value="">
+            <field name="gsm_map.privateExtensionList" showname="privateExtensionList: 1 item" size="13" pos="234" show="1" value="300b06022207e0058a010a8e00">
+              <field name="gsm_map.PrivateExtension_element" showname="PrivateExtension" size="13" pos="234" show="" value="">
+                <field name="gsm_map.extId" showname="extId: 0.34.7 (Nokia SRI Response Extension)" size="2" pos="238" show="0.34.7" value="2207"/>
+                <field name="" show="Extension Data" size="7" pos="240" value="e0058a010a8e00"/>
+                <field name="" show="Nokia Extension" size="7" pos="240" value="e0058a010a8e00">
+                  <field name="NokiaMAP-Extensions.category_element" showname="category" size="1" pos="244" show="" value=""/>
+                  <field name="NokiaMAP-Extensions.noBarrings_element" showname="noBarrings" size="0" pos="247" show="" value=""/>
+                </field>
+              </field>
+            </field>
+          </field>
+          <field name="ber.bitstring.padding" showname="Padding: 5" size="1" pos="249" show="5" value="05"/>
+          <field name="gsm_map.ch.supportedCamelPhasesInVMSC" showname="supportedCamelPhasesInVMSC: e0 (phase1, phase2, phase3)" size="1" pos="250" show="e0" value="e0">
+            <field name="gsm_map.ms.phase1" showname="1... .... = phase1: True" size="1" pos="250" show="1" value="1" unmaskedvalue="e0"/>
+            <field name="gsm_map.ms.phase2" showname=".1.. .... = phase2: True" size="1" pos="250" show="1" value="1" unmaskedvalue="e0"/>
+            <field name="gsm_map.ms.phase3" showname="..1. .... = phase3: True" size="1" pos="250" show="1" value="1" unmaskedvalue="e0"/>
+            <field name="gsm_map.ms.phase4" showname="...0 .... = phase4: False" size="0" pos="251" show="0"/>
+          </field>
+          <field name="gsm_map.ch.gsm_BearerCapability_element" showname="gsm-BearerCapability" size="8" pos="253" show="" value="">
+            <field name="gsm_map.protocolId" showname="protocolId: gsm-0408 (1)" size="1" pos="255" show="1" value="01"/>
+            <field name="gsm_map.signalInfo" showname="signalInfo: 0401a0" size="3" pos="258" show="04:01:a0" value="0401a0">
+              <field name="gsm_map.ie_tag" showname="Tag: Bearer Capability (4)" size="1" pos="258" show="4" value="04"/>
+              <field name="gsm_map.length" showname="Length: 1" size="1" pos="259" show="1" value="01"/>
+              <field name="" show="Octet 3" size="1" pos="260" value="a0">
+                <field name="gsm_a.extension" showname="1... .... = Extension: No Extension" size="1" pos="260" show="1" value="1" unmaskedvalue="a0"/>
+                <field name="gsm_a.dtap.radio_channel_requirement" showname=".01. .... = Radio channel requirement: Spare" size="1" pos="260" show="1" value="1" unmaskedvalue="a0"/>
+                <field name="gsm_a.dtap.coding_standard" showname="...0 .... = Coding standard: GSM standardized coding" size="1" pos="260" show="0" value="0" unmaskedvalue="a0"/>
+                <field name="gsm_a.dtap.transfer_mode" showname=".... 0... = Transfer mode: circuit" size="1" pos="260" show="0" value="0" unmaskedvalue="a0"/>
+                <field name="gsm_a.dtap.itc" showname=".... .000 = Information transfer capability: Speech (0x00)" size="1" pos="260" show="0" value="0" unmaskedvalue="a0"/>
+              </field>
+            </field>
+          </field>
+        </field>
+      </field>
+    </field>
+  </proto>
+</packet>
+
+
+<packet>
+  <proto name="geninfo" pos="0" showname="General information" size="204">
+    <field name="num" pos="0" show="2" showname="Number" value="2" size="204"/>
+    <field name="len" pos="0" show="204" showname="Frame Length" value="cc" size="204"/>
+    <field name="caplen" pos="0" show="204" showname="Captured Length" value="cc" size="204"/>
+    <field name="timestamp" pos="0" show="Apr 25, 2014 10:53:47.041160000 CEST" showname="Captured Time" value="1398416027.041160000" size="204"/>
+  </proto>
+  <proto name="frame" showname="Frame 2: 204 bytes on wire (1632 bits), 204 bytes captured (1632 bits)" size="204" pos="0">
+    <field name="frame.encap_type" showname="Encapsulation type: Linux cooked-mode capture (25)" size="0" pos="0" show="25"/>
+    <field name="frame.time" showname="Arrival Time: Apr 25, 2014 10:53:47.041160000 CEST" size="0" pos="0" show="Apr 25, 2014 10:53:47.041160000 CEST"/>
+    <field name="frame.offset_shift" showname="Time shift for this packet: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.time_epoch" showname="Epoch Time: 1398416027.041160000 seconds" size="0" pos="0" show="1398416027.041160000"/>
+    <field name="frame.time_delta" showname="Time delta from previous captured frame: 0.000501000 seconds" size="0" pos="0" show="0.000501000"/>
+    <field name="frame.time_delta_displayed" showname="Time delta from previous displayed frame: 0.000501000 seconds" size="0" pos="0" show="0.000501000"/>
+    <field name="frame.time_relative" showname="Time since reference or first frame: 0.000501000 seconds" size="0" pos="0" show="0.000501000"/>
+    <field name="frame.number" showname="Frame Number: 2" size="0" pos="0" show="2"/>
+    <field name="frame.len" showname="Frame Length: 204 bytes (1632 bits)" size="0" pos="0" show="204"/>
+    <field name="frame.cap_len" showname="Capture Length: 204 bytes (1632 bits)" size="0" pos="0" show="204"/>
+    <field name="frame.marked" showname="Frame is marked: False" size="0" pos="0" show="0"/>
+    <field name="frame.ignored" showname="Frame is ignored: False" size="0" pos="0" show="0"/>
+    <field name="frame.protocols" showname="Protocols in frame: sll:ethertype:ip:sctp:m3ua:sccp:tcap:gsm_map" size="0" pos="0" show="sll:ethertype:ip:sctp:m3ua:sccp:tcap:gsm_map"/>
+  </proto>
+  <proto name="sll" showname="Linux cooked capture" size="16" pos="0">
+    <field name="sll.pkttype" showname="Packet type: Sent by us (4)" size="2" pos="0" show="4" value="0004"/>
+    <field name="sll.hatype" showname="Link-layer address type: 1" size="2" pos="2" show="1" value="0001"/>
+    <field name="sll.halen" showname="Link-layer address length: 6" size="2" pos="4" show="6" value="0006"/>
+    <field name="sll.src.eth" showname="Source: Hewlett-_c7:ba:ce (68:b5:99:c7:ba:ce)" size="6" pos="6" show="68:b5:99:c7:ba:ce" value="68b599c7bace"/>
+    <field name="sll.etype" showname="Protocol: IP (0x0800)" size="2" pos="14" show="2048" value="0800"/>
+  </proto>
+  <proto name="ip" showname="Internet Protocol Version 4, Src: 10.78.183.45 (10.78.183.45), Dst: 10.78.154.138 (10.78.154.138)" size="20" pos="16">
+    <field name="ip.version" showname="Version: 4" size="1" pos="16" show="4" value="45"/>
+    <field name="ip.hdr_len" showname="Header Length: 20 bytes" size="1" pos="16" show="20" value="45"/>
+    <field name="ip.dsfield" showname="Differentiated Services Field: 0x02 (DSCP 0x00: Default; ECN: 0x02: ECT(0) (ECN-Capable Transport))" size="1" pos="17" show="2" value="02">
+      <field name="ip.dsfield.dscp" showname="0000 00.. = Differentiated Services Codepoint: Default (0x00)" size="1" pos="17" show="0" value="0" unmaskedvalue="02"/>
+      <field name="ip.dsfield.ecn" showname=".... ..10 = Explicit Congestion Notification: ECT(0) (ECN-Capable Transport) (0x02)" size="1" pos="17" show="2" value="2" unmaskedvalue="02"/>
+    </field>
+    <field name="ip.len" showname="Total Length: 188" size="2" pos="18" show="188" value="00bc"/>
+    <field name="ip.id" showname="Identification: 0x5993 (22931)" size="2" pos="20" show="22931" value="5993"/>
+    <field name="ip.flags" showname="Flags: 0x02 (Don&apos;t Fragment)" size="1" pos="22" show="2" value="40">
+      <field name="ip.flags.rb" showname="0... .... = Reserved bit: Not set" size="1" pos="22" show="0" value="40"/>
+      <field name="ip.flags.df" showname=".1.. .... = Don&apos;t fragment: Set" size="1" pos="22" show="1" value="40"/>
+      <field name="ip.flags.mf" showname="..0. .... = More fragments: Not set" size="1" pos="22" show="0" value="40"/>
+    </field>
+    <field name="ip.frag_offset" showname="Fragment offset: 0" size="2" pos="22" show="0" value="4000"/>
+    <field name="ip.ttl" showname="Time to live: 64" size="1" pos="24" show="64" value="40"/>
+    <field name="ip.proto" showname="Protocol: SCTP (132)" size="1" pos="25" show="132" value="84"/>
+    <field name="ip.checksum" showname="Header checksum: 0x79d5 [validation disabled]" size="2" pos="26" show="31189" value="79d5">
+      <field name="ip.checksum_good" showname="Good: False" size="2" pos="26" show="0" value="79d5"/>
+      <field name="ip.checksum_bad" showname="Bad: False" size="2" pos="26" show="0" value="79d5"/>
+    </field>
+    <field name="ip.src" showname="Source: 10.78.183.45 (10.78.183.45)" size="4" pos="28" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.addr" showname="Source or Destination Address: 10.78.183.45 (10.78.183.45)" hide="yes" size="4" pos="28" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.src_host" showname="Source Host: 10.78.183.45" hide="yes" size="4" pos="28" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.host" showname="Source or Destination Host: 10.78.183.45" hide="yes" size="4" pos="28" show="10.78.183.45" value="0a4eb72d"/>
+    <field name="ip.dst" showname="Destination: 10.78.154.138 (10.78.154.138)" size="4" pos="32" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.addr" showname="Source or Destination Address: 10.78.154.138 (10.78.154.138)" hide="yes" size="4" pos="32" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.dst_host" showname="Destination Host: 10.78.154.138" hide="yes" size="4" pos="32" show="10.78.154.138" value="0a4e9a8a"/>
+    <field name="ip.host" showname="Source or Destination Host: 10.78.154.138" hide="yes" size="4" pos="32" show="10.78.154.138" value="0a4e9a8a"/>
+  </proto>
+  <proto name="sctp" showname="Stream Control Transmission Protocol, Src Port: 1034 (1034), Dst Port: 2905 (2905)" size="28" pos="36">
+    <field name="sctp.srcport" showname="Source port: 1034" size="2" pos="36" show="1034" value="040a"/>
+    <field name="sctp.dstport" showname="Destination port: 2905" size="2" pos="38" show="2905" value="0b59"/>
+    <field name="sctp.verification_tag" showname="Verification tag: 0x000042c2" size="4" pos="40" show="17090" value="000042c2"/>
+    <field name="sctp.assoc_index" showname="Assocation index: 0" size="0" pos="36" show="0"/>
+    <field name="sctp.port" showname="Port: 1034" hide="yes" size="2" pos="36" show="1034" value="040a"/>
+    <field name="sctp.port" showname="Port: 2905" hide="yes" size="2" pos="38" show="2905" value="0b59"/>
+    <field name="sctp.checksum" showname="Checksum: 0x698aab1c (not verified)" size="4" pos="44" show="1770695452" value="698aab1c"/>
+    <field name="" show="DATA chunk(ordered, complete segment, TSN: 3952968556, SID: 1, SSN: 59738, PPID: 3, payload length: 140 bytes)" size="16" pos="48" value="0003009ceb9d836c0001e95a00000003">
+      <field name="sctp.chunk_type" showname="Chunk type: DATA (0)" size="1" pos="48" show="0" value="00">
+        <field name="sctp.chunk_bit_1" showname="0... .... = Bit: Stop processing of the packet" size="1" pos="48" show="0" value="0" unmaskedvalue="00"/>
+        <field name="sctp.chunk_bit_2" showname=".0.. .... = Bit: Do not report" size="1" pos="48" show="0" value="0" unmaskedvalue="00"/>
+      </field>
+      <field name="sctp.chunk_flags" showname="Chunk flags: 0x03" size="1" pos="49" show="3" value="03">
+        <field name="sctp.data_e_bit" showname=".... ...1 = E-Bit: Last segment" size="1" pos="49" show="1" value="1" unmaskedvalue="03"/>
+        <field name="sctp.data_b_bit" showname=".... ..1. = B-Bit: First segment" size="1" pos="49" show="1" value="1" unmaskedvalue="03"/>
+        <field name="sctp.data_u_bit" showname=".... .0.. = U-Bit: Ordered delivery" size="1" pos="49" show="0" value="0" unmaskedvalue="03"/>
+        <field name="sctp.data_i_bit" showname=".... 0... = I-Bit: Possibly delay SACK" size="1" pos="49" show="0" value="0" unmaskedvalue="03"/>
+      </field>
+      <field name="sctp.chunk_length" showname="Chunk length: 156" size="2" pos="50" show="156" value="009c"/>
+      <field name="sctp.data_tsn" showname="TSN: 3952968556" size="4" pos="52" show="3952968556" value="eb9d836c"/>
+      <field name="sctp.data_sid" showname="Stream Identifier: 0x0001" size="2" pos="56" show="1" value="0001"/>
+      <field name="sctp.data_ssn" showname="Stream sequence number: 59738" size="2" pos="58" show="59738" value="e95a"/>
+      <field name="sctp.data_payload_proto_id" showname="Payload protocol identifier: M3UA (3)" size="4" pos="60" show="3" value="00000003"/>
+    </field>
+  </proto>
+  <proto name="m3ua" showname="MTP 3 User Adaptation Layer" size="140" pos="64">
+    <field name="m3ua.version" showname="Version: Release 1 (1)" size="1" pos="64" show="1" value="01"/>
+    <field name="m3ua.reserved" showname="Reserved: 0x00" size="1" pos="65" show="0" value="00"/>
+    <field name="m3ua.message_class" showname="Message class: Transfer messages (1)" size="1" pos="66" show="1" value="01"/>
+    <field name="m3ua.message_type" showname="Message Type: Payload data (DATA) (1)" size="1" pos="67" show="1" value="01"/>
+    <field name="m3ua.message_length" showname="Message length: 140" size="4" pos="68" show="140" value="0000008c"/>
+    <field name="" show="Network appearance (12)" size="8" pos="72" value="020000080000000c">
+      <field name="m3ua.parameter_tag" showname="Parameter Tag: Network appearance (512)" size="2" pos="72" show="512" value="0200"/>
+      <field name="m3ua.parameter_length" showname="Parameter length: 8" size="2" pos="74" show="8" value="0008"/>
+      <field name="m3ua.network_appearance" showname="Network appearance: 12" size="4" pos="76" show="12" value="0000000c"/>
+    </field>
+    <field name="" show="Routing context (1 context)" size="8" pos="80" value="00060008000036e0">
+      <field name="m3ua.parameter_tag" showname="Parameter Tag: Routing context (6)" size="2" pos="80" show="6" value="0006"/>
+      <field name="m3ua.parameter_length" showname="Parameter length: 8" size="2" pos="82" show="8" value="0008"/>
+      <field name="m3ua.routing_context" showname="Routing context: 14048" size="4" pos="84" show="14048" value="000036e0"/>
+    </field>
+    <field name="" show="Protocol data (SS7 message of 100 bytes)" size="16" pos="88" value="02100074000036e000003a9d0303000b">
+      <field name="m3ua.parameter_tag" showname="Parameter Tag: Protocol data (528)" size="2" pos="88" show="528" value="0210"/>
+      <field name="m3ua.parameter_length" showname="Parameter length: 116" size="2" pos="90" show="116" value="0074"/>
+      <field name="m3ua.protocol_data_opc" showname="OPC: 14048" size="4" pos="92" show="14048" value="000036e0"/>
+      <field name="m3ua.protocol_data_dpc" showname="DPC: 15005" size="4" pos="96" show="15005" value="00003a9d"/>
+      <field name="m3ua.protocol_data_si" showname="SI: SCCP (3)" size="1" pos="100" show="3" value="03"/>
+      <field name="m3ua.protocol_data_ni" showname="NI: Reserved for national use (3)" size="1" pos="101" show="3" value="03"/>
+      <field name="m3ua.protocol_data_mp" showname="MP: 0" size="1" pos="102" show="0" value="00"/>
+      <field name="m3ua.protocol_data_sls" showname="SLS: 11" size="1" pos="103" show="11" value="0b"/>
+      <field name="" show="MTP3 equivalents" size="0" pos="88">
+        <field name="mtp3.opc" showname="OPC: 14048" size="4" pos="92" show="14048" value="000036e0"/>
+        <field name="mtp3.dpc" showname="DPC: 15005" size="4" pos="96" show="15005" value="00003a9d"/>
+        <field name="mtp3.pc" showname="PC: 14048" size="4" pos="92" show="14048" value="000036e0"/>
+        <field name="mtp3.pc" showname="PC: 15005" size="4" pos="96" show="15005" value="00003a9d"/>
+        <field name="mtp3.ni" showname="NI: 3" size="1" pos="101" show="3" value="03"/>
+        <field name="mtp3.sls" showname="SLS: 11" size="1" pos="103" show="11" value="0b"/>
+      </field>
+    </field>
+  </proto>
+  <proto name="sccp" showname="Signalling Connection Control Part" size="100" pos="104">
+    <field name="sccp.message_type" showname="Message Type: Unitdata (0x09)" size="1" pos="104" show="9" value="09"/>
+    <field name="sccp.class" showname=".... 0001 = Class: 0x01" size="1" pos="105" show="1" value="1" unmaskedvalue="81"/>
+    <field name="sccp.handling" showname="1000 .... = Message handling: Return message on error (0x08)" size="1" pos="105" show="8" value="8" unmaskedvalue="81"/>
+    <field name="sccp.variable_pointer1" showname="Pointer to first Mandatory Variable parameter: 3" size="1" pos="106" show="3" value="03"/>
+    <field name="sccp.variable_pointer2" showname="Pointer to second Mandatory Variable parameter: 14" size="1" pos="107" show="14" value="0e"/>
+    <field name="sccp.variable_pointer3" showname="Pointer to third Mandatory Variable parameter: 25" size="1" pos="108" show="25" value="19"/>
+    <field name="sccp.parameter_length" showname="Called Party Address length: 11" hide="yes" size="1" pos="109" show="11" value="0b"/>
+    <field name="" show="Called Party address (11 bytes)" size="11" pos="110" value="1206001104976216766207">
+      <field name="" show="Address Indicator" size="1" pos="110" value="12">
+        <field name="sccp.called.reserved" showname="0... .... = Reserved for national use: 0x00" size="1" pos="110" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.called.ri" showname=".0.. .... = Routing Indicator: Route on GT (0x00)" size="1" pos="110" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.called.gti" showname="..01 00.. = Global Title Indicator: Translation Type, Numbering Plan, Encoding Scheme, and Nature of Address Indicator included (0x04)" size="1" pos="110" show="4" value="4" unmaskedvalue="12"/>
+        <field name="sccp.called.ssni" showname=".... ..1. = SubSystem Number Indicator: SSN present (0x01)" size="1" pos="110" show="1" value="1" unmaskedvalue="12"/>
+        <field name="sccp.called.pci" showname=".... ...0 = Point Code Indicator: Point Code not present (0x00)" size="1" pos="110" show="0" value="0" unmaskedvalue="12"/>
+      </field>
+      <field name="sccp.called.ssn" showname="SubSystem Number: HLR (Home Location Register) (6)" size="1" pos="111" show="6" value="06"/>
+      <field name="sccp.ssn" showname="Called or Calling SubSystem Number: HLR (Home Location Register) (6)" hide="yes" size="1" pos="111" show="6" value="06"/>
+      <field name="" show="Linked to TCAP, TCAP SSN linked to GSM_MAP" size="1" pos="111" value="06"/>
+      <field name="" show="Global Title 0x4 (9 bytes)" size="9" pos="112" value="001104976216766207">
+        <field name="sccp.called.tt" showname="Translation Type: 0x00" size="1" pos="112" show="0" value="00"/>
+        <field name="sccp.called.np" showname="0001 .... = Numbering Plan: ISDN/telephony (0x01)" size="1" pos="113" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.called.es" showname=".... 0001 = Encoding Scheme: BCD, odd number of digits (0x01)" size="1" pos="113" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.called.nai" showname=".000 0100 = Nature of Address Indicator: International number (0x04)" size="1" pos="114" show="4" value="4" unmaskedvalue="04"/>
+        <field name="sccp.called.digits" showname="Called Party Digits: 79266167267" size="6" pos="115" show="79266167267" value="976216766207">
+          <field name="sccp.digits" showname="Called or Calling GT Digits: 79266167267" size="6" pos="115" show="79266167267" value="976216766207"/>
+          <field name="sccp.called.digits.length" showname="Number of Called Party Digits: 11" size="6" pos="115" show="11" value="976216766207"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="115" value="97"/>
+        </field>
+      </field>
+    </field>
+    <field name="sccp.parameter_length" showname="Calling Party Address length: 11" hide="yes" size="1" pos="121" show="11" value="0b"/>
+    <field name="" show="Calling Party address (11 bytes)" size="11" pos="122" value="1208001104971299009006">
+      <field name="" show="Address Indicator" size="1" pos="122" value="12">
+        <field name="sccp.calling.reserved" showname="0... .... = Reserved for national use: 0x00" size="1" pos="122" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.calling.ri" showname=".0.. .... = Routing Indicator: Route on GT (0x00)" size="1" pos="122" show="0" value="0" unmaskedvalue="12"/>
+        <field name="sccp.calling.gti" showname="..01 00.. = Global Title Indicator: Translation Type, Numbering Plan, Encoding Scheme, and Nature of Address Indicator included (0x04)" size="1" pos="122" show="4" value="4" unmaskedvalue="12"/>
+        <field name="sccp.calling.ssni" showname=".... ..1. = SubSystem Number Indicator: SSN present (0x01)" size="1" pos="122" show="1" value="1" unmaskedvalue="12"/>
+        <field name="sccp.calling.pci" showname=".... ...0 = Point Code Indicator: Point Code not present (0x00)" size="1" pos="122" show="0" value="0" unmaskedvalue="12"/>
+      </field>
+      <field name="sccp.calling.ssn" showname="SubSystem Number: MSC (Mobile Switching Center) (8)" size="1" pos="123" show="8" value="08"/>
+      <field name="sccp.ssn" showname="Called or Calling SubSystem Number: MSC (Mobile Switching Center) (8)" hide="yes" size="1" pos="123" show="8" value="08"/>
+      <field name="" show="Linked to TCAP, TCAP SSN linked to GSM_MAP" size="1" pos="123" value="08"/>
+      <field name="" show="Global Title 0x4 (9 bytes)" size="9" pos="124" value="001104971299009006">
+        <field name="sccp.calling.tt" showname="Translation Type: 0x00" size="1" pos="124" show="0" value="00"/>
+        <field name="sccp.calling.np" showname="0001 .... = Numbering Plan: ISDN/telephony (0x01)" size="1" pos="125" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.calling.es" showname=".... 0001 = Encoding Scheme: BCD, odd number of digits (0x01)" size="1" pos="125" show="1" value="1" unmaskedvalue="11"/>
+        <field name="sccp.calling.nai" showname=".000 0100 = Nature of Address Indicator: International number (0x04)" size="1" pos="126" show="4" value="4" unmaskedvalue="04"/>
+        <field name="sccp.calling.digits" showname="Calling Party Digits: 79219900096" size="6" pos="127" show="79219900096" value="971299009006">
+          <field name="sccp.digits" showname="Called or Calling GT Digits: 79219900096" size="6" pos="127" show="79219900096" value="971299009006"/>
+          <field name="sccp.calling.digits.length" showname="Number of Calling Party Digits: 11" size="6" pos="127" show="11" value="971299009006"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="127" value="97"/>
+        </field>
+      </field>
+    </field>
+    <field name="sccp.parameter_length" showname="Data length: 69" hide="yes" size="1" pos="133" show="69" value="45"/>
+  </proto>
+  <proto name="tcap" showname="Transaction Capabilities Application Part" size="69" pos="134">
+    <field name="tcap.begin_element" showname="begin" size="67" pos="136" show="" value="">
+      <field name="" show="Source Transaction ID" size="6" pos="136" value="480493d22811">
+        <field name="tcap.tid" showname="Transaction Id: 93d22811" hide="yes" size="4" pos="138" show="93:d2:28:11" value="93d22811"/>
+        <field name="tcap.otid" showname="otid: 93d22811" size="4" pos="138" show="93:d2:28:11" value="93d22811"/>
+      </field>
+      <field name="tcap.oid" showname="oid: 0.0.17.773.1.1.1 (id-as-dialogue)" size="7" pos="148" show="0.0.17.773.1.1.1" value="00118605010101"/>
+      <field name="tcap.dialogueRequest_element" showname="dialogueRequest" size="11" pos="159" show="" value="">
+        <field name="tcap.application_context_name" showname="application-context-name: 0.4.0.0.1.0.20.3 (shortMsgGatewayContext-v3)" size="7" pos="163" show="0.4.0.0.1.0.20.3" value="04000001001403"/>
+      </field>
+      <field name="tcap.components" showname="components: 1 item" size="31" pos="172" show="1" value="a11d0201ff02012d30158007919762167662f78101008207919712990040f1">
+        <field name="tcap.Component" showname="Component: invoke (1)" size="29" pos="174" show="1" value="0201ff02012d30158007919762167662f78101008207919712990040f1">
+          <field name="tcap.invoke_element" showname="invoke" size="29" pos="174" show="" value="">
+            <field name="tcap.invokeID" showname="invokeID: -1" size="1" pos="176" show="-1" value="ff"/>
+            <field name="tcap.opCode" showname="opCode: localValue (0)" size="3" pos="177" show="0" value="02012d">
+              <field name="tcap.localValue" showname="localValue: 45" size="1" pos="179" show="45" value="2d"/>
+            </field>
+            <field name="" show="CONSTRUCTOR" size="23" pos="180" value="30158007919762167662f78101008207919712990040f1">
+              <field name="tcap.msgtype" showname="CONSTRUCTOR Tag" size="1" pos="180" show="16" value="30"/>
+              <field name="tcap.msgtype" showname="Tag: 0x00" size="1" pos="180" show="0" value="30"/>
+              <field name="tcap.len" showname="Length: 21" size="1" pos="181" show="21" value="15"/>
+              <field name="" show="Parameter (0x00)" size="9" pos="182" value="8007919762167662f7">
+                <field name="tcap.msgtype" showname="Tag: 0x00" size="1" pos="182" show="0" value="80"/>
+                <field name="tcap.len" showname="Length: 7" size="1" pos="183" show="7" value="07"/>
+              </field>
+              <field name="tcap.data" showname="Data: 91" size="1" pos="184" show="91" value="91"/>
+              <field name="" show="Parameter (0x01)" size="3" pos="191" value="810100">
+                <field name="tcap.msgtype" showname="Tag: 0x01" size="1" pos="191" show="1" value="81"/>
+                <field name="tcap.len" showname="Length: 1" size="1" pos="192" show="1" value="01"/>
+              </field>
+              <field name="tcap.data" showname="Data: 00" size="1" pos="193" show="00" value="00"/>
+              <field name="" show="Parameter (0x02)" size="9" pos="194" value="8207919712990040f1">
+                <field name="tcap.msgtype" showname="Tag: 0x02" size="1" pos="194" show="2" value="82"/>
+                <field name="tcap.len" showname="Length: 7" size="1" pos="195" show="7" value="07"/>
+              </field>
+              <field name="tcap.data" showname="Data: 91" size="1" pos="196" show="91" value="91"/>
+            </field>
+          </field>
+        </field>
+      </field>
+    </field>
+  </proto>
+  <proto name="gsm_map" showname="GSM Mobile Application" size="31" pos="172">
+    <field name="gsm_map.old.Component" showname="Component: invoke (1)" size="29" pos="174" show="1" value="0201ff02012d30158007919762167662f78101008207919712990040f1">
+      <field name="gsm_old.invoke_element" showname="invoke" size="29" pos="174" show="" value="">
+        <field name="gsm_old.invokeID" showname="invokeID: -1" size="1" pos="176" show="-1" value="ff"/>
+        <field name="gsm_old.opCode" showname="opCode: localValue (0)" size="3" pos="177" show="0" value="02012d">
+          <field name="gsm_old.localValue" showname="localValue: sendRoutingInfoForSM (45)" size="1" pos="179" show="45" value="2d"/>
+        </field>
+        <field name="gsm_map.sm.msisdn" showname="msisdn: 919762167662f7" size="7" pos="184" show="91:97:62:16:76:62:f7" value="919762167662f7">
+          <field name="gsm_map.extension" showname="1... .... = Extension: No Extension" size="1" pos="184" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.nature_of_number" showname=".001 .... = Nature of number: International Number (0x01)" size="1" pos="184" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.number_plan" showname=".... 0001 = Number plan: ISDN/Telephony Numbering (Rec ITU-T E.164) (0x01)" size="1" pos="184" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.address.digits" showname="Address digits: 79266167267" size="6" pos="185" show="79266167267" value="9762167662f7"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="185" value="97"/>
+        </field>
+        <field name="gsm_map.sm.sm_RP_PRI" showname="sm-RP-PRI: False" size="1" pos="193" show="0" value="00"/>
+        <field name="gsm_map.sm.serviceCentreAddress" showname="serviceCentreAddress: 919712990040f1" size="7" pos="196" show="91:97:12:99:00:40:f1" value="919712990040f1">
+          <field name="gsm_map.extension" showname="1... .... = Extension: No Extension" size="1" pos="196" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.nature_of_number" showname=".001 .... = Nature of number: International Number (0x01)" size="1" pos="196" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.number_plan" showname=".... 0001 = Number plan: ISDN/Telephony Numbering (Rec ITU-T E.164) (0x01)" size="1" pos="196" show="1" value="1" unmaskedvalue="91"/>
+          <field name="gsm_map.address.digits" showname="Address digits: 79219900041" size="6" pos="197" show="79219900041" value="9712990040f1"/>
+          <field name="" show="Country Code: 7 Russian Federation, Kazakstan (Republic of) (length 1)" size="1" pos="197" value="97"/>
+        </field>
+      </field>
+    </field>
+  </proto>
+</packet>
+</pdml>

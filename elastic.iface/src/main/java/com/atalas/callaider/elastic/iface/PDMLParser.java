@@ -77,9 +77,7 @@ public class PDMLParser {
 		    	
 		    case XMLEvent.START_ELEMENT: // проверяем что элемент нам интересен
 		    	if(ignoreCounter<2){
-			    	String name = cr.getAttributeValue(null, "name");	
-			    	if( "".equals(name))
-			    		name = "x";
+			    	String name = cr.getAttributeValue(null, "name");		    
 			    	FieldMapping llElemnt = fieldsTree.lowerLevelMap == null ? null : fieldsTree.lowerLevelMap.get(name);
 					if(null!=llElemnt){//интересный элемент
 						if( Type.CONTAINER == llElemnt.type ){
@@ -111,7 +109,7 @@ public class PDMLParser {
 		
 		if( null!=fieldVal) {
 			if( Type.INT == fielsMap.type ){
-				fieldContainer.put(fielldName, Long.parseLong(fieldVal));
+				fieldContainer.put(fielldName, Integer.parseInt(fieldVal));
 			} else if( Type.FLOAT == fielsMap.type ){
 				fieldContainer.put(fielldName, Double.parseDouble(fieldVal));
 			} else if( Type.DATE == fielsMap.type ){

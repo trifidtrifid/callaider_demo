@@ -1,0 +1,16 @@
+frame frame.time STRING
+frame frame.time_epoch FLOAT
+
+sccp x sccp.called.ssn INT
+sccp x x sccp.called.digits INT 
+sccp x sccp.calling.ssn INT
+sccp x x sccp.calling.digits INT 
+tcap tcap.begin_element tcap.tid STRING
+
+gsm_map gsm_map.old.Component gsm_old.invoke_element gsm_old.opCode gsm_old.localValue STRING
+gsm_map gsm_map.old.Component gsm_old.invoke_element gsm_map.ch.msisdn gsm_map.address.digits STRING
+gsm_map gsm_map.old.Component gsm_old.returnResultLast_element gsm_old.resultretres_element gsm_old.opCode gsm_old.localValue STRING
+gsm_map gsm_map.old.Component gsm_old.returnResultLast_element gsm_old.resultretres_element gsm_map.tbcd_digits STRING
+gsm_map gsm_map.old.Component gsm_old.returnResultLast_element gsm_old.resultretres_element gsm_map.ch.subscriberInfo_element gsm_map.ms.locationInformation_element  gsm_map.ms.vlr_number gsm_map.address.digits STRING
+gsm_map gsm_map.old.Component gsm_old.invoke_element gsm_map.tbcd_digits STRING
+gsm_map gsm_map.old.Component gsm_old.returnResultLast_element gsm_old.resultretres_element gsm_map.ms.subscriberInfo_element gsm_map.ms.locationInformation_element gsm_map.ms.cellGlobalIdOrServiceAreaIdOrLAI gsm_map.cellGlobalIdOrServiceAreaIdFixedLength STRING

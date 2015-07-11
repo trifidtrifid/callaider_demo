@@ -1,8 +1,9 @@
 package com.atalas.callaider.elastic.iface;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,48 +13,93 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 
-import com.atalas.callaider.elastic.iface.PDMLParser.FieldMapping.Type;
+import org.apache.log4j.Logger;
+
+import com.atalas.callaider.elastic.iface.FieldMapping.Type;
+import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 
 public class PDMLParser {
 	
-	public static interface PacketListener {
-		public void processNextPacket(Map<String, Object> packet);
-	}
-	public static class FieldMapping {
-		public FieldMapping(Type type, Map<String, FieldMapping> lowerLevelMap) {
-			this.type = type;
-			this.lowerLevelMap = lowerLevelMap;
-		}
-		public static enum Type { INT, STRING, DATE, FLOAT, CONTAINER };
-		public Type type;		
-		public Map<String,FieldMapping> lowerLevelMap;
-	}
+	private static Logger logger = Logger.getLogger(PDMLParser.class);
+	private final IdGenerator idGenerator = new IdGenerator();
 	
-	private XMLInputFactory f;
-	private XMLStreamReader r;
-	private FieldMapping fieldsTree;
-
-	public PDMLParser( InputStream is, FieldMapping fieldsTree) throws XMLStreamException{
-		f = XMLInputFactory.newInstance();
-		r = f.createXMLStreamReader( is );
-		this.fieldsTree = fieldsTree;
+	public static interface PacketListener {
+		public void processNextPacket( List<ProtocolContainer> packet);
 	}
+	private XMLInputFactory xmlInputFactory;
+	private XMLStreamReader xmlStreamReader;
+	private Map<String,ProtocolContainer.Description> protocolsStack;
+
+	//==========================================================================================================================
+	
+	public PDMLParser( InputStream is, Map<String,ProtocolContainer.Description> protocolsStack) throws XMLStreamException{
+		xmlInputFactory = XMLInputFactory.newInstance();
+		xmlStreamReader = xmlInputFactory.createXMLStreamReader( is );
+		this.protocolsStack = protocolsStack;
+	}
+	//==========================================================================================================================
 	
 	public void parse( PacketListener pl ) throws XMLStreamException{ 
-		while(r.hasNext()){
-			if(XMLEvent.START_ELEMENT==r.next() 
-					&& r.hasName() && r.getName().toString().equals("packet")){
-				pl.processNextPacket( parse(fieldsTree,r));				
+				
+		while(xmlStreamReader.hasNext()){
+			if(XMLEvent.START_ELEMENT==xmlStreamReader.next() 
+					&& xmlStreamReader.hasName() && xmlStreamReader.getName().toString().equals("packet")){
+		
+				List<ProtocolContainer> protocolsL = new ArrayList<>();
+				int currentProtoLevel=0;
+				String lastId = null;
+				String lastProto = null;
+				while(xmlStreamReader.hasNext()){
+					if(XMLEvent.START_ELEMENT==xmlStreamReader.next() 
+							&& xmlStreamReader.hasName() && xmlStreamReader.getName().toString().equals("proto")){
+					
+						String protoName = xmlStreamReader.getAttributeValue(null, "name");
+						if( protocolsStack.containsKey(protoName)){
+							Description pd = protocolsStack.get(protoName);
+							String id = idGenerator.nextId();
+							String parentId = null;
+							String parentProto = null;
+							int level = pd.getLevel();
+							if( level > currentProtoLevel){ //protocol should use last ID as parent
+								parentId = lastId; 
+								parentProto = lastProto;
+								
+							} else { //looking for the last lower level
+								for( int idx = protocolsL.size()-1; idx >= 0; idx--) {
+									ProtocolContainer oldProtoContainer = protocolsL.get(idx);
+									if( oldProtoContainer.getDescription().getLevel() < level ){
+										parentId = oldProtoContainer.getId();
+										parentProto = oldProtoContainer.getDescription().getName();
+									}
+								}								
+							}
+							ProtocolContainer protocolCont = new ProtocolContainer( protoName, id, parentId, pd );
+							parse(protocolCont, pd.getFields(), xmlStreamReader);
+							try {
+								if( null!=parentProto) protocolCont.setField("parent", parentProto);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							protocolsL.add( protocolCont);
+							lastId = id;
+							lastProto = protoName;
+							currentProtoLevel = level;
+						}
+					}
+				}
+				pl.processNextPacket( protocolsL );
 			} 
 		}
 	} 
 	
-	public List<Map<String,Object>> parse() throws XMLStreamException{ /*будет запускать в потоке */
-		final List<Map<String,Object>> packetList = new ArrayList<Map<String,Object>>();
+	//==========================================================================================================================
+	
+	public List<List<ProtocolContainer>> parse() throws XMLStreamException{ 
+		final List<List<ProtocolContainer>> packetList = new ArrayList<List<ProtocolContainer>>();
 		parse( new PacketListener() {
 			
 			@Override
-			public void processNextPacket(Map<String, Object> packet) {
+			public void processNextPacket(List<ProtocolContainer> packet) {
 				packetList.add(packet);				
 			}
 		});
@@ -62,8 +108,7 @@ public class PDMLParser {
 	
 	//==========================================================================================================================
 		
-	/*запускается в рекурсии*/
-	private Map<String,Object> parse(FieldMapping fieldsTree, XMLStreamReader cr) throws XMLStreamException{ 
+	private Map<String,Object> parse(ProtocolContainer pc, FieldMapping fieldsTree, XMLStreamReader cr) throws XMLStreamException{ 
 		int ignoreCounter = 1;
 		Map<String,Object> nextElem = new HashMap<>();
 		while(cr.hasNext()) {
@@ -83,14 +128,16 @@ public class PDMLParser {
 			    	FieldMapping llElemnt = fieldsTree.lowerLevelMap == null ? null : fieldsTree.lowerLevelMap.get(name);
 					if(null!=llElemnt){//интересный элемент
 						if( Type.CONTAINER == llElemnt.type ){
-							Map<String, Object> llInfo = parse( llElemnt, cr);
-							if( !llInfo.isEmpty()){
-								appendChildElement(nextElem, name, llInfo);									
-							}
+							parse( pc, llElemnt, cr);
 							ignoreCounter--;
 						} else {
-							String val = r.getAttributeValue(null, "show");
-							fieldContainer(nextElem, name, val, llElemnt);
+							String val = xmlStreamReader.getAttributeValue(null, "show");
+							try {
+								setTheField(pc, name, val, llElemnt);
+							} catch (NumberFormatException | IOException e) {
+								logger.error("Failed to setField: "+name+" value:"+val+" : " +e.getMessage(), e);
+								e.printStackTrace();
+							}
 						}
 					} else { //неинтересный элемент					
 					}
@@ -107,36 +154,21 @@ public class PDMLParser {
 
 	//==========================================================================================================================
 	
-	private void fieldContainer(Map<String, Object> fieldContainer,	String fielldName, String fieldVal, FieldMapping fielsMap) {
+	private void setTheField(ProtocolContainer pc, String fielldName, String fieldVal, FieldMapping fielsMap) throws NumberFormatException, IOException {
+		if( fielsMap.shortName != null)
+			fielldName = fielsMap.shortName;
 		
 		if( null!=fieldVal) {
 			if( Type.INT == fielsMap.type ){
-				fieldContainer.put(fielldName, Long.parseLong(fieldVal));
+				pc.setField(fielldName, Long.parseLong(fieldVal));
 			} else if( Type.FLOAT == fielsMap.type ){
-				fieldContainer.put(fielldName, Double.parseDouble(fieldVal));
+				pc.setField(fielldName, Double.parseDouble(fieldVal));
 			} else if( Type.DATE == fielsMap.type ){
-				fieldContainer.put(fielldName, Date.parse(fieldVal));
+				Calendar cldr = Calendar.getInstance();
+				cldr.setTimeInMillis( Long.parseLong( fieldVal.substring(0,10)) * 1000 + Integer.parseInt( fieldVal.substring(11,14) ));
+				pc.setField(fielldName, cldr.getTime());
 			} else {
-				fieldContainer.put(fielldName, fieldVal);
-			}
-		}
-	}
-
-	//==========================================================================================================================
-	
-	private void appendChildElement(Map<String, Object> parentElement,
-			String name, Map<String, Object> childElement) {
-		Object oldValue = parentElement.get(name);
-		if( null==oldValue )
-			parentElement.put(name,childElement);
-		else {// заменяем списком
-			if( oldValue instanceof List){
-				((List)oldValue).add(childElement);
-			} else {
-				List elemList = new ArrayList<Object>();
-				elemList.add(oldValue);
-				elemList.add(childElement);
-				parentElement.put(name,elemList);
+				pc.setField(fielldName, fieldVal);
 			}
 		}
 	}

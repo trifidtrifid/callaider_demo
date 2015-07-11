@@ -2,14 +2,17 @@ package com.atalas.callaider.elastic.iface;
 
 import java.util.Map.Entry;
 
-import com.atalas.callaider.elastic.iface.PDMLParser.FieldMapping;
-import com.atalas.callaider.elastic.iface.PDMLParser.FieldMapping.Type;
+import com.atalas.callaider.elastic.iface.FieldMapping.Type;
+import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
+
 
 public class MappingCreator {
 
-	public static String createMapping( String typeName, FieldMapping mapping){
+	public static String createMapping( String typeName, Description description){
 		String mappingString = "{\"" + typeName + "\" : { \"properties\" : {";
-		mappingString = processTheFIeldMap(mapping, mappingString);
+		
+		mappingString = processTheFIeldMap(description.getFields(), mappingString);
+		
 		if( mappingString.endsWith(","))
 			mappingString = mappingString.substring(0,mappingString.length()-1);
 		mappingString += "}}}";
@@ -23,7 +26,11 @@ public class MappingCreator {
 			if( value.type == Type.CONTAINER && null!=value.lowerLevelMap && !value.lowerLevelMap.isEmpty()){
 				mappingString = processTheFIeldMap(value, mappingString);
 			} else {
-				mappingString += "\""+fme.getKey()+"\":{ \"type\": \"";
+				String name = fme.getValue().shortName;
+				if (null == name) 
+					name = fme.getKey();
+				
+				mappingString += "\""+name+"\":{ \"type\": \"";
 				switch( value.type){
 				case INT:	
 					mappingString += "integer\"";

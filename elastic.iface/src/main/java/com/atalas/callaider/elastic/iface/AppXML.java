@@ -36,15 +36,21 @@ public class AppXML {
 		if( args.length < 2 ){
 			System.err.println("USage java -jar xxx.jar <input file name or - (stdin)> <fields.map.file>");
 		}
+
     	BasicConfigurator.configure();
     	
+    	String argsLine = "";
+    	for( String arg: args){argsLine+= " '" + arg +"'";}
+    	System.out.println("========= Args.length="+args.length+" args: "+argsLine );
+    	
     	Client client = getClient();
+
 		try{
     		app.loadMapping(client, args[1]);
     		InputStream is = args[0].equals("-") ? System.in : new FileInputStream(args[0]);
 			
     		PDMLParser pdmlP = new PDMLParser(is, app.protocolMap);
-     		PacketProcessor pp = new PacketProcessor(client, app.indexName, app.documentType);
+     		PacketProcessor pp = new PacketProcessor(client, app.indexName);
     		pdmlP.parse(pp);
     		
     	} catch(Exception io){

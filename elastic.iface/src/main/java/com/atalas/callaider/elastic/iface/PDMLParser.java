@@ -49,6 +49,7 @@ public class PDMLParser {
 				int currentProtoLevel=0;
 				String lastId = null;
 				String lastProto = null;
+				Object timestamp = null;
 				while(xmlStreamReader.hasNext()){
 					if(XMLEvent.START_ELEMENT==xmlStreamReader.next() 
 							&& xmlStreamReader.hasName() && xmlStreamReader.getName().toString().equals("proto")){
@@ -75,6 +76,16 @@ public class PDMLParser {
 							}
 							ProtocolContainer protocolCont = new ProtocolContainer( protoName, id, parentId, pd );
 							parse(protocolCont, pd.getFields(), xmlStreamReader);
+							if( timestamp == null ){
+								timestamp = protocolCont.getField("_timestamp");
+							} else {
+								try {
+									protocolCont.setField("_timestamp", timestamp);
+								} catch (IOException e) {
+									logger.error("Failed to set timestamp."+ e.getMessage(),e);									
+								}
+							}
+									
 							try {
 								if( null!=parentProto) protocolCont.setField("parent", parentProto);
 							} catch (IOException e) {
@@ -122,7 +133,9 @@ public class PDMLParser {
 		    	
 		    case XMLEvent.START_ELEMENT: // проверяем что элемент нам интересен
 		    	if(ignoreCounter<2){
-			    	String name = cr.getAttributeValue(null, "name");		    
+			    	String name = cr.getAttributeValue(null, "name");
+			    	if("".equals(name))
+			    		name = "x";
 			    	FieldMapping llElemnt = fieldsTree.lowerLevelMap == null ? null : fieldsTree.lowerLevelMap.get(name);
 					if(null!=llElemnt){//интересный элемент
 						if( Type.CONTAINER == llElemnt.type ){

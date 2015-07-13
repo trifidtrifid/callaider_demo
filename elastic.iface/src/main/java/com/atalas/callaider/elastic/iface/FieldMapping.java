@@ -67,20 +67,32 @@ public class FieldMapping {
 	}
 
 	private static void postThePart( Map<String,FieldMapping> fieldMap, String[] parts, int offset) {
+		String name,typeVal,shortName;
+		name = typeVal = shortName = null;
+		
+		if( parts.length - offset >= 2){
+			typeVal = parts[offset+1];
+			name = parts[offset];
+		}
+			
 		if( parts.length - offset == 2 ){ //field name and field type
-			String typeVal = parts[offset+1];
-			String shortName = null;
+			typeVal = parts[offset+1];
 			if(-1!=typeVal.indexOf(":")){
 				shortName = typeVal.substring(typeVal.indexOf(":")+1);
 				typeVal = typeVal.substring(0,typeVal.indexOf(":"));				
 			}
-			fieldMap.put( "\"\"".equals(parts[offset]) ? "x" : parts[offset], 
+			fieldMap.put( "\"\"".equals(name) ? "x" : name, 
 					new FieldMapping(Type.valueOf(typeVal), null, shortName));
 		} if( parts.length - offset > 2 ){
-			FieldMapping childMap = fieldMap.get(parts[offset]);
+
+			if(-1!=name.indexOf(":")){
+				shortName = name.substring(name.indexOf(":")+1);
+				name = name.substring(0,name.indexOf(":"));				
+			}
+			FieldMapping childMap = fieldMap.get(name);
 			if( null == childMap ){
-				childMap = new FieldMapping(Type.CONTAINER, new HashMap<String, FieldMapping>(), null);
-				fieldMap.put(parts[offset],childMap);				
+				childMap = new FieldMapping(Type.CONTAINER, new HashMap<String, FieldMapping>(), shortName);
+				fieldMap.put(name,childMap);				
 			}
 			postThePart(childMap.lowerLevelMap, parts, offset+1);
 		}

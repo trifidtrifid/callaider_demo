@@ -25,6 +25,10 @@ public class MappingCreator {
 			FieldMapping value = fme.getValue();
 			if( value.type == Type.CONTAINER && null!=value.lowerLevelMap && !value.lowerLevelMap.isEmpty()){
 				mappingString = processTheFIeldMap(value, mappingString);
+				if( value.shortName!=null ){
+					mappingString += "\""+value.shortName+"\":{ \"index\":\"not_analyzed\", \"type\": \"string\"},";
+				}
+					
 			} else {
 				String name = fme.getValue().shortName;
 				if (null == name) 

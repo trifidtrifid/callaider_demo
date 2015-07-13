@@ -153,6 +153,18 @@ public class PDMLParser {
 							: fieldsTree.lowerLevelMap.get(name);
 					if (null != llElemnt) {// интересный элемент
 						if (Type.CONTAINER == llElemnt.type) {
+							if( null!=llElemnt.shortName){
+								try {
+									setTheField(pc, llElemnt.shortName, name, llElemnt);
+								} catch (NumberFormatException | IOException e) {
+									logger.error(
+											"Failed to setField: " + name
+													+ " as a container presence flag: "
+													+ e.getMessage(), e);
+									e.printStackTrace();
+								}
+								
+							}
 							parse(pc, llElemnt, cr);
 							ignoreCounter--;
 						} else {
@@ -192,8 +204,11 @@ public class PDMLParser {
 		if (null != fieldVal) {
 			if (Type.INT == fielsMap.type) {
 				pc.setField(fielldName, Long.parseLong(fieldVal));
+			
 			} else if (Type.FLOAT == fielsMap.type) {
 				pc.setField(fielldName, Double.parseDouble(fieldVal));
+			} else if (Type.CONTAINER == fielsMap.type) {
+				pc.setField(fielldName, fieldVal);			
 			} else if (Type.DATE == fielsMap.type) {
 				Calendar cldr = Calendar.getInstance();
 				cldr.setTimeInMillis(Long.parseLong(fieldVal.substring(0, 10))

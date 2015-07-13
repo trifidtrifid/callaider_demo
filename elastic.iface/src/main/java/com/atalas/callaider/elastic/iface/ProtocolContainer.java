@@ -28,7 +28,7 @@ public class ProtocolContainer {
 		fields.put(name, value);	
 	}
 	
-	public <T> T getTheField(String key){		
+	public <T> T getTheField(String key){
 		return (T)fields.get(key); 
 	}
 	

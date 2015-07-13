@@ -35,6 +35,7 @@ public class AppXML {
 		AppXML app = new AppXML();
 		if( args.length < 2 ){
 			System.err.println("USage java -jar xxx.jar <input file name or - (stdin)> <fields.map.file>");
+			return;
 		}
 
     	BasicConfigurator.configure();

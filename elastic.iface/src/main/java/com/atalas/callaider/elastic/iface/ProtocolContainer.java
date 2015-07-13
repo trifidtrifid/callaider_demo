@@ -25,7 +25,11 @@ public class ProtocolContainer {
 		fields.put(name, value);
 	}
 	public void setField( String name, Object value) throws IOException{
-		fields.put(name, value);
+		fields.put(name, value);	
+	}
+	
+	public <T> T getTheField(String key){		
+		return (T)fields.get(key); 
 	}
 	
 	public Object getField(String name){

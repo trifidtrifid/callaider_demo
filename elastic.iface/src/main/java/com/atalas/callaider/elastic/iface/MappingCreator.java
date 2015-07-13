@@ -30,7 +30,7 @@ public class MappingCreator {
 				if (null == name) 
 					name = fme.getKey();
 				
-				mappingString += "\""+name+"\":{ \"type\": \"";
+				mappingString += "\""+name+"\":{ \"index\":\"not_analyzed\", \"type\": \"";
 				switch( value.type){
 				case INT:	
 					mappingString += "integer\"";

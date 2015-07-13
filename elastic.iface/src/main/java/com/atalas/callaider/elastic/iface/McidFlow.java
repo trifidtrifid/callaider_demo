@@ -1,15 +1,14 @@
 package com.atalas.callaider.elastic.iface;
 import java.util.Map;
-import java.util.List;;
 
 public class McidFlow {
 
-	public class GsmTransaction {
-		Map<String, Object> m_request;
-		Map<String, Object> m_response;
+	public static class GsmTransaction {
+		public Map<String, Object> m_request;
+		public Map<String, Object> m_response;
 	}
 
-	List<GsmTransaction> m_transactions;
+	public Map<String, GsmTransaction> m_transactions;
 		
 	
 }

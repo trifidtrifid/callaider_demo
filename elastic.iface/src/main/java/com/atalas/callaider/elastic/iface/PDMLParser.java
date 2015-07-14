@@ -15,8 +15,10 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.apache.log4j.Logger;
 
-import com.atalas.callaider.elastic.iface.FieldMapping.Type;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
+import com.atalas.callaider.elastic.iface.storage.FieldMapping;
+import com.atalas.callaider.elastic.iface.storage.IdGenerator;
+import com.atalas.callaider.elastic.iface.storage.FieldMapping.Type;
 
 public class PDMLParser {
 

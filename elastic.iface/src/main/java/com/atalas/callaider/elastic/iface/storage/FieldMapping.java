@@ -1,4 +1,4 @@
-package com.atalas.callaider.elastic.iface;
+package com.atalas.callaider.elastic.iface.storage;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.atalas.callaider.elastic.iface.ProtocolContainer;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 
 public class FieldMapping {

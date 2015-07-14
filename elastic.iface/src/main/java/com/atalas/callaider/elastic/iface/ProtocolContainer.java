@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.atalas.callaider.elastic.iface.storage.FieldMapping;
+
 public class ProtocolContainer {
 	private final Description description;
 	private final Map<String,Object> fields;

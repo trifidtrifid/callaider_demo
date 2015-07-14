@@ -18,7 +18,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import com.atalas.callaider.elastic.iface.PDMLParser.PacketListener;
 
-class PacketProcessor implements PacketListener {
+public class PacketProcessor implements PacketListener {
 	private final Client client;
 	private final String indexName;
 	private final SimpleDateFormat sdf;

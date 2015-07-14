@@ -2,8 +2,9 @@ package com.atalas.callaider.elastic.iface;
 
 import java.util.Map.Entry;
 
-import com.atalas.callaider.elastic.iface.FieldMapping.Type;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
+import com.atalas.callaider.elastic.iface.storage.FieldMapping;
+import com.atalas.callaider.elastic.iface.storage.FieldMapping.Type;
 
 
 public class MappingCreator {

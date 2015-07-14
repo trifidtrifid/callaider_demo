@@ -1,4 +1,4 @@
-package com.atalas.callaider.elastic.iface;
+package com.atalas.callaider.elastic.iface.storage;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,6 +15,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.search.SearchHit;
 
+import com.atalas.callaider.elastic.iface.ProtocolContainer;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 import com.google.gson.Gson;
 
@@ -45,7 +46,9 @@ public class StorageInterface {
 
             String sourceAsString = hit.getSourceAsString();
             if (sourceAsString != null) {
-            	rslt.add(gson.fromJson( sourceAsString, clazz));                
+            	T nextObj = gson.fromJson( sourceAsString, clazz);            	
+            	setId(nextObj, hit.getId());
+				rslt.add(nextObj);                
             }
         }        
 		return rslt;
@@ -68,17 +71,38 @@ public class StorageInterface {
 	private <T> String getId(T object, Class<? extends Object> oclz) {
 		String id = null;
 		try {
-			Field idFld = oclz.getField("id");
+			Field idFld = oclz.getField("_id");
 			if( idFld.isAccessible() )
 				id = ""+idFld.get( object );
 			else {			
-				Method getIdMthd = oclz.getMethod("getId", new Class[]{});
+				Method getIdMthd = oclz.getMethod("get_Id", new Class[]{});
 				if( getIdMthd.isAccessible()){
 					id = ""+getIdMthd.invoke(object, new Object[]{});
 				}
 			}
 		} catch (Exception e){}
 		return id;
+	}
+	
+	private <T> void setId(T object, String id) {
+		/*if( null!=id){
+			try {
+				Field idFld = object.getClass().getField("id");
+				if( idFld.isAccessible() )
+					idFld.set(object, id);
+				else {			
+					Method setIdMthd;
+					try {
+						setIdMthd = object.getClass().getMethod("setId", new Class[]{String.class});
+					} catch (Exception e) {						
+						e.printStackTrace();
+					}
+					if( setIdMthd.isAccessible()){
+						setIdMthd.invoke(object, new Object[]{id});
+					}
+				}
+			} catch (Exception e){}
+		}*/
 	}
 	
 	public <T> String updateObject( T object ){

@@ -15,6 +15,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
+import com.atalas.callaider.elastic.iface.storage.FieldMapping;
+
 public class AppXML {
 	
 	static Logger logger = Logger.getLogger(AppXML.class.getName()) ;

@@ -1,4 +1,4 @@
-package com.atalas.callaider.elastic.iface;
+package com.atalas.callaider.elastic.iface.storage;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

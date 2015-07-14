@@ -4,7 +4,9 @@ import java.util.List;;
 
 public class McidFlow {
 
-	public class GsmTransaction {
+	public String id;
+	
+	public static class GsmTransaction {
 		Map<String, Object> m_request;
 		Map<String, Object> m_response;
 	}

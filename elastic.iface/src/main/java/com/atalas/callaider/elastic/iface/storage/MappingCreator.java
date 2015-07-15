@@ -1,9 +1,9 @@
-package com.atalas.callaider.elastic.iface;
+package com.atalas.callaider.elastic.iface.storage;
 
 import java.util.Map.Entry;
 
+import com.atalas.callaider.elastic.iface.ProtocolContainer;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
-import com.atalas.callaider.elastic.iface.storage.FieldMapping;
 import com.atalas.callaider.elastic.iface.storage.FieldMapping.Type;
 
 

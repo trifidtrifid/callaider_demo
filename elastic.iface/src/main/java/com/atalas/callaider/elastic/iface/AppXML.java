@@ -16,6 +16,8 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
 import com.atalas.callaider.elastic.iface.storage.FieldMapping;
+import com.atalas.callaider.elastic.iface.storage.MappingCreator;
+import com.atalas.callaider.flow.mcid.McidPacketProcessor;
 
 public class AppXML {
 	
@@ -52,8 +54,9 @@ public class AppXML {
     		app.loadMapping(client, args[1]);
     		InputStream is = args[0].equals("-") ? System.in : new FileInputStream(args[0]);
 			
-    		PDMLParser pdmlP = new PDMLParser(is, app.protocolMap);
-     		PacketProcessor pp = new PacketProcessor(client, app.indexName);
+    		PDMLParser pdmlP = new PDMLParser(is, app.protocolMap);    		
+     		//PacketProcessor pp = new PacketProcessor(client, app.indexName);
+    		PacketProcessor pp = new McidPacketProcessor(client, app.indexName);
     		pdmlP.parse(pp);
     		
     	} catch(Exception io){

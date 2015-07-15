@@ -1,5 +1,5 @@
 package com.atalas.callaider.elastic.iface.storage;
 
-public interface StorageIndexedInterface {
-	public String _id = null;
+public abstract class StorageIndexedInterface {
+	public String id = null;	
 }

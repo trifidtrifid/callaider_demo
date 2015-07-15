@@ -1,12 +1,18 @@
 package com.atalas.callaider.elastic.iface.storage;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+import org.elasticsearch.action.ListenableActionFuture;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -15,97 +21,169 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.search.SearchHit;
 
-import com.atalas.callaider.elastic.iface.ProtocolContainer;
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 import com.google.gson.Gson;
 
-
 public class StorageInterface {
-	
+
+	// private static Logger logger = Logger.getLogger(StorageInterface.class);
+
 	private final Client client;
 	private final Gson gson;
 	private final String index;
+	private final IdGenerator idGen;
 
-	public StorageInterface(Client client, Map<String, Description> protoMap, String index) {
+	public StorageInterface(Client client, Map<String, Description> protoMap,
+			String index) {
 
-		this.client = client;		
+		this.client = client;
 		this.gson = new Gson();
 		this.index = index;
+		this.idGen = new IdGenerator();
 	}
-	
-	public <T> List<T> searchObjects( Class<T> clazz, Map<String, Object> fields ){
-		
-		List<T> rslt = new ArrayList<T>();		
-		SearchRequestBuilder searchReq = client.prepareSearch( index ).setTypes(clazz.getSimpleName());
-		for( Entry<String,Object> fldEntry : fields.entrySet() )
-			searchReq.setPostFilter(FilterBuilders.termFilter(fldEntry.getKey(), fldEntry.getValue()));
-			
-		SearchResponse sr = searchReq.execute().actionGet();		
-		SearchHit[] results = sr.getHits().getHits();
-        for(SearchHit hit : results){
 
-            String sourceAsString = hit.getSourceAsString();
-            if (sourceAsString != null) {
-            	T nextObj = gson.fromJson( sourceAsString, clazz);            	
-            	setId(nextObj, hit.getId());
-				rslt.add(nextObj);                
-            }
-        }        
+	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> fields) {
+
+		List<T> rslt = new ArrayList<T>();
+		SearchRequestBuilder searchReq = client.prepareSearch(index).setTypes(
+				clazz.getSimpleName());
+		for (Entry<String, Object> fldEntry : fields.entrySet())
+			searchReq.setPostFilter(FilterBuilders.termFilter(
+					fldEntry.getKey(), fldEntry.getValue()));
+
+		SearchResponse sr = searchReq.execute().actionGet();
+		SearchHit[] results = sr.getHits().getHits();
+		for (SearchHit hit : results) {
+
+			String sourceAsString = hit.getSourceAsString();
+			if (sourceAsString != null) {
+				logger.debug("Search by '"+filterAsString(fields)+"' got object: "+sourceAsString);
+				T nextObj = gson.fromJson(sourceAsString, clazz);
+				setId(nextObj, hit.getId());
+				rslt.add(nextObj);
+			}
+		} 
+		if( results.length == 0){
+			logger.warn("Search by '"+filterAsString(fields)+"' got NOTHING");
+		}
 		return rslt;
 	}
+	// ================================================================================================
+	public <T> T searchSingleObjects(Class<T> clazz, Map<String, Object> fields) {
+		List<T> foundObjects = searchObjects(clazz, fields);
+		if(foundObjects.size() == 0){
+			logger.warn("No object "+clazz.getName()+" found by filter '"+filterAsString(fields)+"'");
+			return null;
+		} else if(foundObjects.size() > 1){
+			logger.warn("There are "+ foundObjects.size() +" "+clazz.getName()+" found by filter '"+filterAsString(fields)+"'");
+		}	
+		return foundObjects.get(0);
+	}
 	
-	//================================================================================================
-	
-	public <T> String saveObject( T object ){
+	private String filterAsString(Map<String,Object> filter){
+		String filterStr = "";
+		for (Entry<String, Object> fldEntry : filter.entrySet())
+			filterStr += fldEntry.getKey()+":" + fldEntry.getValue()+" ";
+		return filterStr;
+	}
+
+	// ================================================================================================
+
+	public <T> String saveObject(T object) {
+
 		Class<? extends Object> oclz = object.getClass();
 		String id = getId(object, oclz);
 		String simpleName = oclz.getSimpleName();
-		IndexRequestBuilder indexReq = client.prepareIndex(index, simpleName, id);
-		indexReq.setSource( gson.toJson(object) );
-		IndexResponse response = indexReq.execute()
-		        .actionGet();
+		if (null == id) {
+			id = idGen.nextId();
+			setId(object, id);
+		}
+		IndexRequestBuilder indexReq = client.prepareIndex(index, simpleName,id);
+		String json = gson.toJson(object);
+		logger.debug("Saved object '"+json+"'");
+		indexReq.setSource(json);
+		IndexResponse response = indexReq.execute().actionGet();
 		return response.getId();
 	}
-	
 
 	private <T> String getId(T object, Class<? extends Object> oclz) {
-		String id = null;
-		try {
-			Field idFld = oclz.getField("_id");
-			if( idFld.isAccessible() )
-				id = ""+idFld.get( object );
-			else {			
-				Method getIdMthd = oclz.getMethod("get_Id", new Class[]{});
-				if( getIdMthd.isAccessible()){
-					id = ""+getIdMthd.invoke(object, new Object[]{});
-				}
-			}
-		} catch (Exception e){}
-		return id;
+
+		if (object instanceof StorageIndexedInterface) {
+			return ((StorageIndexedInterface) object).id;
+		}
+		return null;
 	}
-	
+
 	private <T> void setId(T object, String id) {
-		/*if( null!=id){
-			try {
-				Field idFld = object.getClass().getField("id");
-				if( idFld.isAccessible() )
-					idFld.set(object, id);
-				else {			
-					Method setIdMthd;
-					try {
-						setIdMthd = object.getClass().getMethod("setId", new Class[]{String.class});
-					} catch (Exception e) {						
-						e.printStackTrace();
-					}
-					if( setIdMthd.isAccessible()){
-						setIdMthd.invoke(object, new Object[]{id});
-					}
-				}
-			} catch (Exception e){}
-		}*/
+		if (object instanceof StorageIndexedInterface) {
+			((StorageIndexedInterface) object).id = id;
+		}
 	}
-	
-	public <T> String updateObject( T object ){
-		return saveObject(object);		
+
+	public <T> String updateObject(T object) {
+		return saveObject(object);
 	}
+
+	public String createObjectMapping(Class objCls) {
+
+		String className = objCls.getSimpleName();
+		String mappingString = "{ \"" + className
+				+ "\" : { \"properties\" : { \"_id\" : {\"type\" : \"string\", \"store\" : true, \"copy_to\": \"id\" }, ";
+
+		for (Field fld : objCls.getFields()) {
+			Type fclass = fld.getType();
+			String fldName = fld.getName();
+			// if( fldName.equals("id")) continue;
+
+			if (fclass.equals(String.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"string\" },";
+			} else if (fclass.equals(Integer.class)
+					|| fclass.equals(Long.class)) {
+				mappingString += " \"" + fldName + "\": { \"type\":\"long\"},";
+			} else if (fclass.equals(Double.class)
+					|| fclass.equals(Float.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"double\"},";
+			} else if (fclass.equals(Boolean.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"boolean\"},";
+
+			} else if (!fld.getType().isArray()) {
+				mappingString += "\"" + fldName
+						+ "\": { \"type\":\"object\", \"properties\" : {";
+				mappingString += "}},";
+			}
+		}
+
+		if (mappingString.endsWith(","))
+			mappingString = mappingString.substring(0,
+					mappingString.length() - 1);
+		mappingString += "}}}";
+
+		// DELETE OLD INDEX
+		final IndicesExistsResponse res = client.admin().indices()
+				.prepareExists(index).execute().actionGet();
+		if (res.isExists()) {
+			final DeleteIndexRequestBuilder delIdx = client.admin().indices()
+					.prepareDelete(index);
+			delIdx.execute().actionGet();
+		}
+
+		final CreateIndexRequestBuilder createIndexRequestBuilder = client
+				.admin().indices().prepareCreate(index);
+
+		// MAPPING GOES HERE
+
+		createIndexRequestBuilder.addMapping(className, mappingString);
+		// logger.debug(className+" mapping described as:"+mappingString);
+		// MAPPING DONE
+		ListenableActionFuture<CreateIndexResponse> execute = createIndexRequestBuilder
+				.execute();
+		execute.actionGet();
+
+		return mappingString;
+
+	}
+	static Logger logger = Logger.getLogger(StorageInterface.class);
 }

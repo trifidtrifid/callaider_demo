@@ -47,6 +47,10 @@ public class StorageInterfaceTest extends TestCase {
 		String mappStr = si.createObjectMapping( McidFlow.class );		
 		
 		String id = si.saveObject(mcf);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}		
 		
 		//search test
 		Map<String,Object> searchMap;

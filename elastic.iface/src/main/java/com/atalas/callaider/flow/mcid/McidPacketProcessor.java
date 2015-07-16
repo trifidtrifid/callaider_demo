@@ -1,5 +1,8 @@
 package com.atalas.callaider.flow.mcid;
 
+import org.joda.time.*;
+import org.joda.time.format.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,40 +20,40 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap.Builder;
 public class McidPacketProcessor extends PacketProcessor {
 
 	private final StorageInterface si;
+
 	private static class TcapInfo {
 		public String tid;
 		public int tcapResult;
 	}
-	
-	private final ConcurrentLinkedHashMap<String,McidFlow> tidMap;
-	private final ConcurrentLinkedHashMap<String,McidFlow> imsiMap;
-	
+
+	private final ConcurrentLinkedHashMap<String, McidFlow> tidMap;
+	private final ConcurrentLinkedHashMap<String, McidFlow> imsiMap;
+
 	public McidPacketProcessor(Client client, String indexName) {
 		super(client, indexName);
 		this.si = new StorageInterface(client, null, indexName);
-		//@Delete all Stored objects and initialize field mapping
+		// @Delete all Stored objects and initialize field mapping
 		this.si.createObjectMapping(McidFlow.class);
-		ConcurrentLinkedHashMap.Builder<String,McidFlow> builder = new Builder<>();
-		builder.maximumWeightedCapacity(1000000);
+		ConcurrentLinkedHashMap.Builder<String, McidFlow> builder = new Builder<>();
+		builder.maximumWeightedCapacity(1000000L);
 		tidMap = builder.build();
 		imsiMap = builder.build();
-		
+
 	}
 
 	@Override
 	public void processNextPacket(List<ProtocolContainer> packet) {
 		super.processNextPacket(packet);
-		
+
 		TcapInfo currentTcap = null;
-		
-		
+
 		for (ProtocolContainer proto : packet) {
 			String protoName = proto.getDescription().getName();
-			if ( "gsm_map".equals(protoName)) {
+			if ("gsm_map".equals(protoName)) {
 				String elementType = proto.getTheField("map_component_type");
-				if( null!=elementType){
+				if (null != elementType) {
 					switch (elementType) {
-	
+
 					case "gsm_old.invoke_element":
 						processInvoke(proto, currentTcap);
 						break;
@@ -61,14 +64,15 @@ public class McidPacketProcessor extends PacketProcessor {
 						processReturnError(proto, currentTcap);
 						break;
 					default:
-						logger.debug(" unsupported map element type: " + elementType);
+						logger.debug(" unsupported map element type: "
+								+ elementType);
 						break;
 					}
 				} else {
 					logger.warn("No field 'map_component_type' in GSM_MAP proto");
 				}
-			} else if ( "tcap".equals(protoName)) {
-				currentTcap = processTcap( proto );
+			} else if ("tcap".equals(protoName)) {
+				currentTcap = processTcap(proto);
 			}
 		}
 	}
@@ -76,7 +80,8 @@ public class McidPacketProcessor extends PacketProcessor {
 	private TcapInfo processTcap(ProtocolContainer proto) {
 		TcapInfo ti = new TcapInfo();
 		ti.tid = proto.getTheField("tid");
-		//ti.tcapResult = ((Long)proto.getTheField("tcap.result")).intValue();//tcap.result
+		// ti.tcapResult =
+		// ((Long)proto.getTheField("tcap.result")).intValue();//tcap.result
 		return ti;
 	}
 
@@ -84,7 +89,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	}
 
 	void processReturnResultLast(ProtocolContainer proto, TcapInfo currentTcap) {
-		int opCode = ((Long)proto.getTheField("opCode")).intValue();
+		int opCode = ((Long) proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
@@ -92,14 +97,15 @@ public class McidPacketProcessor extends PacketProcessor {
 			break;
 		case 70:
 			processPsiResp(proto, currentTcap);
+			break;
 		default:
 			logger.debug("unsupported map opcode in responce: " + opCode);
 			break;
 		}
 	}
-	
+
 	void processInvoke(ProtocolContainer proto, TcapInfo currentTcap) {
-		int opCode = ((Long)proto.getTheField("opCode")).intValue();
+		int opCode = ((Long) proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
@@ -107,149 +113,178 @@ public class McidPacketProcessor extends PacketProcessor {
 			break;
 		case 70:
 			processPsiReq(proto, currentTcap);
+			break;
 		default:
 			logger.debug("unsupported map opcode in request: " + opCode);
 			break;
 		}
 	}
 
-	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap){
-	
+	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap) {
+
 		String tid = currentTcap.tid;
 		String tidKey = "psi.gsm_map_request.tid";
-		
+
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
 		McidFlow.GsmTransaction gsmTransaction;
-		if( null == mcidFlow ){
+		if (null == mcidFlow) {
 			mcidFlow = new McidFlow();
-			mcidFlow.psi = gsmTransaction = new GsmTransaction();			
+			mcidFlow.psi = gsmTransaction = new GsmTransaction();
 		} else {
 			gsmTransaction = mcidFlow.psi;
-			if(gsmTransaction == null){
+			if (gsmTransaction == null) {
 				logger.warn("can't find SRI transaction by tid: " + tid);
 				mcidFlow.psi = gsmTransaction = new GsmTransaction();
 			}
 		}
-		
-		
+
 		String laiOrCid = proto.getTheField("CID_LAI_SAI");
 		String result = "success";
-		if(laiOrCid.isEmpty())
+		if (null == laiOrCid || laiOrCid.isEmpty())
 			result = "fault";
+		else {
+			gsmTransaction.gsm_map_response.put("CID_LAI_SAI", laiOrCid);
+			mcidFlow.CID_SAI_LAI = laiOrCid;
+		}
+
 		gsmTransaction.gsm_map_response.put("result", result);
-		gsmTransaction.gsm_map_response.put("CID_LAI_SAI", laiOrCid);
-		gsmTransaction.gsm_map_response.put("tid", tid);			
+		gsmTransaction.gsm_map_response.put("tid", tid);
 		
+		mcidFlow.psiResponseDelay = parseDateTime("" + proto.getField("@timestamp")).getMillis() - 				
+				(null == mcidFlow.psiRequestTime ? 0L : mcidFlow.psiRequestTime);
+		mcidFlow.result = result;		
+
 		si.saveObject(mcidFlow);
 		tidMap.remove(tid);
 	}
 
-
 	void processPsiReq(ProtocolContainer proto, TcapInfo currentTcap) {
-		
-		//todo get McidFlow by "SRI.gsm_map_response.imsi" 
+
+		// todo get McidFlow by "SRI.gsm_map_response.imsi"
 		String imsi = proto.getTheField("imsi");
-		if( null!=imsi){
-			
+		if (null != imsi) {
+
 			McidFlow mcidFlow = imsiMap.get(imsi);
-			if( null==mcidFlow){
-				Map<String,Object> filter = new HashMap<String, Object>();
+			if (null == mcidFlow) {
+				Map<String, Object> filter = new HashMap<String, Object>();
 				filter.put("sri.gsm_map_response.imsi", imsi);
-				mcidFlow = si.searchSingleObjects( McidFlow.class, filter);
+				mcidFlow = si.searchSingleObjects(McidFlow.class, filter);
+			} else {
+				logger.debug("Got sri transaction from cache for IMSI:" + imsi);
 			}
-			if(mcidFlow == null){
+			if (mcidFlow == null) {
 				logger.warn("can't find PSI req by imsi: " + imsi);
 				return;
 			}
-			
+
 			McidFlow.GsmTransaction gsmTransaction = new McidFlow.GsmTransaction();
 			String tid = currentTcap.tid;
-			if(tid.isEmpty()){
+			if (tid.isEmpty()) {
 				logger.warn("SRI request have no tid");
 				return;
 			}
-			
+
 			gsmTransaction.gsm_map_request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
+			mcidFlow.psiRequestTime = parseDateTime("" + proto.getField("@timestamp")).getMillis();
+			
 			si.saveObject(mcidFlow);
 			tidMap.put(tid, mcidFlow);
+						
 			
 		} else {
 			logger.warn("There is NO imsi in PSI.request");
 		}
 	}
 
-	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap){
-		
+	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap) {
+
 		String tid = currentTcap.tid;
 		String tidKey = "sri.gsm_map_request.tid";
 		String imsi = proto.getTheField("imsi");
-		
+
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
 		McidFlow.GsmTransaction gsmTransaction;
-		if( null != mcidFlow ){			
+		if (null != mcidFlow) {
 			gsmTransaction = mcidFlow.sri;
-			if(gsmTransaction == null){
-				logger.warn("can't find SRI transaction by tid: " + tid);	
+			if (gsmTransaction == null) {
+				logger.warn("can't find SRI transaction by tid: " + tid);
 				mcidFlow.sri = gsmTransaction = new GsmTransaction();
 			}
 		} else {
 			mcidFlow = new McidFlow();
-			mcidFlow.sri = gsmTransaction = new GsmTransaction();				
+			mcidFlow.sri = gsmTransaction = new GsmTransaction();
 		}
-		
+
 		imsi = proto.getTheField("imsi");
-		
+
 		gsmTransaction.gsm_map_response.put("imsi", imsi);
 		gsmTransaction.gsm_map_response.put("tid", tid);
-		
+
 		imsiMap.put(imsi, mcidFlow);
 		tidMap.remove(tid);
+
+		mcidFlow.sriResponseDelay = parseDateTime("" + proto.getField("@timestamp")).getMillis() - 
+				(null == mcidFlow.sriRequestTime ? 0L : mcidFlow.sriRequestTime);
+		mcidFlow.IMSI = ""+proto.getField("IMSI");
 		
-		si.saveObject(mcidFlow);		
+		si.saveObject(mcidFlow);
 	}
 
 	private McidFlow getFlowByTid(String tid, String tidKey) {
 		McidFlow mcidFlow = null;
-		
-		if( null==tid)
+
+		if (null == tid)
 			logger.error("tid = NULL!");
 		else {
-			
+
 			mcidFlow = tidMap.get(tid);
-			if( null==mcidFlow){
-				Map<String,Object> filter = new HashMap<>();		
+			if (null == mcidFlow) {
+				Map<String, Object> filter = new HashMap<>();
 				filter.put(tidKey, tid);
-				List<McidFlow> mcidFlowL =  si.searchObjects(McidFlow.class, filter);
-				
-				if(mcidFlowL.size() == 0){
+				List<McidFlow> mcidFlowL = si.searchObjects(McidFlow.class,
+						filter);
+
+				if (mcidFlowL.size() == 0) {
 					logger.warn("can't find SRI req by tid: " + tid);
 					return null;
-				} else if(mcidFlowL.size() > 1){
-					logger.warn("There are "+ mcidFlowL.size() +" MCid flows found by filter sri.gsm_map_request.tid="+tid);
-				}	
+				} else if (mcidFlowL.size() > 1) {
+					logger.warn("There are "
+							+ mcidFlowL.size()
+							+ " MCid flows found by filter sri.gsm_map_request.tid="
+							+ tid);
+				}
 				mcidFlow = mcidFlowL.get(0);
+			} else {
+				logger.debug("Got Mcidflow from cache by tid:" + tid);
 			}
 		}
 		return mcidFlow;
 	}
-	
+
 	void processSriReq(ProtocolContainer proto, TcapInfo currentTcap) {
 		McidFlow mcidFlow = new McidFlow();
 		McidFlow.GsmTransaction sriReq = new McidFlow.GsmTransaction();
 		String tid = currentTcap.tid;
-		if(tid.isEmpty()){
+		if (tid.isEmpty()) {
 			logger.warn("SRI request have no tid");
 			return;
 		}
 		sriReq.gsm_map_request.put("tid", tid);
-		mcidFlow.sri = sriReq;		
+		mcidFlow.sri = sriReq;
 
-		si.saveObject(mcidFlow);	
+		mcidFlow.sriRequestTime = parseDateTime("" + proto.getField("@timestamp")).getMillis();
+
+		si.saveObject(mcidFlow);
 		tidMap.put(tid, mcidFlow);
 	}
 
-	static Logger logger = Logger.getLogger(McidPacketProcessor.class.getName());
+	static DateTime parseDateTime(String text) {
+		return new DateTime();//ISODateTimeFormat.dateTimeNoMillis().parseDateTime(text);		
+	}
+
+	static Logger logger = Logger
+			.getLogger(McidPacketProcessor.class.getName());
 
 }

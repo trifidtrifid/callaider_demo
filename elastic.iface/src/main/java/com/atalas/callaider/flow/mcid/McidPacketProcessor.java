@@ -15,6 +15,10 @@ import com.atalas.callaider.flow.mcid.McidFlow.GsmTransaction;
 public class McidPacketProcessor extends PacketProcessor {
 
 	private final StorageInterface si;
+	private static class TcapInfo {
+		public String tid;
+		public int tcapResult;
+	}
 	
 	public McidPacketProcessor(Client client, String indexName) {
 		super(client, indexName);
@@ -26,21 +30,25 @@ public class McidPacketProcessor extends PacketProcessor {
 	@Override
 	public void processNextPacket(List<ProtocolContainer> packet) {
 		super.processNextPacket(packet);
-
+		
+		TcapInfo currentTcap = null;
+		
+		
 		for (ProtocolContainer proto : packet) {
-			if ( "gsm_map".equals(proto.getDescription().getName())) {
+			String protoName = proto.getDescription().getName();
+			if ( "gsm_map".equals(protoName)) {
 				String elementType = proto.getTheField("map_component_type");
 				if( null!=elementType){
 					switch (elementType) {
 	
 					case "gsm_old.invoke_element":
-						processInvoke(proto);
+						processInvoke(proto, currentTcap);
 						break;
 					case "gsm_old.returnResultLast_element":
-						processReturnResultLast(proto);
+						processReturnResultLast(proto, currentTcap);
 						break;
 					case "gsm_old.returnError_element":
-						processReturnError(proto);
+						processReturnError(proto, currentTcap);
 						break;
 					default:
 						logger.debug(" unsupported map element type: " + elementType);
@@ -49,66 +57,84 @@ public class McidPacketProcessor extends PacketProcessor {
 				} else {
 					logger.warn("No field 'map_component_type' in GSM_MAP proto");
 				}
+			} else if ( "tcap".equals(protoName)) {
+				currentTcap = processTcap( proto );
 			}
 		}
 	}
 
-	void processReturnError(ProtocolContainer proto) {
+	private TcapInfo processTcap(ProtocolContainer proto) {
+		TcapInfo ti = new TcapInfo();
+		ti.tid = proto.getTheField("tid");
+		//ti.tcapResult = ((Long)proto.getTheField("tcap.result")).intValue();//tcap.result
+		return ti;
 	}
 
-	void processReturnResultLast(ProtocolContainer proto) {
+	void processReturnError(ProtocolContainer proto, TcapInfo currentTcap) {
+	}
+
+	void processReturnResultLast(ProtocolContainer proto, TcapInfo currentTcap) {
 		int opCode = ((Long)proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
-			processSriResp(proto);
+			processSriResp(proto, currentTcap);
 			break;
 		case 70:
-			processPsiResp(proto);
+			processPsiResp(proto, currentTcap);
 		default:
 			logger.debug("unsupported map opcode in responce: " + opCode);
 			break;
 		}
 	}
 	
-	void processInvoke(ProtocolContainer proto) {
+	void processInvoke(ProtocolContainer proto, TcapInfo currentTcap) {
 		int opCode = ((Long)proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
-			processSriReq(proto);
+			processSriReq(proto, currentTcap);
 			break;
 		case 70:
-			processPsiReq(proto);
+			processPsiReq(proto, currentTcap);
 		default:
 			logger.debug("unsupported map opcode in request: " + opCode);
 			break;
 		}
 	}
 
-	void processPsiResp(ProtocolContainer proto){
+	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap){
 	
-		String tid = proto.getTheField("tid");
+		String tid = currentTcap.tid;
 		String tidKey = "psi.m_request.tid";
 		
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
-		if( null != mcidFlow ){
-		
-			McidFlow.GsmTransaction gsmTransaction = mcidFlow.psi;
+		McidFlow.GsmTransaction gsmTransaction;
+		if( null == mcidFlow ){
+			mcidFlow = new McidFlow();
+			mcidFlow.psi = gsmTransaction = new GsmTransaction();			
+		} else {
+			gsmTransaction = mcidFlow.psi;
 			if(gsmTransaction == null){
 				logger.warn("can't find SRI transaction by tid: " + tid);
-				return;
+				mcidFlow.psi = gsmTransaction = new GsmTransaction();
 			}
-			String laiOrCid = proto.getTheField("CID_LAI_SAI");
-			String result = "success";
-			if(laiOrCid.isEmpty())
-				result = "fault";
-			gsmTransaction.m_response.put("result", result);
-		}			
+		}
+		
+		
+		String laiOrCid = proto.getTheField("CID_LAI_SAI");
+		String result = "success";
+		if(laiOrCid.isEmpty())
+			result = "fault";
+		gsmTransaction.m_response.put("result", result);
+		gsmTransaction.m_response.put("CID_LAI_SAI", laiOrCid);
+		gsmTransaction.m_response.put("tid", tid);			
+		
+		si.saveObject(mcidFlow);
 	}
 
 
-	void processPsiReq(ProtocolContainer proto) {
+	void processPsiReq(ProtocolContainer proto, TcapInfo currentTcap) {
 		
 		//todo get McidFlow by "SRI.m_response.imsi" 
 		String imsi = proto.getTheField("imsi");
@@ -123,7 +149,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			}
 			
 			McidFlow.GsmTransaction gsmTransaction = new McidFlow.GsmTransaction();
-			String tid = proto.getTheField("tid");
+			String tid = currentTcap.tid;
 			if(tid.isEmpty()){
 				logger.warn("SRI request have no tid");
 				return;
@@ -138,27 +164,38 @@ public class McidPacketProcessor extends PacketProcessor {
 		}
 	}
 
-	void processSriResp(ProtocolContainer proto){
+	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap){
 		
-		String tid = proto.getTheField("tid");
+		String tid = currentTcap.tid;
 		String tidKey = "sri.m_request.tid";
+		String imsi = proto.getTheField("imsi");
 		
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
-		if( null != mcidFlow ){
-		
-			//@TODO it's a paranoia to check below!
-			McidFlow.GsmTransaction gsmTransaction = mcidFlow.sri;
+		McidFlow.GsmTransaction gsmTransaction;
+		if( null != mcidFlow ){			
+			gsmTransaction = mcidFlow.sri;
 			if(gsmTransaction == null){
-				logger.warn("can't find SRI transaction by tid: " + tid);
-				return;
+				logger.warn("can't find SRI transaction by tid: " + tid);	
+				mcidFlow.sri = gsmTransaction = new GsmTransaction();
 			}
-			String imsi = proto.getTheField("imsi");
-			
-			gsmTransaction.m_response.put("imsi", imsi);
-			gsmTransaction.m_response.put("tid", tid);
-			
-			si.saveObject(mcidFlow);		
+		} else {
+			mcidFlow = new McidFlow();
+			mcidFlow.sri = gsmTransaction = new GsmTransaction();			
 		}
+		
+		//@TODO it's a paranoia to check below!
+		gsmTransaction = mcidFlow.sri;
+		if(gsmTransaction == null){
+			logger.warn("can't find SRI transaction by tid: " + tid);
+			return;
+		}
+		imsi = proto.getTheField("imsi");
+		
+		gsmTransaction.m_response.put("imsi", imsi);
+		gsmTransaction.m_response.put("tid", tid);
+		
+		si.saveObject(mcidFlow);		
+
 	}
 
 	private McidFlow getFlowByTid(String tid, String tidKey) {
@@ -182,10 +219,10 @@ public class McidPacketProcessor extends PacketProcessor {
 		return mcidFlow;
 	}
 	
-	void processSriReq(ProtocolContainer proto) {
+	void processSriReq(ProtocolContainer proto, TcapInfo currentTcap) {
 		McidFlow mcidFlow = new McidFlow();
 		McidFlow.GsmTransaction sriReq = new McidFlow.GsmTransaction();
-		String tid = proto.getTheField("tid");
+		String tid = currentTcap.tid;
 		if(tid.isEmpty()){
 			logger.warn("SRI request have no tid");
 			return;

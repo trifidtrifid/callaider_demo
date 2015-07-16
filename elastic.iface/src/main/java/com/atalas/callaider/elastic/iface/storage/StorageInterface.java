@@ -83,7 +83,7 @@ public class StorageInterface {
 	private String filterAsString(Map<String,Object> filter){
 		String filterStr = "";
 		for (Entry<String, Object> fldEntry : filter.entrySet())
-			filterStr += fldEntry.getKey()+":" + fldEntry.getValue()+" ";
+			filterStr += fldEntry.getKey()+"=" + fldEntry.getValue()+" ";
 		return filterStr;
 	}
 
@@ -130,31 +130,7 @@ public class StorageInterface {
 		String mappingString = "{ \"" + className
 				+ "\" : { \"properties\" : { \"_id\" : {\"type\" : \"string\", \"store\" : true, \"copy_to\": \"id\" }, ";
 
-		for (Field fld : objCls.getFields()) {
-			Type fclass = fld.getType();
-			String fldName = fld.getName();
-			// if( fldName.equals("id")) continue;
-
-			if (fclass.equals(String.class)) {
-				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"string\" },";
-			} else if (fclass.equals(Integer.class)
-					|| fclass.equals(Long.class)) {
-				mappingString += " \"" + fldName + "\": { \"type\":\"long\"},";
-			} else if (fclass.equals(Double.class)
-					|| fclass.equals(Float.class)) {
-				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"double\"},";
-			} else if (fclass.equals(Boolean.class)) {
-				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"boolean\"},";
-
-			} else if (!fld.getType().isArray()) {
-				mappingString += "\"" + fldName
-						+ "\": { \"type\":\"object\", \"properties\" : {";
-				mappingString += "}},";
-			}
-		}
+		mappingString += createFieldsIndex(objCls);
 
 		if (mappingString.endsWith(","))
 			mappingString = mappingString.substring(0,
@@ -184,6 +160,46 @@ public class StorageInterface {
 
 		return mappingString;
 
+	}
+
+	private String createFieldsIndex(Class objCls) {
+		
+		String mappingString = "";
+		for (Field fld : objCls.getFields()) {
+			Type fclass = fld.getType();
+			String fldName = fld.getName();
+			// if( fldName.equals("id")) continue;
+
+			if (fclass.equals(String.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"string\" },";
+			} else if (fclass.equals(Integer.class)
+					|| fclass.equals(Long.class)) {
+				mappingString += " \"" + fldName + "\": { \"type\":\"long\"},";
+			} else if (fclass.equals(Double.class)
+					|| fclass.equals(Float.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"double\"},";
+			} else if (fclass.equals(Boolean.class)) {
+				mappingString += " \"" + fldName
+						+ "\": { \"type\":\"boolean\"},";
+
+			} else if (!fld.getType().isArray()) {
+				mappingString += "\"" + fldName
+						+ "\": { \"type\":\"object\", \"index\" : \"not_analyzed\", \"properties\" : {";
+				
+				if( fclass.equals(Map.class) ){
+					mappingString += "\"tid\" : { \"type\":\"string\", \"index\" : \"not_analyzed\"}" ;
+				} else {
+					mappingString += createFieldsIndex(fld.getType());
+				}
+				
+				mappingString += "}},";
+			}
+		}
+		if( mappingString.endsWith(","))
+			mappingString = mappingString.substring(0,mappingString.length()-1);
+		return mappingString;
 	}
 	static Logger logger = Logger.getLogger(StorageInterface.class);
 }

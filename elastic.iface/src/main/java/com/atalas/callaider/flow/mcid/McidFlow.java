@@ -13,7 +13,7 @@ public class McidFlow extends StorageIndexedInterface {
 	public List<GsmTransaction> errors;
 	
 	public static class GsmTransaction {		
-		public Map<String, Object> m_request = new HashMap<>();
-		public Map<String, Object> m_response = new HashMap<>();
+		public Map<String, Object> gsm_map_request = new HashMap<>();
+		public Map<String, Object> gsm_map_response = new HashMap<>();
 	}			
 }

@@ -106,7 +106,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap){
 	
 		String tid = currentTcap.tid;
-		String tidKey = "psi.m_request.tid";
+		String tidKey = "psi.gsm_map_request.tid";
 		
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
 		McidFlow.GsmTransaction gsmTransaction;
@@ -126,9 +126,9 @@ public class McidPacketProcessor extends PacketProcessor {
 		String result = "success";
 		if(laiOrCid.isEmpty())
 			result = "fault";
-		gsmTransaction.m_response.put("result", result);
-		gsmTransaction.m_response.put("CID_LAI_SAI", laiOrCid);
-		gsmTransaction.m_response.put("tid", tid);			
+		gsmTransaction.gsm_map_response.put("result", result);
+		gsmTransaction.gsm_map_response.put("CID_LAI_SAI", laiOrCid);
+		gsmTransaction.gsm_map_response.put("tid", tid);			
 		
 		si.saveObject(mcidFlow);
 	}
@@ -136,11 +136,11 @@ public class McidPacketProcessor extends PacketProcessor {
 
 	void processPsiReq(ProtocolContainer proto, TcapInfo currentTcap) {
 		
-		//todo get McidFlow by "SRI.m_response.imsi" 
+		//todo get McidFlow by "SRI.gsm_map_response.imsi" 
 		String imsi = proto.getTheField("imsi");
 		if( null!=imsi){
 			Map<String,Object> filter = new HashMap<String, Object>();
-			filter.put("sri.m_response.imsi", imsi);
+			filter.put("sri.gsm_map_response.imsi", imsi);
 			McidFlow mcidFlow = si.searchSingleObjects( McidFlow.class, filter);
 
 			if(mcidFlow == null){
@@ -155,7 +155,7 @@ public class McidPacketProcessor extends PacketProcessor {
 				return;
 			}
 			
-			gsmTransaction.m_request.put("tid", tid);
+			gsmTransaction.gsm_map_request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
 			si.saveObject(mcidFlow);
@@ -167,7 +167,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap){
 		
 		String tid = currentTcap.tid;
-		String tidKey = "sri.m_request.tid";
+		String tidKey = "sri.gsm_map_request.tid";
 		String imsi = proto.getTheField("imsi");
 		
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
@@ -183,16 +183,10 @@ public class McidPacketProcessor extends PacketProcessor {
 			mcidFlow.sri = gsmTransaction = new GsmTransaction();			
 		}
 		
-		//@TODO it's a paranoia to check below!
-		gsmTransaction = mcidFlow.sri;
-		if(gsmTransaction == null){
-			logger.warn("can't find SRI transaction by tid: " + tid);
-			return;
-		}
 		imsi = proto.getTheField("imsi");
 		
-		gsmTransaction.m_response.put("imsi", imsi);
-		gsmTransaction.m_response.put("tid", tid);
+		gsmTransaction.gsm_map_response.put("imsi", imsi);
+		gsmTransaction.gsm_map_response.put("tid", tid);
 		
 		si.saveObject(mcidFlow);		
 
@@ -212,7 +206,7 @@ public class McidPacketProcessor extends PacketProcessor {
 				logger.warn("can't find SRI req by tid: " + tid);
 				return null;
 			} else if(mcidFlowL.size() > 1){
-				logger.warn("There are "+ mcidFlowL.size() +" MCid flows found by filter sri.m_request.tid="+tid);
+				logger.warn("There are "+ mcidFlowL.size() +" MCid flows found by filter sri.gsm_map_request.tid="+tid);
 			}	
 			mcidFlow = mcidFlowL.get(0);
 		}
@@ -227,7 +221,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			logger.warn("SRI request have no tid");
 			return;
 		}
-		sriReq.m_request.put("tid", tid);
+		sriReq.gsm_map_request.put("tid", tid);
 		mcidFlow.sri = sriReq;		
 
 		si.saveObject(mcidFlow);		

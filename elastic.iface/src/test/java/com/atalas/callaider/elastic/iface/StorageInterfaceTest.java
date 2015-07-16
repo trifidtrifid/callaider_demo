@@ -51,23 +51,23 @@ public class StorageInterfaceTest extends TestCase {
 		//search test
 		Map<String,Object> searchMap;
 		searchMap = new HashMap<>();
-		searchMap.put("m_request.a", 1);
+		searchMap.put("gsm_map_request.a", 1);
 		List<McidFlow> foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 0 );
 		
 		searchMap = new HashMap<>();
-		searchMap.put("sri.m_request.a", 1);
+		searchMap.put("sri.gsm_map_request.a", 1);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);		
 		assertEquals( foundObjs.size(), 1);
 		assertEquals( foundObjs.get(0).id, id );
 		
 		searchMap = new HashMap<>();
-		searchMap.put("psi.m_request.a", 1);
+		searchMap.put("psi.gsm_map_request.a", 1);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 0);
 		
 		searchMap = new HashMap<>();
-		searchMap.put("sri.m_response.c", true);
+		searchMap.put("sri.gsm_map_response.c", true);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 1);			
 	}
@@ -77,22 +77,22 @@ public class StorageInterfaceTest extends TestCase {
 		//mcf.m_transactions = new HashMap<>();
 		McidFlow.GsmTransaction gt1 = new McidFlow.GsmTransaction();
 
-		gt1.m_request = new HashMap<>();
-		gt1.m_response = new HashMap<>();
-		gt1.m_request.put("a", 1);
-		gt1.m_request.put("b", 1.0D);
-		gt1.m_request.put("c", true);
+		gt1.gsm_map_request = new HashMap<>();
+		gt1.gsm_map_response = new HashMap<>();
+		gt1.gsm_map_request.put("a", 1);
+		gt1.gsm_map_request.put("b", 1.0D);
+		gt1.gsm_map_request.put("c", true);
 		
-		gt1.m_response.put("a", 1);
-		gt1.m_response.put("b", 1.0D);
-		gt1.m_response.put("c", true);		
+		gt1.gsm_map_response.put("a", 1);
+		gt1.gsm_map_response.put("b", 1.0D);
+		gt1.gsm_map_response.put("c", true);		
 		
 		McidFlow.GsmTransaction gt2 = new McidFlow.GsmTransaction();
-		gt2.m_request = new HashMap<>();
-		gt2.m_response = new HashMap<>();
-		gt2.m_request.put("a", 2);
-		gt2.m_request.put("b", 2.0D);
-		gt2.m_request.put("c", false);		
+		gt2.gsm_map_request = new HashMap<>();
+		gt2.gsm_map_response = new HashMap<>();
+		gt2.gsm_map_request.put("a", 2);
+		gt2.gsm_map_request.put("b", 2.0D);
+		gt2.gsm_map_request.put("c", false);		
 		
 		mcf.sri = gt1;
 		mcf.psi = gt2;

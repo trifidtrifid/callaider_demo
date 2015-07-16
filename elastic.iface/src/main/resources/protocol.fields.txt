@@ -28,6 +28,7 @@ gsm_map.old.Component gsm_old.invoke_element gsm_map.lcs.locationType_element gs
 gsm_map.old.Component gsm_old.invoke_element gsm_map.lcs.mlc_Number gsm_map.address.digits STRING:lcsMlcNumber
 gsm_map.old.Component gsm_old.invoke_element gsm_map.lcs.lcs_ClientID_element gsm_map.lcs.lcsClientType INT:lcsClientType
 
-#IMCI
+#IMSI
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.tbcd_digits STRING:imsi
 gsm_map.old.Component gsm_old.invoke_element:map_component_type gsm_map.tbcd_digits STRING:imsi
+gsm_map.old.Component gsm_old.invoke_element gsm_map.tbcd_digits STRING:imsi 

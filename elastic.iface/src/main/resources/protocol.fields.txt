@@ -15,13 +15,19 @@ tcap.end_element:element_type tcap.components tcap.Component tcap.returnError_el
 
 proto gsm_map 6
 gsm_map.old.Component gsm_old.invoke_element:map_component_type gsm_old.opCode gsm_old.localValue INT:opCode
+#msisdn in SRI
 gsm_map.old.Component gsm_old.invoke_element:map_component_type gsm_map.ch.msisdn gsm_map.address.digits STRING:msisdn
+#msisdn in SRIforSM
+gsm_map.old.Component gsm_old.invoke_element:map_component_type gsm_map.sm.msisdn gsm_map.address.digits STRING:msisdn
+
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_old.opCode gsm_old.localValue INT:opCode
-gsm_map.old.Component gsm_old.returnError_element:map_component_type gsm_old.errorCode gsm_old.localValue INT:errorCode
-gsm_map.old.Component gsm_old.returnError_element:map_component_type gsm_old.invokeID INT:invokeID
-gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.tbcd_digits STRING:resultretres
+gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.tbcd_digits STRING:imsi
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ch.subscriberInfo_element gsm_map.ms.locationInformation_element gsm_map.ms.vlr_number gsm_map.address.digits STRING:VLR.address
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ms.subscriberInfo_element gsm_map.ms.locationInformation_element gsm_map.ms.cellGlobalIdOrServiceAreaIdOrLAI gsm_map.cellGlobalIdOrServiceAreaIdFixedLength STRING:CID_LAI_SAI
+
+gsm_map.old.Component gsm_old.returnError_element:map_component_type gsm_old.errorCode gsm_old.localValue INT:errorCode
+gsm_map.old.Component gsm_old.returnError_element:map_component_type gsm_old.invokeID INT:invokeID
+
 
 #LCS.specific
 gsm_map.old.Component gsm_old.invoke_element gsm_map.lcs.locationType_element gsm_map.lcs.locationEstimateType INT:locationEstimateType

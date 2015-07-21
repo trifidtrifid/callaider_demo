@@ -8,20 +8,22 @@ import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface;
 
 public class McidFlow extends StorageIndexedInterface {
 	
-	public String _MSISDN;
+	public String x_msisdn;
 	public String x_IMSI;
 	public String x_CID_SAI_LAI;
-	public String HLR;
-	public String VLR;
+	public String x_HLR;
+	public String x_VLR;
 	public Boolean x_sriResponse=false;
 	public Boolean x_psiResponse=false;
 	public Long x_sriRequestTime;
 	public Long x_psiRequestTime;
 	public Long x_sriResponseDelay;
 	public Long x_psiResponseDelay;
-	public String x_result="absent";	
+	public String x_result="absent";
+	public Integer x_sriErrorCode = 0;
+	public Integer x_psiErrorCode = 0;
 	
-	
+		
 	public GsmTransaction sriForSm;
 	public GsmTransaction sri;
 	public GsmTransaction psi;

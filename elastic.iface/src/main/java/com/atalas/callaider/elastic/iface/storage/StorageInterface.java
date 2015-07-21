@@ -35,13 +35,13 @@ public class StorageInterface {
 	private final Gson gson;
 	private final String index;
 	private final IdGenerator idGen;
-	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public StorageInterface(Client client, Map<String, Description> protoMap,
 			String index) {
 
 		this.client = client;
-		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 		this.index = index;
 		this.idGen = new IdGenerator();
 	}

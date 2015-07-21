@@ -62,9 +62,11 @@ public class FieldMapping {
 	}
 
 	private static void parseString( String descLine, FieldMapping currentMapping ){
-		String[] parts = descLine.split("[ ]");
-		if( parts.length > 1) 
-			postThePart( currentMapping.lowerLevelMap, parts, 0);		
+		if(!descLine.trim().startsWith("#")){
+			String[] parts = descLine.split("[ ]");
+			if( parts.length > 1) 
+				postThePart( currentMapping.lowerLevelMap, parts, 0);		
+		}
 	}
 
 	private static void postThePart( Map<String,FieldMapping> fieldMap, String[] parts, int offset) {

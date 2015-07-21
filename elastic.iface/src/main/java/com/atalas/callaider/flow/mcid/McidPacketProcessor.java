@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
@@ -23,6 +24,12 @@ public class McidPacketProcessor extends PacketProcessor {
 	private static class TcapInfo {
 		public String tid;
 		public int tcapResult;
+	}
+	private static class SccpInfo {
+		public String sccpCallingDigits;
+		public String sccpCalledSsn;
+		public String sccpCalledDigits;
+		public String sccpCallingSsn;
 	}
 
 	private final ConcurrentLinkedHashMap<String, McidFlow> tidMap;
@@ -45,6 +52,7 @@ public class McidPacketProcessor extends PacketProcessor {
 		super.processNextPacket(packet);
 
 		TcapInfo currentTcap = null;
+		SccpInfo currentSccp = null;
 
 		for (ProtocolContainer proto : packet) {
 			String protoName = proto.getDescription().getName();
@@ -54,13 +62,13 @@ public class McidPacketProcessor extends PacketProcessor {
 					switch (elementType) {
 
 					case "gsm_old.invoke_element":
-						processInvoke(proto, currentTcap);
+						processInvoke(proto, currentTcap, currentSccp);
 						break;
 					case "gsm_old.returnResultLast_element":
-						processReturnResultLast(proto, currentTcap);
+						processReturnResultLast(proto, currentTcap, currentSccp);
 						break;
 					case "gsm_old.returnError_element":
-						processReturnError(proto, currentTcap);
+						processReturnError(proto, currentTcap, currentSccp);
 						break;
 					default:
 						logger.debug(" unsupported map element type: "
@@ -72,8 +80,20 @@ public class McidPacketProcessor extends PacketProcessor {
 				}
 			} else if ("tcap".equals(protoName)) {
 				currentTcap = processTcap(proto);
+				
+			} else if ("sccp".equals(protoName)) {
+				currentSccp = processSccp(proto);
 			}
 		}
+	}
+
+	private SccpInfo processSccp(ProtocolContainer proto) {
+		SccpInfo sccpInfo = new SccpInfo();
+		sccpInfo.sccpCalledDigits = ""+proto.getField("sccp.called.digits");
+		sccpInfo.sccpCallingDigits = ""+proto.getField("sccp.calling.digits");
+		sccpInfo.sccpCalledSsn = ""+proto.getField("sccp.called.ssn");
+		sccpInfo.sccpCallingSsn = ""+proto.getField("sccp.calling.ssn");
+		return sccpInfo;		
 	}
 
 	private TcapInfo processTcap(ProtocolContainer proto) {
@@ -84,18 +104,50 @@ public class McidPacketProcessor extends PacketProcessor {
 		return ti;
 	}
 
-	void processReturnError(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processReturnError(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
+		//
+		String tid = currentTcap.tid;
+		String tidKey = "sri.gsm_map_request.tid";
+		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
+		if( null!=mcidFlow){
+			processSRIErrorResult( mcidFlow, proto, currentTcap, currentSccp);
+		
+		} else {
+			tidKey = "psi.gsm_map_request.tid";
+			mcidFlow = getFlowByTid(tid, tidKey);
+			if( null!=mcidFlow )
+				processPSIErrorResult( mcidFlow, proto, currentTcap, currentSccp);
+			else {
+				logger.warn("Got error result fot tid:"+tid+" but no objects sessions found");
+			}
+		}
 	}
 
-	void processReturnResultLast(ProtocolContainer proto, TcapInfo currentTcap) {
+	private void processPSIErrorResult(McidFlow mcidFlow, ProtocolContainer proto,
+			TcapInfo currentTcap, SccpInfo currentSccp) {
+		mcidFlow.x_psiErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
+		mcidFlow.psi.gsm_map_response.put("error", mcidFlow.x_psiErrorCode);	
+		
+		si.saveObject(mcidFlow);
+	}
+
+	private void processSRIErrorResult(McidFlow mcidFlow, ProtocolContainer proto,
+			TcapInfo currentTcap, SccpInfo currentSccp) {
+		mcidFlow.x_sriErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
+		mcidFlow.sri.gsm_map_response.put("error", mcidFlow.x_sriErrorCode);	
+		
+		si.saveObject(mcidFlow);
+	}
+
+	void processReturnResultLast(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 		int opCode = ((Long) proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
-			processSriResp(proto, currentTcap);
+			processSriResp(proto, currentTcap, currentSccp);
 			break;
 		case 70:
-			processPsiResp(proto, currentTcap);
+			processPsiResp(proto, currentTcap, currentSccp);
 			break;
 		default:
 			logger.debug("unsupported map opcode in responce: " + opCode);
@@ -103,15 +155,15 @@ public class McidPacketProcessor extends PacketProcessor {
 		}
 	}
 
-	void processInvoke(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processInvoke(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 		int opCode = ((Long) proto.getTheField("opCode")).intValue();
 		switch (opCode) {
 		case 22:
 		case 45:
-			processSriReq(proto, currentTcap);
+			processSriReq(proto, currentTcap, currentSccp);
 			break;
 		case 70:
-			processPsiReq(proto, currentTcap);
+			processPsiReq(proto, currentTcap, currentSccp);
 			break;
 		default:
 			logger.debug("unsupported map opcode in request: " + opCode);
@@ -119,7 +171,7 @@ public class McidPacketProcessor extends PacketProcessor {
 		}
 	}
 
-	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processPsiResp(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 
 		String tid = currentTcap.tid;
 		String tidKey = "psi.gsm_map_request.tid";
@@ -153,11 +205,13 @@ public class McidPacketProcessor extends PacketProcessor {
 				(null == mcidFlow.x_psiRequestTime ? 0L : mcidFlow.x_psiRequestTime);
 		mcidFlow.x_result = result;		
 		mcidFlow.x_psiResponse = true;
+		//mcidFlow.VLR = currentSccp.sccpCallingDigits;
+		
 		si.saveObject(mcidFlow);
 		tidMap.remove(tid);
 	}
 
-	void processPsiReq(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processPsiReq(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 
 		// todo get McidFlow by "SRI.gsm_map_response.imsi"
 		String imsi = proto.getTheField("imsi");
@@ -182,12 +236,11 @@ public class McidPacketProcessor extends PacketProcessor {
 				logger.warn("SRI request have no tid");
 				return;
 			}
-
+			
 			gsmTransaction.gsm_map_request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
-			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();
-			
+			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();			
 			si.saveObject(mcidFlow);
 			tidMap.put(tid, mcidFlow);
 						
@@ -197,11 +250,11 @@ public class McidPacketProcessor extends PacketProcessor {
 		}
 	}
 
-	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 		
 		String tid = currentTcap.tid;
 		String tidKey = "sri.gsm_map_request.tid";
-		String imsi = proto.getTheField("imsi");
+		String imsi = proto.getTheField("imsi");		
 
 		McidFlow mcidFlow = getFlowByTid(tid, tidKey);
 		McidFlow.GsmTransaction gsmTransaction;
@@ -215,10 +268,11 @@ public class McidPacketProcessor extends PacketProcessor {
 			mcidFlow = new McidFlow();
 			mcidFlow.sri = gsmTransaction = new GsmTransaction();
 		}
-
+		
 		imsi = proto.getTheField("imsi");
 
 		gsmTransaction.gsm_map_response.put("imsi", imsi);
+		mcidFlow.x_IMSI = imsi;
 		gsmTransaction.gsm_map_response.put("tid", tid);
 
 		imsiMap.put(imsi, mcidFlow);
@@ -228,7 +282,10 @@ public class McidPacketProcessor extends PacketProcessor {
 		mcidFlow.x_sriResponseDelay = ((Date)filestamp).getTime() - 
 				(null == mcidFlow.x_sriRequestTime ? 0L : mcidFlow.x_sriRequestTime);
 		mcidFlow.x_IMSI = ""+proto.getField("IMSI");
-		mcidFlow.x_sriResponse = true;		
+		mcidFlow.x_sriResponse = true;	
+		mcidFlow.x_HLR = currentSccp.sccpCallingDigits;
+		mcidFlow.x_VLR = ""+proto.getField("VLR.address");
+		
 		si.saveObject(mcidFlow);
 	}
 
@@ -263,8 +320,9 @@ public class McidPacketProcessor extends PacketProcessor {
 		return mcidFlow;
 	}
 
-	void processSriReq(ProtocolContainer proto, TcapInfo currentTcap) {
+	void processSriReq(ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 		McidFlow mcidFlow = new McidFlow();
+		mcidFlow.x_msisdn = ""+proto.getField("msisdn");
 		McidFlow.GsmTransaction sriReq = new McidFlow.GsmTransaction();
 		String tid = currentTcap.tid;
 		if (tid.isEmpty()) {

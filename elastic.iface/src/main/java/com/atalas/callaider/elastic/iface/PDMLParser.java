@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -212,7 +213,7 @@ public class PDMLParser {
 			} else if (Type.CONTAINER == fielsMap.type) {
 				pc.setField(fielldName, fieldVal);			
 			} else if (Type.DATE == fielsMap.type) {
-				Calendar cldr = Calendar.getInstance();
+				Calendar cldr = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 				cldr.setTimeInMillis(Long.parseLong(fieldVal.substring(0, 10))
 						* 1000 + Integer.parseInt(fieldVal.substring(11, 14)));
 				pc.setField(fielldName, cldr.getTime());

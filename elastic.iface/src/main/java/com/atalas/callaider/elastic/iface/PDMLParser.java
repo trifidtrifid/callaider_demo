@@ -92,10 +92,10 @@ public class PDMLParser {
 						ProtocolContainer protocolCont = new ProtocolContainer( protoName, id, parentId, pd );
 						parse(protocolCont, pd.getFields(), xmlStreamReader);
 						if( timestamp == null ){
-							timestamp = protocolCont.getField("@timestamp");
+							timestamp = protocolCont.getField("x_timestamp");
 						} else {
 							try {
-								protocolCont.setField("@timestamp", timestamp);
+								protocolCont.setField("x_timestamp", timestamp);
 							} catch (IOException e) {
 								logger.error("Failed to set timestamp."+ e.getMessage(),e);									
 							}

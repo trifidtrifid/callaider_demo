@@ -1,5 +1,5 @@
 proto frame 1
-frame.time_epoch DATE:@timestamp
+frame.time_epoch DATE:x_timestamp
 
 proto sccp 3
 x sccp.called.ssn INT

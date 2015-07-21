@@ -2,7 +2,9 @@ package com.atalas.callaider.elastic.iface.storage;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +25,7 @@ import org.elasticsearch.search.SearchHit;
 
 import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class StorageInterface {
 
@@ -32,12 +35,13 @@ public class StorageInterface {
 	private final Gson gson;
 	private final String index;
 	private final IdGenerator idGen;
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	public StorageInterface(Client client, Map<String, Description> protoMap,
 			String index) {
 
 		this.client = client;
-		this.gson = new Gson();
+		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 		this.index = index;
 		this.idGen = new IdGenerator();
 	}
@@ -89,7 +93,7 @@ public class StorageInterface {
 
 	// ================================================================================================
 
-	public <T> String saveObject(T object) {
+	public <T extends StorageIndexedInterface> String saveObject(T object) {
 
 		Class<? extends Object> oclz = object.getClass();
 		String id = getId(object, oclz);
@@ -102,6 +106,9 @@ public class StorageInterface {
 		String json = gson.toJson(object);
 		logger.debug("Saved object '"+json+"'");
 		indexReq.setSource(json);
+		if( null!=object.x_timestamp) {
+			indexReq.setTimestamp( sdf.format(object.x_timestamp));			
+		}
 		IndexResponse response = indexReq.execute().actionGet();
 		return response.getId();
 	}
@@ -120,7 +127,7 @@ public class StorageInterface {
 		}
 	}
 
-	public <T> String updateObject(T object) {
+	public <T extends StorageIndexedInterface> String updateObject(T object) {
 		return saveObject(object);
 	}
 
@@ -167,29 +174,33 @@ public class StorageInterface {
 		String mappingString = "";
 		for (Field fld : objCls.getFields()) {
 			Type fclass = fld.getType();
-			String fldName = fld.getName();
-			// if( fldName.equals("id")) continue;
+			String fldName = fld.getName();			
 
 			if (fclass.equals(String.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"string\" },";
+						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"string\" },";
 			} else if (fclass.equals(Integer.class)
 					|| fclass.equals(Long.class)) {
-				mappingString += " \"" + fldName + "\": { \"type\":\"long\"},";
+				mappingString += " \"" + fldName + "\": { \"index\" : \"not_analyzed\", \"type\":\"long\"},";
 			} else if (fclass.equals(Double.class)
 					|| fclass.equals(Float.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"double\"},";
+						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"double\"},";
 			} else if (fclass.equals(Boolean.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"type\":\"boolean\"},";
+						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"boolean\"},";
+
+			} else if (fclass.equals(Date.class)) {
+				mappingString += " \"" 
+						+ fldName 
+						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"date\"},";
 
 			} else if (!fld.getType().isArray()) {
-				mappingString += "\"" + fldName
-						+ "\": { \"type\":\"object\", \"index\" : \"not_analyzed\", \"properties\" : {";
+				mappingString += "\"" + fldName							 
+						+ "\": { \"type\":\"object\", \"index\" : \"not_analyzed\", \"properties\" : {";						
 				
 				if( fclass.equals(Map.class) ){
-					mappingString += "\"tid\" : { \"type\":\"string\", \"index\" : \"not_analyzed\"}" ;
+					mappingString += "\"tid\" : { \"type\":\"string\"}" ;
 				} else {
 					mappingString += createFieldsIndex(fld.getType());
 				}

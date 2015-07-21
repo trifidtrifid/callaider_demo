@@ -1,4 +1,5 @@
 package com.atalas.callaider.flow.mcid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,18 +8,19 @@ import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface;
 
 public class McidFlow extends StorageIndexedInterface {
 	
-	public String MSISDN;
-	public String IMSI;
-	public String CID_SAI_LAI;
+	public String _MSISDN;
+	public String x_IMSI;
+	public String x_CID_SAI_LAI;
 	public String HLR;
 	public String VLR;
-	public Boolean sriResponse;
-	public Boolean psiResponse;
-	public Long sriRequestTime;
-	public Long psiRequestTime;
-	public Long sriResponseDelay;
-	public Long psiResponseDelay;
-	public String result;	
+	public Boolean x_sriResponse=false;
+	public Boolean x_psiResponse=false;
+	public Long x_sriRequestTime;
+	public Long x_psiRequestTime;
+	public Long x_sriResponseDelay;
+	public Long x_psiResponseDelay;
+	public String x_result="absent";	
+	
 	
 	public GsmTransaction sriForSm;
 	public GsmTransaction sri;

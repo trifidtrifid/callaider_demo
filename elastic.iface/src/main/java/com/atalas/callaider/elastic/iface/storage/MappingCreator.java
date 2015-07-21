@@ -27,7 +27,7 @@ public class MappingCreator {
 			if( value.type == Type.CONTAINER && null!=value.lowerLevelMap && !value.lowerLevelMap.isEmpty()){
 				mappingString = processTheFIeldMap(value, mappingString);
 				if( value.shortName!=null ){
-					mappingString += "\""+value.shortName+"\":{ \"index\":\"not_analyzed\", \"type\": \"string\"},";
+					mappingString += "\""+value.shortName+"\":{ \"index\":\"not_analyzed\", \"type\": \"string\"},";				
 				}
 					
 			} else {
@@ -36,6 +36,7 @@ public class MappingCreator {
 					name = fme.getKey();
 				
 				mappingString += "\""+name+"\":{ \"index\":\"not_analyzed\", \"type\": \"";
+				//mappingString += "\""+name+"\":{ \"type\": \"";
 				switch( value.type){
 				case INT:	
 					mappingString += "integer\"";

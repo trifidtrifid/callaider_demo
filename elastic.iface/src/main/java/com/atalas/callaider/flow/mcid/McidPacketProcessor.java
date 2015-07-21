@@ -1,14 +1,13 @@
 package com.atalas.callaider.flow.mcid;
 
-import org.joda.time.*;
-import org.joda.time.format.*;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
+import org.joda.time.DateTime;
 
 import com.atalas.callaider.elastic.iface.PacketProcessor;
 import com.atalas.callaider.elastic.iface.ProtocolContainer;
@@ -144,16 +143,16 @@ public class McidPacketProcessor extends PacketProcessor {
 			result = "fault";
 		else {
 			gsmTransaction.gsm_map_response.put("CID_LAI_SAI", laiOrCid);
-			mcidFlow.CID_SAI_LAI = laiOrCid;
+			mcidFlow.x_CID_SAI_LAI = laiOrCid;
 		}
 
 		gsmTransaction.gsm_map_response.put("result", result);
 		gsmTransaction.gsm_map_response.put("tid", tid);
 		
-		mcidFlow.psiResponseDelay = parseDateTime("" + proto.getField("@timestamp")).getMillis() - 				
-				(null == mcidFlow.psiRequestTime ? 0L : mcidFlow.psiRequestTime);
-		mcidFlow.result = result;		
-
+		mcidFlow.x_psiResponseDelay = ((Date)proto.getField("x_timestamp")).getTime() - 				
+				(null == mcidFlow.x_psiRequestTime ? 0L : mcidFlow.x_psiRequestTime);
+		mcidFlow.x_result = result;		
+		mcidFlow.x_psiResponse = true;
 		si.saveObject(mcidFlow);
 		tidMap.remove(tid);
 	}
@@ -187,7 +186,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			gsmTransaction.gsm_map_request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
-			mcidFlow.psiRequestTime = parseDateTime("" + proto.getField("@timestamp")).getMillis();
+			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();
 			
 			si.saveObject(mcidFlow);
 			tidMap.put(tid, mcidFlow);
@@ -199,7 +198,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	}
 
 	void processSriResp(ProtocolContainer proto, TcapInfo currentTcap) {
-
+		
 		String tid = currentTcap.tid;
 		String tidKey = "sri.gsm_map_request.tid";
 		String imsi = proto.getTheField("imsi");
@@ -225,10 +224,11 @@ public class McidPacketProcessor extends PacketProcessor {
 		imsiMap.put(imsi, mcidFlow);
 		tidMap.remove(tid);
 
-		mcidFlow.sriResponseDelay = parseDateTime("" + proto.getField("@timestamp")).getMillis() - 
-				(null == mcidFlow.sriRequestTime ? 0L : mcidFlow.sriRequestTime);
-		mcidFlow.IMSI = ""+proto.getField("IMSI");
-		
+		Object filestamp = proto.getField("x_timestamp");
+		mcidFlow.x_sriResponseDelay = ((Date)filestamp).getTime() - 
+				(null == mcidFlow.x_sriRequestTime ? 0L : mcidFlow.x_sriRequestTime);
+		mcidFlow.x_IMSI = ""+proto.getField("IMSI");
+		mcidFlow.x_sriResponse = true;		
 		si.saveObject(mcidFlow);
 	}
 
@@ -274,8 +274,8 @@ public class McidPacketProcessor extends PacketProcessor {
 		sriReq.gsm_map_request.put("tid", tid);
 		mcidFlow.sri = sriReq;
 
-		mcidFlow.sriRequestTime = parseDateTime("" + proto.getField("@timestamp")).getMillis();
-
+		mcidFlow.x_sriRequestTime = ((Date)proto.getField("x_timestamp")).getTime();
+		mcidFlow.x_timestamp = (Date)proto.getField("x_timestamp");		
 		si.saveObject(mcidFlow);
 		tidMap.put(tid, mcidFlow);
 	}

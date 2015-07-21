@@ -50,7 +50,7 @@ public class PacketProcessor implements PacketListener {
 	        	contentBuilder.endObject();
 		        indexRequestBuilder.setSource(contentBuilder);
 		        
-		        Object tsfld = protocol.getField("@timestamp");
+		        Object tsfld = protocol.getField("x_timestamp");
 		        if(null!=tsfld) 
 		        	indexRequestBuilder.setTimestamp( sdf.format(tsfld));
 		        

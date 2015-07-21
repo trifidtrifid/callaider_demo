@@ -205,7 +205,10 @@ public class McidPacketProcessor extends PacketProcessor {
 				(null == mcidFlow.x_psiRequestTime ? 0L : mcidFlow.x_psiRequestTime);
 		mcidFlow.x_result = result;		
 		mcidFlow.x_psiResponse = true;
-		//mcidFlow.VLR = currentSccp.sccpCallingDigits;
+		if( null==mcidFlow.x_VLR || null!=currentSccp.sccpCallingDigits &&
+				!mcidFlow.x_VLR.equals(currentSccp.sccpCallingDigits)){
+			logger.debug("VLR:"+mcidFlow.x_VLR + " but PSI response arrived from:"+ currentSccp.sccpCallingDigits);
+		}
 		
 		si.saveObject(mcidFlow);
 		tidMap.remove(tid);
@@ -240,7 +243,10 @@ public class McidPacketProcessor extends PacketProcessor {
 			gsmTransaction.gsm_map_request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
-			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();			
+			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();	
+			if(null==mcidFlow.x_VLR || "null".equals(mcidFlow.x_VLR)){
+				mcidFlow.x_VLR = currentSccp.sccpCalledDigits;
+			}
 			si.saveObject(mcidFlow);
 			tidMap.put(tid, mcidFlow);
 						
@@ -284,7 +290,10 @@ public class McidPacketProcessor extends PacketProcessor {
 		mcidFlow.x_IMSI = ""+proto.getField("IMSI");
 		mcidFlow.x_sriResponse = true;	
 		mcidFlow.x_HLR = currentSccp.sccpCallingDigits;
-		mcidFlow.x_VLR = ""+proto.getField("VLR.address");
+		mcidFlow.x_VLR = proto.getTheField("VLR.address");
+		if( mcidFlow.x_VLR == null ){
+			logger.error("SRI response without VLR");
+		}
 		
 		si.saveObject(mcidFlow);
 	}

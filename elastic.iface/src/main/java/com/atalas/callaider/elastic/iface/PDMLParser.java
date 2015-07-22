@@ -217,7 +217,9 @@ public class PDMLParser {
 				cldr.setTimeInMillis(Long.parseLong(fieldVal.substring(0, 10))
 						* 1000 + Integer.parseInt(fieldVal.substring(11, 14)));
 				pc.setField(fielldName, cldr.getTime());
-			} else {
+			} else if (Type.FLAG == fielsMap.type) {
+				pc.setField(fielldName, Boolean.TRUE);
+			}else {
 				pc.setField(fielldName, fieldVal);
 			}
 		}

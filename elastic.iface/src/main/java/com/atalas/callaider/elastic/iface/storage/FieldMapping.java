@@ -22,7 +22,7 @@ public class FieldMapping {
 		this.shortName = fieldName;	
 	}
 	
-	public static enum Type { INT, STRING, DATE, FLOAT, CONTAINER };
+	public static enum Type { INT, STRING, DATE, FLOAT, CONTAINER, FLAG };
 	public String shortName;
 	public Type type;		
 	public Map<String,FieldMapping> lowerLevelMap;

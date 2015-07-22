@@ -22,15 +22,17 @@ public class McidFlow extends StorageIndexedInterface {
 	public String x_result="absent";
 	public Integer x_sriErrorCode = 0;
 	public Integer x_psiErrorCode = 0;
-	
+	public Boolean x_pagingFlag = false;		
 		
 	public GsmTransaction sriForSm;
 	public GsmTransaction sri;
 	public GsmTransaction psi;
 	public List<GsmTransaction> errors;
 	
+	public String x_client;
+	
 	public static class GsmTransaction {		
 		public Map<String, Object> gsm_map_request = new HashMap<>();
 		public Map<String, Object> gsm_map_response = new HashMap<>();
-	}			
+	}		
 }

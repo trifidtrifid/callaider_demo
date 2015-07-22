@@ -17,6 +17,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
 import com.atalas.callaider.elastic.iface.storage.FieldMapping;
 import com.atalas.callaider.elastic.iface.storage.MappingCreator;
+import com.atalas.callaider.elastic.iface.storage.StorageInterface;
 import com.atalas.callaider.flow.mcid.McidPacketProcessor;
 
 public class AppXML {
@@ -26,13 +27,6 @@ public class AppXML {
 	public final String indexName = "network";
 	public final String documentType = "packet";
 	private Map<String,ProtocolContainer.Description>  protocolMap;
-	
-	private static Client getClient() {
-        final ImmutableSettings.Builder settings = ImmutableSettings.settingsBuilder();
-        TransportClient transportClient = new TransportClient(settings)
-        	.addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
-        return transportClient;
-    }
 	
 	public static void main( String[] args )
     {
@@ -48,7 +42,7 @@ public class AppXML {
     	for( String arg: args){argsLine+= " '" + arg +"'";}
     	System.out.println("========= Args.length="+args.length+" args: "+argsLine );
     	
-    	Client client = getClient();
+    	Client client = StorageInterface.createClient();
 
 		try{
     		app.loadMapping(client, args[1]);

@@ -42,7 +42,7 @@ public class StorageInterfaceTest extends TestCase {
 				
         dropTheIndex(client);
         
-		StorageInterface si = new StorageInterface(client, null, index);
+		StorageInterface si = new StorageInterface(client, index);
 		
 		String mappStr = si.createObjectMapping( McidFlow.class );		
 		

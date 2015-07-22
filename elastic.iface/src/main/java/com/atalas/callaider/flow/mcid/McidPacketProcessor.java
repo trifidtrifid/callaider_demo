@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
@@ -37,7 +36,7 @@ public class McidPacketProcessor extends PacketProcessor {
 
 	public McidPacketProcessor(Client client, String indexName) {
 		super(client, indexName);
-		this.si = new StorageInterface(client, null, indexName);
+		this.si = new StorageInterface(client, indexName);
 		// @Delete all Stored objects and initialize field mapping
 		this.si.createObjectMapping(McidFlow.class);
 		ConcurrentLinkedHashMap.Builder<String, McidFlow> builder = new Builder<>();
@@ -218,6 +217,7 @@ public class McidPacketProcessor extends PacketProcessor {
 
 		// todo get McidFlow by "SRI.gsm_map_response.imsi"
 		String imsi = proto.getTheField("imsi");
+		Boolean paging = proto.getTheField("paging");
 		if (null != imsi) {
 
 			McidFlow mcidFlow = imsiMap.get(imsi);
@@ -247,6 +247,9 @@ public class McidPacketProcessor extends PacketProcessor {
 			if(null==mcidFlow.x_VLR || "null".equals(mcidFlow.x_VLR)){
 				mcidFlow.x_VLR = currentSccp.sccpCalledDigits;
 			}
+			if( null!=paging ) 
+				mcidFlow.x_pagingFlag = paging;
+			
 			si.saveObject(mcidFlow);
 			tidMap.put(tid, mcidFlow);
 						

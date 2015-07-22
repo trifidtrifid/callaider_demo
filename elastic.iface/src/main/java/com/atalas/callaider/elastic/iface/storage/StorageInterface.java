@@ -20,10 +20,12 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.search.SearchHit;
 
-import com.atalas.callaider.elastic.iface.ProtocolContainer.Description;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -37,23 +39,43 @@ public class StorageInterface {
 	private final IdGenerator idGen;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-	public StorageInterface(Client client, Map<String, Description> protoMap,
-			String index) {
+	public StorageInterface(Client client, String index) {
 
 		this.client = client;
 		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 		this.index = index;
 		this.idGen = new IdGenerator();
 	}
+	
+	public final Client getClient(){return client;}
+	
+	public StorageInterface(String index) {
+		this( StorageInterface.createClient(), index);
+	}
 
-	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> fields) {
+
+	public static Client createClient() {
+        final ImmutableSettings.Builder settings = ImmutableSettings.settingsBuilder();
+        TransportClient transportClient = new TransportClient(settings)
+        	.addTransportAddress(new InetSocketTransportAddress("localhost", 9300));
+        return transportClient;
+    }
+
+	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> keyValues) {
 
 		List<T> rslt = new ArrayList<T>();
 		SearchRequestBuilder searchReq = client.prepareSearch(index).setTypes(
 				clazz.getSimpleName());
-		for (Entry<String, Object> fldEntry : fields.entrySet())
-			searchReq.setPostFilter(FilterBuilders.termFilter(
-					fldEntry.getKey(), fldEntry.getValue()));
+		for (Entry<String, Object> fldEntry : keyValues.entrySet()) {
+			Object value = fldEntry.getValue();
+			if( value.getClass().isArray() && ((Object[])value).length == 2 ){ //Range 
+				searchReq.setPostFilter(FilterBuilders.rangeFilter(
+						fldEntry.getKey()).from(((Object[])value)[0]).to(((Object[])value)[1]));
+			} else {
+				searchReq.setPostFilter(FilterBuilders.termFilter(
+						fldEntry.getKey(), value));
+			}
+		}
 
 		SearchResponse sr = searchReq.execute().actionGet();
 		SearchHit[] results = sr.getHits().getHits();
@@ -61,14 +83,14 @@ public class StorageInterface {
 
 			String sourceAsString = hit.getSourceAsString();
 			if (sourceAsString != null) {
-				logger.debug("Search by '"+filterAsString(fields)+"' got object: "+sourceAsString);
+				logger.debug("Search by '"+filterAsString(keyValues)+"' got object: "+sourceAsString);
 				T nextObj = gson.fromJson(sourceAsString, clazz);
 				setId(nextObj, hit.getId());
 				rslt.add(nextObj);
 			}
 		} 
 		if( results.length == 0){
-			logger.warn("Search by '"+filterAsString(fields)+"' got NOTHING");
+			logger.warn("Search by '"+filterAsString(keyValues)+"' got NOTHING");
 		}
 		return rslt;
 	}

@@ -30,9 +30,20 @@ public class McidFlow extends StorageIndexedInterface {
 	public List<GsmTransaction> errors;
 	
 	public String x_client;
+	public Location location;
 	
 	public static class GsmTransaction {		
-		public Map<String, Object> gsm_map_request = new HashMap<>();
-		public Map<String, Object> gsm_map_response = new HashMap<>();
-	}		
+		public Map<String, Object> request = new HashMap<>();
+		public Map<String, Object> response = new HashMap<>();
+	}
+	public static class Location {
+		public Location(Double longitude, Double lattitude, Integer error) {
+			this.longitude = longitude;
+			this.lattitude = lattitude;
+			this.error = error;
+		}
+		Double longitude;
+		Double lattitude;
+		Integer error;
+	}
 }

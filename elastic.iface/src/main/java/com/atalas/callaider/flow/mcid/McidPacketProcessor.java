@@ -125,7 +125,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	private void processPSIErrorResult(McidFlow mcidFlow, ProtocolContainer proto,
 			TcapInfo currentTcap, SccpInfo currentSccp) {
 		mcidFlow.x_psiErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
-		mcidFlow.psi.gsm_map_response.put("error", mcidFlow.x_psiErrorCode);	
+		mcidFlow.psi.response.put("error", mcidFlow.x_psiErrorCode);	
 		
 		si.saveObject(mcidFlow);
 	}
@@ -133,7 +133,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	private void processSRIErrorResult(McidFlow mcidFlow, ProtocolContainer proto,
 			TcapInfo currentTcap, SccpInfo currentSccp) {
 		mcidFlow.x_sriErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
-		mcidFlow.sri.gsm_map_response.put("error", mcidFlow.x_sriErrorCode);	
+		mcidFlow.sri.response.put("error", mcidFlow.x_sriErrorCode);	
 		
 		si.saveObject(mcidFlow);
 	}
@@ -193,12 +193,12 @@ public class McidPacketProcessor extends PacketProcessor {
 		if (null == laiOrCid || laiOrCid.isEmpty())
 			result = "fault";
 		else {
-			gsmTransaction.gsm_map_response.put("CID_LAI_SAI", laiOrCid);
+			gsmTransaction.response.put("CID_LAI_SAI", laiOrCid);
 			mcidFlow.x_CID_SAI_LAI = laiOrCid;
 		}
 
-		gsmTransaction.gsm_map_response.put("result", result);
-		gsmTransaction.gsm_map_response.put("tid", tid);
+		gsmTransaction.response.put("result", result);
+		gsmTransaction.response.put("tid", tid);
 		
 		mcidFlow.x_psiResponseDelay = ((Date)proto.getField("x_timestamp")).getTime() - 				
 				(null == mcidFlow.x_psiRequestTime ? 0L : mcidFlow.x_psiRequestTime);
@@ -224,7 +224,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			if (null == mcidFlow) {
 				Map<String, Object> filter = new HashMap<String, Object>();
 				filter.put("sri.gsm_map_response.imsi", imsi);
-				mcidFlow = si.searchSingleObjects(McidFlow.class, filter);
+				mcidFlow = si.searchSingleObjects(McidFlow.class, filter,"x_timestamp",true);
 			} else {
 				logger.debug("Got sri transaction from cache for IMSI:" + imsi);
 			}
@@ -240,7 +240,7 @@ public class McidPacketProcessor extends PacketProcessor {
 				return;
 			}
 			
-			gsmTransaction.gsm_map_request.put("tid", tid);
+			gsmTransaction.request.put("tid", tid);
 			mcidFlow.psi = gsmTransaction;
 			
 			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();	
@@ -280,9 +280,9 @@ public class McidPacketProcessor extends PacketProcessor {
 		
 		imsi = proto.getTheField("imsi");
 
-		gsmTransaction.gsm_map_response.put("imsi", imsi);
+		gsmTransaction.response.put("imsi", imsi);
 		mcidFlow.x_IMSI = imsi;
-		gsmTransaction.gsm_map_response.put("tid", tid);
+		gsmTransaction.response.put("tid", tid);
 
 		imsiMap.put(imsi, mcidFlow);
 		tidMap.remove(tid);
@@ -290,7 +290,7 @@ public class McidPacketProcessor extends PacketProcessor {
 		Object filestamp = proto.getField("x_timestamp");
 		mcidFlow.x_sriResponseDelay = ((Date)filestamp).getTime() - 
 				(null == mcidFlow.x_sriRequestTime ? 0L : mcidFlow.x_sriRequestTime);
-		mcidFlow.x_IMSI = ""+proto.getField("IMSI");
+		mcidFlow.x_IMSI = imsi;
 		mcidFlow.x_sriResponse = true;	
 		mcidFlow.x_HLR = currentSccp.sccpCallingDigits;
 		mcidFlow.x_VLR = proto.getTheField("VLR.address");
@@ -313,7 +313,7 @@ public class McidPacketProcessor extends PacketProcessor {
 				Map<String, Object> filter = new HashMap<>();
 				filter.put(tidKey, tid);
 				List<McidFlow> mcidFlowL = si.searchObjects(McidFlow.class,
-						filter);
+						filter,"x_timestamp", true);
 
 				if (mcidFlowL.size() == 0) {
 					logger.warn("can't find SRI req by tid: " + tid);
@@ -341,7 +341,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			logger.warn("SRI request have no tid");
 			return;
 		}
-		sriReq.gsm_map_request.put("tid", tid);
+		sriReq.request.put("tid", tid);
 		mcidFlow.sri = sriReq;
 
 		mcidFlow.x_sriRequestTime = ((Date)proto.getField("x_timestamp")).getTime();

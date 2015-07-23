@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +26,10 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 
+import com.atalas.callaider.flow.mcid.McidFlow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -62,6 +66,10 @@ public class StorageInterface {
     }
 
 	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> keyValues) {
+		return searchObjects(clazz, keyValues, null, null);
+	}
+
+	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> keyValues, String sortField, Boolean sortDesc) {
 
 		List<T> rslt = new ArrayList<T>();
 		SearchRequestBuilder searchReq = client.prepareSearch(index).setTypes(
@@ -76,7 +84,10 @@ public class StorageInterface {
 						fldEntry.getKey(), value));
 			}
 		}
-
+		
+		if( null!=sortField){
+			searchReq.addSort(sortField, null==sortDesc || !sortDesc ? SortOrder.ASC : SortOrder.DESC);
+		}
 		SearchResponse sr = searchReq.execute().actionGet();
 		SearchHit[] results = sr.getHits().getHits();
 		for (SearchHit hit : results) {
@@ -95,8 +106,9 @@ public class StorageInterface {
 		return rslt;
 	}
 	// ================================================================================================
-	public <T> T searchSingleObjects(Class<T> clazz, Map<String, Object> fields) {
-		List<T> foundObjects = searchObjects(clazz, fields);
+	public <T> T searchSingleObjects(Class<T> clazz, Map<String, Object> fields, String sortField, Boolean sortDesc) {
+
+		List<T> foundObjects = searchObjects(clazz, fields,sortField,sortDesc);
 		if(foundObjects.size() == 0){
 			logger.warn("No object "+clazz.getName()+" found by filter '"+filterAsString(fields)+"'");
 			return null;
@@ -105,6 +117,12 @@ public class StorageInterface {
 		}	
 		return foundObjects.get(0);
 	}
+	
+	
+	public <T> T searchSingleObjects(Class<T> clazz, Map<String, Object> fields) {
+		return searchSingleObjects(clazz, fields, null, null);
+	}
+
 	
 	private String filterAsString(Map<String,Object> filter){
 		String filterStr = "";
@@ -129,7 +147,8 @@ public class StorageInterface {
 		logger.debug("Saved object '"+json+"'");
 		indexReq.setSource(json);
 		if( null!=object.x_timestamp) {
-			indexReq.setTimestamp( sdf.format(object.x_timestamp));			
+			indexReq.setTimestamp( sdf.format(object.x_timestamp));	
+			indexReq.setId(id);
 		}
 		IndexResponse response = indexReq.execute().actionGet();
 		return response.getId();
@@ -235,4 +254,5 @@ public class StorageInterface {
 		return mappingString;
 	}
 	static Logger logger = Logger.getLogger(StorageInterface.class);
+	
 }

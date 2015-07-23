@@ -81,22 +81,22 @@ public class StorageInterfaceTest extends TestCase {
 		//mcf.m_transactions = new HashMap<>();
 		McidFlow.GsmTransaction gt1 = new McidFlow.GsmTransaction();
 
-		gt1.gsm_map_request = new HashMap<>();
-		gt1.gsm_map_response = new HashMap<>();
-		gt1.gsm_map_request.put("a", 1);
-		gt1.gsm_map_request.put("b", 1.0D);
-		gt1.gsm_map_request.put("c", true);
+		gt1.request = new HashMap<>();
+		gt1.response = new HashMap<>();
+		gt1.request.put("a", 1);
+		gt1.request.put("b", 1.0D);
+		gt1.request.put("c", true);
 		
-		gt1.gsm_map_response.put("a", 1);
-		gt1.gsm_map_response.put("b", 1.0D);
-		gt1.gsm_map_response.put("c", true);		
+		gt1.response.put("a", 1);
+		gt1.response.put("b", 1.0D);
+		gt1.response.put("c", true);		
 		
 		McidFlow.GsmTransaction gt2 = new McidFlow.GsmTransaction();
-		gt2.gsm_map_request = new HashMap<>();
-		gt2.gsm_map_response = new HashMap<>();
-		gt2.gsm_map_request.put("a", 2);
-		gt2.gsm_map_request.put("b", 2.0D);
-		gt2.gsm_map_request.put("c", false);		
+		gt2.request = new HashMap<>();
+		gt2.response = new HashMap<>();
+		gt2.request.put("a", 2);
+		gt2.request.put("b", 2.0D);
+		gt2.request.put("c", false);		
 		
 		mcf.sri = gt1;
 		mcf.psi = gt2;

@@ -55,23 +55,23 @@ public class StorageInterfaceTest extends TestCase {
 		//search test
 		Map<String,Object> searchMap;
 		searchMap = new HashMap<>();
-		searchMap.put("gsm_map_request.a", 1);
+		searchMap.put("request.a", 1);
 		List<McidFlow> foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 0 );
 		
 		searchMap = new HashMap<>();
-		searchMap.put("sri.gsm_map_request.a", 1);
+		searchMap.put("sri.request.a", 1);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);		
 		assertEquals( foundObjs.size(), 1);
 		assertEquals( foundObjs.get(0).id, id );
 		
 		searchMap = new HashMap<>();
-		searchMap.put("psi.gsm_map_request.a", 1);
+		searchMap.put("psi.request.a", 1);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 0);
 		
 		searchMap = new HashMap<>();
-		searchMap.put("sri.gsm_map_response.c", true);
+		searchMap.put("sri.response.c", true);
 		foundObjs = si.searchObjects(McidFlow.class, searchMap);
 		assertEquals( foundObjs.size(), 1);			
 	}
@@ -100,7 +100,6 @@ public class StorageInterfaceTest extends TestCase {
 		
 		mcf.sri = gt1;
 		mcf.psi = gt2;
-		mcf.sriForSm = gt2;
 		
 		return mcf;
 	}

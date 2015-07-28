@@ -54,7 +54,7 @@ public class MLBSweb_app_logParserTest extends TestCase {
 		} catch (InterruptedException e) {			
 			e.printStackTrace();
 		}
-		walp.processTheEvent(msisdn, uid, theDate, "0","0","0");
+		walp.processTheEvent(msisdn, uid, theDate, "1","1","2","3","OK");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {			
@@ -83,7 +83,7 @@ public class MLBSweb_app_logParserTest extends TestCase {
 		walp = new MLBSweb_app_logParser(indexName){
 
 			@Override
-			public void processTheEvent(String msisdn, String uid, Date reqDate, String lon, String lat, String err) {
+			public void processTheEvent(String msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String res) {
 				results.add( new ParseREsults(msisdn,uid,reqDate));
 			}
 		};

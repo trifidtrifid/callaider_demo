@@ -22,13 +22,10 @@ gsm_map.old.Component gsm_old.invoke_element:map_component_type gsm_map.sm.msisd
 
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_old.opCode gsm_old.localValue INT:opCode
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.tbcd_digits STRING:imsi
+
 #VLR
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ch.subscriberInfo_element gsm_map.ms.locationInformation_element gsm_map.ms.vlr_number gsm_map.address.digits STRING:VLR.address
 gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.sm.locationInfoWithLMSI_element gsm_map.sm.networkNode_Number gsm_map.address.digits STRING:VLR.address
-
-#gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ch.extendedRoutingInfo gsm_map.ch.routingInfo gsm_map.ch.roamingNumber gsm_map.address.digits STRING:VLR.address
-#gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ch.extendedRoutingInfo gsm_map.ch.camelRoutingInfo_element gsm_map.ch.forwardingData_element gsm_map.ch.forwardedToNumber gsm_map.address.digits STRING:VLR.address
-#gsm_map.old.Component gsm_old.returnResultLast_element:map_component_type gsm_old.resultretres_element gsm_map.ch.extendedRoutingInfo gsm_map.ch.routingInfo gsm_map.ch.forwardingData_element gsm_map.ch.forwardedToNumber gsm_map.address.digits STRING:VLR.address
 
 #paging
 gsm_map.old.Component gsm_old.invoke_element gsm_map.ms.requestedInfo_element gsm_map.ms.currentLocation_element FLAG:paging

@@ -7,15 +7,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface;
 import com.atalas.callaider.elastic.iface.storage.StorageInterface;
-import com.atalas.callaider.flow.mcid.McidFlow.Location;
 
 //класс будет паристь строки вида 
 // 0 22/07/2015 23:51:20,
@@ -29,15 +31,15 @@ import com.atalas.callaider.flow.mcid.McidFlow.Location;
 // 8 MODE='4',
 // 9 MSISDN='79269004669',
 // 10 IP=10.236.26.210,
-// 12 RESULT=OK,
-// 13 longitude=38.042580,
-// 14 latitude=55.557743,
-// 15 error=355,
-// 16 age=0,
-// 17 cid=50799,
-// 18 lac=5012,
-// 19 ,
-// 20 comment="<LocationDatacomment=\"\"ageOfLocation=\"0\"locationInformation=\"-1\"/>"2
+// 11 RESULT=OK,
+// 12 longitude=38.042580,
+// 13 latitude=55.557743,
+// 14 error=355,
+// 15 age=0,
+// 16 cid=50799,
+// 17 lac=5012,
+// 18 ,
+// 29 comment="<LocationDatacomment=\"\"ageOfLocation=\"0\"locationInformation=\"-1\"/>"2
 public class MLBSweb_app_logParser {
 	
 	private static Logger logger = Logger.getLogger(MLBSweb_app_logParser.class);
@@ -51,6 +53,7 @@ public class MLBSweb_app_logParser {
 			System.err.println("USage java -jar xxx.jar <input file name or - (stdin)>");
 			return;
 		}
+		app.sdf.setTimeZone( TimeZone.getTimeZone("UTC") );
 
     	BasicConfigurator.configure();
     	
@@ -82,43 +85,70 @@ public class MLBSweb_app_logParser {
 		String nextLine;
 		while( null != (nextLine=br.readLine())){
 			String[] parts = nextLine.split("[,]");
-			if( 16 > parts.length ){
-				logger.error("Failed to parse line: '"+nextLine+"' not enought parts");
+			if( parts.length < 12 ){
+				logger.error("Failed to parse line: '"+nextLine+"' not enought parts ["+parts.length+" found but 12 required at least]");
 				
 			} else {
-				String msisdn = unquotePart(parts,9);				
+				String msisdn = unquotePart(parts,9);
+				String mode = unquotePart(parts,8);	
 				String uid = unquotePart(parts,2);
-				String lon = unquotePart(parts,13);
-				String lat = unquotePart(parts,14);
-				String err = unquotePart(parts,15);
+				String result = unquotePart(parts,11);
+				String lon, lat, err;
+				if("OK".endsWith(result)){
+					if( parts.length < 15 ){
+						logger.error("Failed to parse(2) line: '"+nextLine+"' not enought parts ["+parts.length+" found but 15 required at least]");
+						continue;
+					}
+					lon = unquotePart(parts,12);
+					lat = unquotePart(parts,13);
+					err = unquotePart(parts,14);
+				} else {
+					lon = lat = err = "0";
+				}				
 				
 				Date reqDate;
 				String unquotedDate = unquotePart(parts,0);
 				try {
 					reqDate = sdf.parse(unquotedDate);
+					processTheEvent(msisdn, uid, reqDate, mode, lon, lat, err, result);
+					
 				} catch (ParseException e) {
-					throw new IOException("INcorrect date format ["+unquotedDate+"]: "+e.getMessage(),e);
-				}
-				
-				processTheEvent(msisdn, uid, reqDate, lon, lat, err);
+					logger.error("INcorrect date format ["+unquotedDate+"]: "+e.getMessage(),e);
+				}				
 			}
 		}
 	}
 
-	public void processTheEvent(String msisdn, String uid, Date reqDate, String lon, String lat, String err) {
-		McidFlow msf = getTheFlow(msisdn, reqDate);
-		if( null!=msf ){
-			msf.x_client = uid;
-			msf.location = new Location(Double.parseDouble(lon), 
-					Double.parseDouble(lat), Integer.parseInt(err));
-			si.saveObject(msf);
+	public void processTheEvent(String msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String result ) {
+		try {
+			McidFlow msf = getTheFlow(msisdn, reqDate);
+			if( null!=msf ){
+				msf.x_client = uid;
+				msf.location = new StorageIndexedInterface.Location(Double.parseDouble(lon), Double.parseDouble(lat));
+				msf.x_locError = Integer.parseInt(err);
+				msf.x_serviceResult = result;
+				msf.x_serviceMode = Integer.parseInt(mode);
+				
+				si.saveObject(msf);
+			}
+		} catch (Exception e) {
+			logger.error("Failed to process event. "+e.getMessage(),e);
 		}
 	}
-	
+		
 	private McidFlow getTheFlow(String msisdn, Date rspDate) {
+		if( null==rspDate || null==msisdn || msisdn.isEmpty())
+			return null;
 		Map<String, Object> keyValueFilter = new HashMap<>();
 		keyValueFilter.put("x_msisdn", msisdn);
-		keyValueFilter.put("x_timestamp", new Date[]{ new Date( rspDate.getTime() - 180000L), rspDate } );
+		Calendar from = Calendar.getInstance( TimeZone.getTimeZone("UTC"));
+		Calendar to = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		from.setTime(rspDate);
+		from.add(Calendar.MINUTE, -1);
+		to.setTime(rspDate);
+		to.add(Calendar.SECOND, 1);
+		
+		keyValueFilter.put("x_timestamp", new Date[]{ from.getTime(), to.getTime()} );
 		return si.searchSingleObjects(McidFlow.class,keyValueFilter,"x_timestamp", true);		
 	}
 

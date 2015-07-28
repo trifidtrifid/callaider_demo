@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ListenableActionFuture;
@@ -24,11 +25,15 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.index.query.AndFilterBuilder;
+import org.elasticsearch.index.query.FilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.RangeFilterBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
+import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface.Location;
 import com.atalas.callaider.flow.mcid.McidFlow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,6 +54,8 @@ public class StorageInterface {
 		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 		this.index = index;
 		this.idGen = new IdGenerator();
+		 sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		 sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 	
 	public final Client getClient(){return client;}
@@ -71,24 +78,17 @@ public class StorageInterface {
 
 	public <T> List<T> searchObjects(Class<T> clazz, Map<String, Object> keyValues, String sortField, Boolean sortDesc) {
 
-		List<T> rslt = new ArrayList<T>();
-		SearchRequestBuilder searchReq = client.prepareSearch(index).setTypes(
-				clazz.getSimpleName());
-		for (Entry<String, Object> fldEntry : keyValues.entrySet()) {
-			Object value = fldEntry.getValue();
-			if( value.getClass().isArray() && ((Object[])value).length == 2 ){ //Range 
-				searchReq.setPostFilter(FilterBuilders.rangeFilter(
-						fldEntry.getKey()).from(((Object[])value)[0]).to(((Object[])value)[1]));
-			} else {
-				searchReq.setPostFilter(FilterBuilders.termFilter(
-						fldEntry.getKey(), value));
-			}
-		}
+		SearchRequestBuilder searchReq = prepareSearchRequest(clazz, keyValues,
+				sortField, sortDesc);
 		
-		if( null!=sortField){
-			searchReq.addSort(sortField, null==sortDesc || !sortDesc ? SortOrder.ASC : SortOrder.DESC);
-		}
 		SearchResponse sr = searchReq.execute().actionGet();
+		return loadSearchResults(clazz, keyValues, sr);
+		
+	}
+
+	private <T> List<T> loadSearchResults(Class<T> clazz,
+			Map<String, Object> keyValues, SearchResponse sr) {
+		List<T> rslt = new ArrayList<>();
 		SearchHit[] results = sr.getHits().getHits();
 		for (SearchHit hit : results) {
 
@@ -105,16 +105,55 @@ public class StorageInterface {
 		}
 		return rslt;
 	}
+
+	private <T> SearchRequestBuilder prepareSearchRequest(Class<T> clazz,
+			Map<String, Object> keyValues, String sortField, Boolean sortDesc) {
+		SearchRequestBuilder searchReq = client.prepareSearch(index).setTypes(
+				clazz.getSimpleName());
+		
+		if(keyValues.size()>0){
+			AndFilterBuilder andFilter = FilterBuilders.andFilter();
+			
+			for (Entry<String, Object> fldEntry : keyValues.entrySet()) {
+				FilterBuilder filterBuilder;
+				filterBuilder = createFilter(fldEntry);
+				andFilter.add( filterBuilder);
+			}
+			searchReq.setPostFilter( andFilter );				
+		}
+		
+		if( null!=sortField){
+			searchReq.addSort(sortField, null==sortDesc || !sortDesc ? SortOrder.ASC : SortOrder.DESC);
+		}
+		return searchReq;
+	}
+
+	private FilterBuilder createFilter(Entry<String, Object> fldEntry) {
+		FilterBuilder filterBuilder;
+		Object value = fldEntry.getValue();
+		
+		if( value.getClass().isArray() && ((Object[])value).length == 2 ){ //Range 
+			filterBuilder = FilterBuilders. rangeFilter( 
+					fldEntry.getKey()).from(((Object[])value)[0]).to(((Object[])value)[1]);
+			
+		} else {
+			filterBuilder = FilterBuilders.termFilter(
+					fldEntry.getKey(), value);
+		}
+		return filterBuilder;
+	}
 	// ================================================================================================
 	public <T> T searchSingleObjects(Class<T> clazz, Map<String, Object> fields, String sortField, Boolean sortDesc) {
 
-		List<T> foundObjects = searchObjects(clazz, fields,sortField,sortDesc);
+		SearchRequestBuilder searchReq = prepareSearchRequest(clazz, fields, sortField, sortDesc);
+		searchReq.setSize(1);
+		SearchResponse sr = searchReq.execute().actionGet();
+		List<T> foundObjects = loadSearchResults(clazz, fields, sr);
+		
 		if(foundObjects.size() == 0){
 			logger.warn("No object "+clazz.getName()+" found by filter '"+filterAsString(fields)+"'");
 			return null;
-		} else if(foundObjects.size() > 1){
-			logger.warn("There are "+ foundObjects.size() +" "+clazz.getName()+" found by filter '"+filterAsString(fields)+"'");
-		}	
+		} 
 		return foundObjects.get(0);
 	}
 	
@@ -126,12 +165,32 @@ public class StorageInterface {
 	
 	private String filterAsString(Map<String,Object> filter){
 		String filterStr = "";
-		for (Entry<String, Object> fldEntry : filter.entrySet())
-			filterStr += fldEntry.getKey()+"=" + fldEntry.getValue()+" ";
+		for (Entry<String, Object> fldEntry : filter.entrySet()) {
+			Object value = fldEntry.getValue();
+			filterStr += fldEntry.getKey()+":";
+			if( value.getClass().isArray()){
+				filterStr += "[";
+				for( Object nfv : (Object[])value)
+					filterStr += printObjValue(nfv) + ", ";
+				filterStr += "] ";
+			
+			} else {
+				filterStr += printObjValue(value)+" ";
+			}
+		}
 		return filterStr;
 	}
 
 	// ================================================================================================
+
+	private final SimpleDateFormat sdf2;
+
+	private String printObjValue(Object value) {
+		if( value instanceof Date ){
+			return sdf2.format((Date)value);
+		}
+		return ""+value;
+	}
 
 	public <T extends StorageIndexedInterface> String saveObject(T object) {
 
@@ -235,6 +294,11 @@ public class StorageInterface {
 				mappingString += " \"" 
 						+ fldName 
 						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"date\"},";
+
+			} else if (fclass.equals(Location.class)) {
+				mappingString += " \"" 
+						+ fldName 
+						+ "\": {\"type\":\"geo_point\"},";
 
 			} else if (!fld.getType().isArray()) {
 				mappingString += "\"" + fldName							 

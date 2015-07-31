@@ -54,8 +54,7 @@ public class StorageInterface {
 		this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 		this.index = index;
 		this.idGen = new IdGenerator();
-		 sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		 sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
+		 sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");		 
 	}
 	
 	public final Client getClient(){return client;}

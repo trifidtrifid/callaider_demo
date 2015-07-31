@@ -53,7 +53,7 @@ public class MLBSweb_app_logParser {
 			System.err.println("USage java -jar xxx.jar <input file name or - (stdin)>");
 			return;
 		}
-		app.sdf.setTimeZone( TimeZone.getTimeZone("UTC") );
+		app.sdf.setTimeZone( TimeZone.getTimeZone("GMT+03:00"));
 
     	BasicConfigurator.configure();
     	
@@ -110,6 +110,7 @@ public class MLBSweb_app_logParser {
 				String unquotedDate = unquotePart(parts,0);
 				try {
 					reqDate = sdf.parse(unquotedDate);
+					
 					processTheEvent(msisdn, uid, reqDate, mode, lon, lat, err, result);
 					
 				} catch (ParseException e) {
@@ -141,8 +142,8 @@ public class MLBSweb_app_logParser {
 			return null;
 		Map<String, Object> keyValueFilter = new HashMap<>();
 		keyValueFilter.put("x_msisdn", msisdn);
-		Calendar from = Calendar.getInstance( TimeZone.getTimeZone("UTC"));
-		Calendar to = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar from = Calendar.getInstance();
+		Calendar to = Calendar.getInstance();
 		from.setTime(rspDate);
 		from.add(Calendar.MINUTE, -1);
 		to.setTime(rspDate);

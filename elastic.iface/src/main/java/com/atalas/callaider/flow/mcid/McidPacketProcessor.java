@@ -127,6 +127,7 @@ public class McidPacketProcessor extends PacketProcessor {
 		mcidFlow.x_psiErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
 		mcidFlow.psi.response.put("error", mcidFlow.x_psiErrorCode);	
 		mcidFlow.x_result = "psiError";
+		mcidFlow.x_VLR = Long.getLong(currentSccp.sccpCallingDigits);
 		si.saveObject(mcidFlow);
 	}
 
@@ -134,6 +135,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			TcapInfo currentTcap, SccpInfo currentSccp) {
 		mcidFlow.x_sriErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
 		mcidFlow.sri.response.put("error", mcidFlow.x_sriErrorCode);	
+		mcidFlow.x_HLR = Long.getLong(currentSccp.sccpCallingDigits);
 		mcidFlow.x_result = "sriError";
 		si.saveObject(mcidFlow);
 	}
@@ -245,7 +247,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			
 			mcidFlow.x_psiRequestTime = ((Date)proto.getField("x_timestamp")).getTime();	
 			if(null==mcidFlow.x_VLR || "null".equals(mcidFlow.x_VLR)){
-				mcidFlow.x_VLR = currentSccp.sccpCalledDigits;
+				mcidFlow.x_VLR = Long.parseLong(currentSccp.sccpCalledDigits);
 			}
 			if( null!=paging ) 
 				mcidFlow.x_pagingFlag = paging;
@@ -292,8 +294,8 @@ public class McidPacketProcessor extends PacketProcessor {
 				(null == mcidFlow.x_sriRequestTime ? 0L : mcidFlow.x_sriRequestTime);
 		mcidFlow.x_IMSI = imsi;
 		mcidFlow.x_sriResponse = true;	
-		mcidFlow.x_HLR = currentSccp.sccpCallingDigits;
-		mcidFlow.x_VLR = proto.getTheField("VLR.address");
+		mcidFlow.x_HLR = Long.parseLong(currentSccp.sccpCallingDigits);
+		mcidFlow.x_VLR = Long.parseLong(proto.getTheField("VLR.address"));
 		if( mcidFlow.x_VLR == null ){
 			logger.error("SRI response without VLR");
 		}
@@ -335,7 +337,7 @@ public class McidPacketProcessor extends PacketProcessor {
 	void processSriReq(int opCode, ProtocolContainer proto, TcapInfo currentTcap, SccpInfo currentSccp) {
 		
 		McidFlow mcidFlow = new McidFlow();
-		mcidFlow.x_msisdn = ""+proto.getField("msisdn");
+		mcidFlow.x_msisdn = Long.parseLong(""+proto.getField("msisdn"));
 		mcidFlow.x_sriOpCode = opCode;
 		McidFlow.GsmTransaction req = new McidFlow.GsmTransaction();
 		String tid = currentTcap.tid;

@@ -89,7 +89,7 @@ public class MLBSweb_app_logParser {
 				logger.error("Failed to parse line: '"+nextLine+"' not enought parts ["+parts.length+" found but 12 required at least]");
 				
 			} else {
-				String msisdn = unquotePart(parts,9);
+				Long msisdn = Long.parseLong(unquotePart(parts,9));
 				String mode = unquotePart(parts,8);	
 				String uid = unquotePart(parts,2);
 				String result = unquotePart(parts,11);
@@ -120,7 +120,7 @@ public class MLBSweb_app_logParser {
 		}
 	}
 
-	public void processTheEvent(String msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String result ) {
+	public void processTheEvent(Long msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String result ) {
 		try {
 			McidFlow msf = getTheFlow(msisdn, reqDate);
 			if( null!=msf ){
@@ -137,8 +137,8 @@ public class MLBSweb_app_logParser {
 		}
 	}
 		
-	private McidFlow getTheFlow(String msisdn, Date rspDate) {
-		if( null==rspDate || null==msisdn || msisdn.isEmpty())
+	private McidFlow getTheFlow(Long msisdn, Date rspDate) {
+		if( null==rspDate || null==msisdn )
 			return null;
 		Map<String, Object> keyValueFilter = new HashMap<>();
 		keyValueFilter.put("x_msisdn", msisdn);

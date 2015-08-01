@@ -36,7 +36,7 @@ public class MLBSweb_app_logParserTest extends TestCase {
 
 	public void testProcessTheEvent() {
 		McidFlow mcf = new McidFlow();
-		String msisdn = "123456";
+		Long msisdn = 123456L;
 		Date theDate = new Date();
 		String uid = "23456";		
 		
@@ -68,12 +68,12 @@ public class MLBSweb_app_logParserTest extends TestCase {
 	}
 
 	public static class ParseREsults {
-		public ParseREsults(String msisdn, String uid, Date date) {			
+		public ParseREsults(Long msisdn, String uid, Date date) {			
 			this.msisdn = msisdn;
 			this.uid = uid;
 			this.date = date;
 		}
-		String msisdn;
+		Long msisdn;
 		String uid;
 		Date date;
 	}
@@ -83,7 +83,7 @@ public class MLBSweb_app_logParserTest extends TestCase {
 		walp = new MLBSweb_app_logParser(indexName){
 
 			@Override
-			public void processTheEvent(String msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String res) {
+			public void processTheEvent(Long msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String res) {
 				results.add( new ParseREsults(msisdn,uid,reqDate));
 			}
 		};
@@ -92,7 +92,7 @@ public class MLBSweb_app_logParserTest extends TestCase {
 			walp.parseLogs( new FileInputStream("src/test/resources/web_app.test.log"));
 			assertEquals(10, results.size());
 			ParseREsults theFIrstLine = results.get(0);
-			assertEquals("79275696404",theFIrstLine.msisdn);
+			assertEquals(new Long(79275696404L),theFIrstLine.msisdn);
 			assertEquals("controlcad",theFIrstLine.uid);
 			assertEquals( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"
 					).parse("2015-07-22 04:02:09"),theFIrstLine.date);

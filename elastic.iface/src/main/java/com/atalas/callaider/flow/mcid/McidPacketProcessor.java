@@ -127,7 +127,7 @@ public class McidPacketProcessor extends PacketProcessor {
 		mcidFlow.x_psiErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
 		mcidFlow.psi.response.put("error", mcidFlow.x_psiErrorCode);	
 		mcidFlow.x_result = "psiError";
-		mcidFlow.x_VLR = Long.getLong(currentSccp.sccpCallingDigits);
+		mcidFlow.x_VLR = Long.parseLong(currentSccp.sccpCallingDigits);
 		si.saveObject(mcidFlow);
 	}
 
@@ -135,7 +135,7 @@ public class McidPacketProcessor extends PacketProcessor {
 			TcapInfo currentTcap, SccpInfo currentSccp) {
 		mcidFlow.x_sriErrorCode = Integer.parseInt( ""+proto.getField("errorCode"));	
 		mcidFlow.sri.response.put("error", mcidFlow.x_sriErrorCode);	
-		mcidFlow.x_HLR = Long.getLong(currentSccp.sccpCallingDigits);
+		mcidFlow.x_HLR = Long.parseLong(currentSccp.sccpCallingDigits);
 		mcidFlow.x_result = "sriError";
 		si.saveObject(mcidFlow);
 	}

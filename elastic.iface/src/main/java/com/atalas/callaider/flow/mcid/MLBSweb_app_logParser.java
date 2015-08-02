@@ -89,7 +89,8 @@ public class MLBSweb_app_logParser {
 				logger.error("Failed to parse line: '"+nextLine+"' not enought parts ["+parts.length+" found but 12 required at least]");
 				
 			} else {
-				Long msisdn = Long.parseLong(unquotePart(parts,9));
+				String msisdbPArt = unquotePart(parts,9);				
+				Long msisdn = msisdbPArt.length() != 0 ? Long.parseLong(msisdbPArt) : null;
 				String mode = unquotePart(parts,8);	
 				String uid = unquotePart(parts,2);
 				String result = unquotePart(parts,11);

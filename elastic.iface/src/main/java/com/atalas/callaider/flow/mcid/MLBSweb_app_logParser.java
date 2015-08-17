@@ -16,7 +16,8 @@ import java.util.TimeZone;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface;
+import com.atalas.callaider.elastic.iface.AppXML;
+import com.atalas.callaider.elastic.iface.storage.StorageIndexedInterface.Location;
 import com.atalas.callaider.elastic.iface.storage.StorageInterface;
 
 //класс будет паристь строки вида 
@@ -39,7 +40,7 @@ import com.atalas.callaider.elastic.iface.storage.StorageInterface;
 // 16 cid=50799,
 // 17 lac=5012,
 // 18 ,
-// 29 comment="<LocationDatacomment=\"\"ageOfLocation=\"0\"locationInformation=\"-1\"/>"2
+// 19 comment="<LocationDatacomment=\"\"ageOfLocation=\"0\"locationInformation=\"-1\"/>"2
 public class MLBSweb_app_logParser {
 	
 	private static Logger logger = Logger.getLogger(MLBSweb_app_logParser.class);
@@ -69,9 +70,9 @@ public class MLBSweb_app_logParser {
 			e.printStackTrace();
 		}
     }
-	
+		
 	public MLBSweb_app_logParser() {
-		this("network");
+		this(AppXML.indexName);
 	}
 
 	public MLBSweb_app_logParser(String indexName) {
@@ -88,50 +89,91 @@ public class MLBSweb_app_logParser {
 			if( parts.length < 12 ){
 				logger.error("Failed to parse line: '"+nextLine+"' not enought parts ["+parts.length+" found but 12 required at least]");
 				
-			} else {
-				String msisdbPArt = unquotePart(parts,9);				
-				Long msisdn = msisdbPArt.length() != 0 ? Long.parseLong(msisdbPArt) : null;
-				String mode = unquotePart(parts,8);	
-				String uid = unquotePart(parts,2);
-				String result = unquotePart(parts,11);
-				String lon, lat, err;
-				if("OK".endsWith(result)){
-					if( parts.length < 15 ){
-						logger.error("Failed to parse(2) line: '"+nextLine+"' not enought parts ["+parts.length+" found but 15 required at least]");
-						continue;
-					}
-					lon = unquotePart(parts,12);
-					lat = unquotePart(parts,13);
-					err = unquotePart(parts,14);
-				} else {
-					lon = lat = err = "0";
-				}				
-				
-				Date reqDate;
-				String unquotedDate = unquotePart(parts,0);
-				try {
-					reqDate = sdf.parse(unquotedDate);
-					
-					processTheEvent(msisdn, uid, reqDate, mode, lon, lat, err, result);
-					
-				} catch (ParseException e) {
-					logger.error("INcorrect date format ["+unquotedDate+"]: "+e.getMessage(),e);
-				}				
+			} else {				
+				LBSLogRecord lr = createLogRecord(parts);
+				if( null == lr ) 
+					logger.error("Failed to parse line "+nextLine);
+				else
+					processTheEvent(lr);													
 			}
 		}
 	}
 
-	public void processTheEvent(Long msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String result ) {
+	public LBSLogRecord createLogRecord(String[] parts) {
+		LBSLogRecord lr = new LBSLogRecord();
+		
+		String msisdbPArt = unquotePart(parts,9);				
 		try {
-			McidFlow msf = getTheFlow(msisdn, reqDate);
+			lr.msisdn = msisdbPArt.length() != 0 ? Long.parseLong(msisdbPArt) : null;
+		} catch (NumberFormatException e1) {
+			lr.msisdn = null;
+		}
+		try {
+			lr.mode = Integer.parseInt(unquotePart(parts,8));
+		} catch (NumberFormatException e1) {
+			lr.mode = -1;
+		}	
+		lr.uid = unquotePart(parts,2);
+		lr.result = unquotePart(parts,11);
+		lr.reqId = unquotePart(parts, 1);
+		
+		if("OK".endsWith(lr.result)){
+			if( parts.length < 17 ){
+				logger.error("Failed to parse(2) line: '"+parts[0]+":" + parts[1] + "' not enought parts ["+parts.length+" found but 20 required at least]");
+				return null;
+			}
+			try {
+				lr.location = new Location(Double.parseDouble(unquotePart(parts,12)), Double.parseDouble(unquotePart(parts,13)));
+			} catch (NumberFormatException e1) {
+				lr.location = null;
+			}			
+			try {
+				lr.err = Integer.parseInt(unquotePart(parts,14));
+			} catch (NumberFormatException e) {
+				lr.err = 0;
+			}
+			try {
+				lr.age = Integer.parseInt(unquotePart(parts,15));
+			} catch (NumberFormatException e) {
+				lr.age = 0;
+			}			 				
+			
+		} else {
+			lr.err = -1;
+		}
+		String unquotedDate = unquotePart(parts,0);
+		try {
+			lr.x_timestamp = sdf.parse(unquotedDate);
+		} catch( Exception e){
+			return null;
+		}
+		si.saveObject(lr);
+		return lr;
+	}
+
+	private Integer parseComment() {		
+		return null;
+	}
+
+	public void processTheEvent(LBSLogRecord lr ) {
+		try {
+			McidFlow msf = getTheFlow(lr.msisdn, lr.x_timestamp);
 			if( null!=msf ){
-				msf.x_client = uid;
-				msf.location = new StorageIndexedInterface.Location(Double.parseDouble(lon), Double.parseDouble(lat));
-				msf.x_locError = Integer.parseInt(err);
-				msf.x_serviceResult = result;
-				msf.x_serviceMode = Integer.parseInt(mode);
+				msf.x_client = lr.uid;
+				msf.location = lr.location;
+				msf.x_locError = lr.err;
+				msf.x_serviceResult = lr.result;
+				msf.x_serviceMode = lr.mode;
+				msf.x_requestFound = true;
+				msf.x_lbsReqId = lr.reqId;
+				msf.x_requestId = lr.id;
+				msf.x_reqestDelay = - msf.x_timestamp.getTime() + lr.x_timestamp.getTime();
+				lr.flowFound = true;
+				lr.flowId = msf.id;
 				
 				si.saveObject(msf);
+				si.saveObject(lr);
+				
 			}
 		} catch (Exception e) {
 			logger.error("Failed to process event. "+e.getMessage(),e);
@@ -146,9 +188,9 @@ public class MLBSweb_app_logParser {
 		Calendar from = Calendar.getInstance();
 		Calendar to = Calendar.getInstance();
 		from.setTime(rspDate);
-		from.add(Calendar.MINUTE, -1);
-		to.setTime(rspDate);
-		to.add(Calendar.SECOND, 1);
+		from.add(Calendar.HOUR, -1);
+		from.add(Calendar.MINUTE, -1);		
+		to.setTime(rspDate);		
 		
 		keyValueFilter.put("x_timestamp", new Date[]{ from.getTime(), to.getTime()} );
 		return si.searchSingleObjects(McidFlow.class,keyValueFilter,"x_timestamp", true);		

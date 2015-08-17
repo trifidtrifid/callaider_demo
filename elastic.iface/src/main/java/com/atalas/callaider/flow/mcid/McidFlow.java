@@ -34,6 +34,11 @@ public class McidFlow extends StorageIndexedInterface {
 	public Integer x_locError;
 	public String x_serviceResult;
 	public Integer x_serviceMode;
+	public Boolean x_requestFound;
+	
+	public String x_requestId;
+	public Long x_reqestDelay;
+	public String x_lbsReqId;
 	
 	public static class GsmTransaction {		
 		public Map<String, Object> request = new HashMap<>();

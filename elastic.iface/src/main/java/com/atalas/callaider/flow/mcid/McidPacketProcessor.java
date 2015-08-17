@@ -35,10 +35,9 @@ public class McidPacketProcessor extends PacketProcessor {
 	private final ConcurrentLinkedHashMap<String, McidFlow> imsiMap;
 
 	public McidPacketProcessor(Client client, String indexName) {
-		super(client, indexName);
+		super(client, indexName);		
 		this.si = new StorageInterface(client, indexName);
-		// @Delete all Stored objects and initialize field mapping
-		this.si.createObjectMapping(McidFlow.class);
+		// @Delete all Stored objects and initialize field mapping		
 		ConcurrentLinkedHashMap.Builder<String, McidFlow> builder = new Builder<>();
 		builder.maximumWeightedCapacity(1000000L);
 		tidMap = builder.build();
@@ -295,7 +294,11 @@ public class McidPacketProcessor extends PacketProcessor {
 		mcidFlow.x_IMSI = imsi;
 		mcidFlow.x_sriResponse = true;	
 		mcidFlow.x_HLR = Long.parseLong(currentSccp.sccpCallingDigits);
-		mcidFlow.x_VLR = Long.parseLong(proto.getTheField("VLR.address"));
+		try {
+			mcidFlow.x_VLR = Long.parseLong(proto.getTheField("VLR.address"));
+		} catch (NumberFormatException e) {
+			logger.warn("Failed to arse VLR "+proto.getTheField("VLR.address"));
+		}
 		if( mcidFlow.x_VLR == null ){
 			logger.error("SRI response without VLR");
 		}

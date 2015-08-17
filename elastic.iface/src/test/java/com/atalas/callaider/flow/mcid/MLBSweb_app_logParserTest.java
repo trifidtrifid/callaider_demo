@@ -36,9 +36,9 @@ public class MLBSweb_app_logParserTest extends TestCase {
 
 	public void testProcessTheEvent() {
 		McidFlow mcf = new McidFlow();
-		Long msisdn = 123456L;
+		Long msisdn = 79275696404L;
 		Date theDate = new Date();
-		String uid = "23456";		
+		String uid = "controlcad";		
 		
 		mcf.x_msisdn=msisdn;
 		mcf.x_timestamp = theDate;
@@ -54,7 +54,11 @@ public class MLBSweb_app_logParserTest extends TestCase {
 		} catch (InterruptedException e) {			
 			e.printStackTrace();
 		}
-		walp.processTheEvent(msisdn, uid, theDate, "1","1","2","3","OK");
+		String line= "22/07/2015 04:02:09,REQ_ID='20150722040207.8894s10.236.26.210p49084',UID='controlcad',PWD='AbrU43k',MCC='',MNC='',CID='',LAC='',MODE='4',MSISDN='79275696404',IP=10.236.26.210,RESULT=OK,longitude=47.976700,latitude=46.422264,error=284,age=0,cid=38953,lac=3005,,comment=\\\"<LocationDatacomment=\\\"\\\"ageOfLocation=\\\"0\\\"locationInformation=\\\"-1\\\"/>";
+		
+		LBSLogRecord lr = walp.createLogRecord( line.split("[,]"));		
+		walp.processTheEvent( lr);//msisdn, uid, theDate, "1","1","2","3","OK");
+		
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {			
@@ -82,10 +86,11 @@ public class MLBSweb_app_logParserTest extends TestCase {
 		final List<ParseREsults> results = new ArrayList<>();
 		walp = new MLBSweb_app_logParser(indexName){
 
+			
 			@Override
-			public void processTheEvent(Long msisdn, String uid, Date reqDate, String mode, String lon, String lat, String err, String res) {
-				results.add( new ParseREsults(msisdn,uid,reqDate));
-			}
+			public void processTheEvent(LBSLogRecord lr) {
+				results.add( new ParseREsults(lr.msisdn,lr.uid,lr.x_timestamp));
+			}			
 		};
 		
 		try {

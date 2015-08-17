@@ -233,17 +233,20 @@ public class StorageInterface {
 	public String createObjectMapping(Class objCls) {
 
 		String className = objCls.getSimpleName();
-		String mappingString = "{ \"" + className
-				+ "\" : { \"properties\" : { \"_id\" : {\"type\" : \"string\", \"store\" : true, \"copy_to\": \"id\" }, ";
-
+		String mappingString = "{\"" + className + "\" : { _id: { \"path\" : \"id\" }, \"properties\" : {";
+				 
 		mappingString += createFieldsIndex(objCls);
 
 		if (mappingString.endsWith(","))
 			mappingString = mappingString.substring(0,
 					mappingString.length() - 1);
 		mappingString += "}}}";
+		return mappingString;
 
-		// DELETE OLD INDEX
+	}
+
+	public void deleteIndex( String index ) {
+		// DELETE INDEX if exists
 		final IndicesExistsResponse res = client.admin().indices()
 				.prepareExists(index).execute().actionGet();
 		if (res.isExists()) {
@@ -251,21 +254,6 @@ public class StorageInterface {
 					.prepareDelete(index);
 			delIdx.execute().actionGet();
 		}
-
-		final CreateIndexRequestBuilder createIndexRequestBuilder = client
-				.admin().indices().prepareCreate(index);
-
-		// MAPPING GOES HERE
-
-		createIndexRequestBuilder.addMapping(className, mappingString);
-		// logger.debug(className+" mapping described as:"+mappingString);
-		// MAPPING DONE
-		ListenableActionFuture<CreateIndexResponse> execute = createIndexRequestBuilder
-				.execute();
-		execute.actionGet();
-
-		return mappingString;
-
 	}
 
 	private String createFieldsIndex(Class objCls) {
@@ -277,22 +265,22 @@ public class StorageInterface {
 
 			if (fclass.equals(String.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"string\" },";
+						+ "\": { \"index\" : \"not_analyzed\", \"type\" : \"string\" },";
 			} else if (fclass.equals(Integer.class)
 					|| fclass.equals(Long.class)) {
-				mappingString += " \"" + fldName + "\": { \"index\" : \"not_analyzed\", \"type\":\"long\"},";
+				mappingString += " \"" + fldName + "\" : { \"type\":\"long\"},";
 			} else if (fclass.equals(Double.class)
 					|| fclass.equals(Float.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"double\"},";
+						+ "\": { \"type\" : \"double\"},";
 			} else if (fclass.equals(Boolean.class)) {
 				mappingString += " \"" + fldName
-						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"boolean\"},";
+						+ "\": { \"type\" : \"boolean\"},";
 
 			} else if (fclass.equals(Date.class)) {
 				mappingString += " \"" 
 						+ fldName 
-						+ "\": { \"index\" : \"not_analyzed\", \"type\":\"date\"},";
+						+ "\": { \"type\" : \"date\"},";
 
 			} else if (fclass.equals(Location.class)) {
 				mappingString += " \"" 
@@ -301,14 +289,13 @@ public class StorageInterface {
 
 			} else if (!fld.getType().isArray()) {
 				mappingString += "\"" + fldName							 
-						+ "\": { \"type\":\"object\", \"index\" : \"not_analyzed\", \"properties\" : {";						
+						+ "\": { \"type\":\"object\", \"properties\" : {";						
 				
 				if( fclass.equals(Map.class) ){
-					mappingString += "\"tid\" : { \"type\":\"string\"}" ;
+					mappingString += "\"tid\" : { \"type\" : \"string\"}" ;
 				} else {
 					mappingString += createFieldsIndex(fld.getType());
-				}
-				
+				}				
 				mappingString += "}},";
 			}
 		}

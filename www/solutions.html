@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Bootstack - Bootstrap 3 Landing Page Theme">
+		<meta name="keywords" content="">
+		<meta name="author" content="Daniely Wright">
+		<link href="assets/img/favicon.png" rel="shortcut icon" >
+		<title>How it works</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Plugins -->
+		<link href="assets/css/social-icons.css" rel="stylesheet">
+		<link href="assets/css/icomoon.css" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="assets/css/style.css" rel="stylesheet">
+		<!-- Web Fonts -->
+		<!--link href='//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'-->
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<script src="assets/js/modernizr.custom.js"></script>
+	</head>
+
+	<body data-spy="scroll" data-offset="0" data-target="#navigation">
+
+		<!-- Fixed navbar -->
+		<nav id="navigation" class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html"><span class="icon-stack"></span> <b>ATALAS INC.</b></a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="navbar-collapse collapse" id="bs-navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="index.html" class="smoothScroll">Главная</a></li>
+						<li><a href="how_it_work.html" class="smoothScroll">Как это работает</a></li>
+						<li><a href="solutions.html" class="smoothScroll">Решения</a></li>
+						<li><a href="company.html" class="smoothScroll">О Компании</a></li>
+					</ul>
+
+					<!-- Sign In / Sign Up -->
+					<ul class="nav navbar-nav navbar-right">
+						<div class="navbar-form pull-left">
+							<a href="text.html#signup" type="button" class="btn btn-sm btn-theme" data-toggle="modal" data-target=".bs-modal-sm">Попробовать сейчас>></a>
+						</div>
+					</ul>
+				</div><!--/nav-collapse -->
+			</div><!-- /container -->
+		</nav><!-- /fixed-navbar -->
+
+
+		<!-- Sign In / Sign Up Modal -->
+		<div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<br>
+					<div class="modal-body">
+						<form class="form-horizontal" action="thankyou.html">
+							<fieldset>
+								<!-- Text input-->
+								<div class="control-group">
+									<label class="control-label" for="Email">* Email:</label>
+									<div class="controls">
+										<input required id="Email" name="Email" class="form-control input-large" type="text" placeholder="Укажите Ваш Email" >
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="nameinput">* Имя:</label>
+									<div class="controls">
+										<input required id="nameinput" name="nameinput" class="form-control input-medium" type="text" placeholder="Укажите Ваше имя">
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="companyinput">* Компания:</label>
+									<div class="controls">
+										<input required id="companyinput" name="companyinput" class="form-control input-medium" type="text" placeholder="Укажите Вашу компанию">
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="phoneinput">Телефон:</label>
+									<div class="controls">
+										<input id="phoneinput" name="phoneinput" class="form-control input-medium" type="text" placeholder="Укажите контактный телефон">
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label" for="comment">Комментарий:</label>
+									<div class="controls">
+										<textarea id="comment" name="comment" class="form-control input-medium" style="height: 100px; resize: none;" type="text" placeholder="Ваш комментарий"></textarea>
+									</div>
+								</div>
+
+
+								<!-- Button -->
+								<div class="control-group">
+									<label class="control-label" for="signin"></label>
+									<div class="controls">
+										<button id="signin" name="signin" class="btn btn-theme btn-block">Получить</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div><!-- /modal-body -->
+
+					<!--
+                    <div class="modal-footer">
+						<div class="text-center">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+                    -->
+				</div><!-- /modal-content -->
+			</div><!-- /modal-dialog -->
+		</div><!-- /modal -->
+
+
+		<!-- Header Wrap -->
+		<section id="home">
+			<div class="headerwrap">
+				<div class="container">
+					<div class="row text-center">
+						<div class="col-lg-12">
+							<h1>Решения</b></h1>
+							<h3>Эффективно. Просто. Надежно.</h3>
+							<br>
+						</div>
+
+						<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+						</div>
+						<div class="col-lg-8">
+							<!--img class="img-responsive" src="assets/img/app-bg.png" alt=""-->
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+
+							<!--<h4>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h4>
+							<a href="#features" type="submit" class="btn btn-lg btn-theme smoothScroll">LEARN MORE</a>-->
+						</div>
+						<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+						</div>
+					</div>
+				</div> <!-- /container -->
+			</div><!-- /headerwrap -->
+
+
+			<!-- Intro Wrap -->
+			<div class="intro">
+				<div class="container">
+					<div class="row text-center">
+						<br>
+						<div class="col-lg-1"></div>
+						<div class="col-lg-10">
+							<p>Уже сегодня на платформе CallAider реализованы решения для сбора информации, контроля качества и мониторинга реальных сервисов, 
+							операторов сотовой связи. Использование платформы CallAider предоставляет удобные интерфейсы для всесторонней оценки качества работы сервисов</p>
+						</div>
+						<div class="col-lg-1"></div>
+					</div>
+					<br>
+				</div> <!-- /container -->
+			</div><!-- /introwrap -->
+		</section>
+
+<!-- LBS service begin -->
+		<!-- Features Wrap -->
+		<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+						<br><br><br>
+						<img class="img-responsive right" src="assets/img/lbs.png" alt="">
+						</div>
+						<div class="col-lg-6">
+							<!-- Accordion -->
+							<div class="accordion ac" id="accordion2">
+								<div class="accordion-group active">
+									<h4><span class="icon-checkmark"></span> Мониторинг платформы определения местоположения абонентов</h4>
+
+									<div id="collapseOne" class="accordion-body collapse in">
+										<div class="accordion-inner">
+										<p> Платформа определения местоположения абонентов LBS используется оператором сотовой связи для работы сервисов геолокации, 
+										таких как «Маячок», «Я-рядом», «Радар», «Навигатор», «Поиск» и другие. </p>
+										
+										<p>Результатом использования CallAider оператором связи стало  устранение 60.000 ошибок в сутки, возникающих из-за некорректной конфигурации платформы.
+										Использование платформы CallAider инженерами оператора сократило время локализации проблемы в 4 раза.</p>
+										
+										<p>Для мониторинга качества работы сервиса используется копия сетевого трафика c интерфейсов серверов платформы и журналы (CDR) работы платформы</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+										<span class="icon-bars"></span> KPI которые анализирует CallAider
+										</a>
+									</div>
+									<div id="collapseThree" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<p>
+										<ul>
+										<li>Мониторинг качественных характеристик:</li>
+											<ul>
+											<li>процент ошибок, связанных с некорректной конфигурацией платформы</li>
+											<li>процент алгоритмических ошибок работы платформы LBS</li>
+											<li>процент абонентов, находящихся вне зоны действия сети для платформы LBS</li>
+											<li>процент абонентов, для которых сервис запрещен</li>
+											<li>время ответа элементов сигнальной сети оператора, с распределением по регионам</li>
+											</ul>
+										<li>Мониторинг количественных характеристик:</li>
+											<ul>
+											<li>интенсивность запросов от потребителей сервиса</li>
+											<li>нагрузка, генерируемая платформой по элементам сигнальной сети оператора</li>
+											</ul>
+										<li>Мониторинг состояния системы:</li>
+											<ul>
+												<li>состояние сигнальных линков подключения платформы к сети оператора</li>
+												<li>состояние IP интерфейсов на стороне подключения потребителей сервиса</li>
+											</ul>
+										<li>Аудит - контроль соответствия CDR платформы, реальному результатам обработки запросов</li>
+										</ul>
+										</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+										<span class="icon-list"></span> Подробней о решении
+										</a>
+									</div>
+									<div id="collapseFour" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<br>
+										<iframe src="https://player.vimeo.com/video/136806994" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> 
+										<p><a href="https://vimeo.com/136806994">CallAider on m.LBS</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+										<br>
+										<p>
+										На сегодняшний день в 98% случаев сотовыми операторами используется метод определения местоположения - CID (Cell Identification), 
+										в котором координата абонента вычисляется исходя из параметров базовой станции, которая обслуживает абонента в текущий момент.
+										<br>
+										При реализации этого алгоритма, платформа LBS взаимодействует с HLR оператора для определения коммутатор(ов) – MSC и SGSN,
+										на которых зарегистрирован абонент в голосовой сети и пакетной сети.  Все взаимодействия в рамках определения местоположения могут 
+										контролироваться в одной точке – непосредственно на серверах платформы LBS 
+										</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+							</div><!-- /accordion -->
+						</div>
+					</div>
+				</div><!-- /container -->
+			</div><!-- /featureswrap -->
+		</section>
+<!-- LBS  service end -->
+
+<!-- SMS service begin -->
+		<section id="features">
+			<div class="featureswrap" style="background-color:#ffffff">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<!-- Accordion -->
+							<div class="accordion ac" id="accordion3">
+								<div class="accordion-group active">
+									<h4><span class="icon-checkmark"></span> Мониторинг SMS сервиса</h4>
+
+									<div id="collapseOne" class="accordion-body collapse in">
+										<div class="accordion-inner">
+											<p>Роль сервиса SMS - обмен сообщениями между абонентами, смещается в сторону систем оповещения и M2M взаимодействий, 
+											вместе с этим растут требования к качеству реализации сервиса.</p> 
+											<p>CallAider детально отслеживает доставку каждого 
+											сообщения, формирует качественные характеристики, влияющие на общие показатели и анализирует поведение 
+											пользователей для пересечения подозрительной активности.</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseSmsKpi">
+										<span class="icon-bars"></span> KPI которые анализирует CallAider
+										</a>
+									</div>
+									<div id="collapseSmsKpi" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<p>
+										<ul>
+										<li>Автоматическое обнаружение нелегальных способов использования сервиса SMS:</li>
+											<ul>
+											<li>для массовых рассылок сообщений - спам</li>
+											<li>использование номера для систем мониторинга, оповещения или слежения</li>
+											<li>работа вредоносного программного обеспечения на смартфонах абонентов</li>
+											</ul>
+										
+										<li>Мониторинг качественных характеристик:</li>
+											<ul>
+											<li>процент доставленных сообщений</li>
+											<li>среднее время доставки сообщения по каждому интерфейсу</li>
+											<li>процент абонентов вне зоны действия сети для сервиса</li>
+											<li>процент абонентов для которых сервис запрещен или недоступен</li>
+											<li>процент доставки сообщений и время доставки для каждого</li>
+											</ul>
+										<li>Мониторинг количественных характеристик:</li>
+											<ul>
+											<li>суммарная нагрузка на сервис</li>
+											<li>нагрузка на каждом коммутаторе оператора</li>
+											<li>нагрузка на базовых станциях</li>
+											<li>нагрузка на внешних и межрегиональных каналах связи</li>
+											<li>интенсивность запросов к биллингу и Camel/PCEF сервисам</li>
+											</ul>
+										<li>Мониторинг состояния системы:</li>
+											<ul>
+											<li>контроль состояния сигнальных и IP подключений</li>
+											<li>контроль времени отклика элементов сети оператора и внешних систем</li>
+											<li>процент ошибок по каждому элементу</li>
+											</ul>
+										<li>Aудит - контроль своевременности а корректности формирования тарификационной информации</li>
+										</ul>
+										</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseSmsMore">
+										<span class="icon-list"></span> Подробней о решении
+										</a>
+									</div>
+									<div id="collapseSmsMore" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<p>Для контроля качественных характеристик работы SMS сервиса, на коллекторы CallAider 
+										передается копия трафика SS7/SIGTRAN/SMPP/SIP/SMTP интерфейсов и CDR файлы.</p>
+
+										<p>Весь поток данных сетевого обмена и CDR сохраняется в Hadoop хранилище. 
+										Высокопроизводительные анализаторы CallAider мгновенно извлекают из полученных данных сессии, 
+										содержащие полный набор событий, которые произошли при доставке каждого сообщения. 
+										Группировка сессий по оборудованию, абонентам, и другим параметрам позволяют получить всесторонние 
+										количественные и качественные оценки работы сервиса.</p>
+										
+										<p>Аналитический процессор выполняет группировку сессий по интерфейсам доставки, диапазонам номеров, 
+										результатам обработки и временным характеристикам для полного мониторинга и аудита 
+										работы SMSC оператора связи, формирует отчеты и показатели для внешних систем мониторинга.</p>
+
+										<p>Анализ поведения отправителей сообщений позволяет выявить тип использования сервиса SMS сервиса</p>
+
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+							</div><!-- /accordion -->
+						</div>
+						<div class="col-lg-6">
+							<br>
+							<img class="img-responsive right" src="assets/img/sms.png" alt="">
+						</div>
+
+
+					</div>
+				</div><!-- /container -->
+			</div><!-- /featureswrap -->
+		</section>
+<!-- SMS service end -->
+
+<!-- CALL service begin -->
+		<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+						<br><br><br>
+						<img class="img-responsive right" src="assets/img/call.png" alt="">
+						</div>
+						<div class="col-lg-6">
+							<!-- Accordion -->
+							<div class="accordion ac" id="accordionCall">
+								<div class="accordion-group active">
+									<h4><span class="icon-checkmark"></span>Мониторинг голосового сервиса</h4>
+
+									<div id="collapseOne" class="accordion-body collapse in">
+										<div class="accordion-inner">
+										<p>Анализаторы поведения, объединяют сессии по абонентам и формируют 
+										показатели удовлетворенности абонента, по суммарным показателям его сессий вычисляется</p>
+										
+										<p>Для оценки качества реализации голосового сервиса CallAider получает копию сигнального трафика с ключевых элементов сети, 
+										участвующих в реализации голосовых вызовов – коммутаторов MSC/VLR. </p>
+										
+										<p>Высокопроизводительные коллекторы формируют сессии, полностью описывающие каждый сеанс голосовой связи.</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionCall" href="#collapseCallKpi">
+										<span class="icon-bars"></span> KPI которые анализирует CallAider
+										</a>
+									</div>
+									<div id="collapseCallKpi" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<p>
+										<ul>
+										<li>Мониторинг поведения пользователей:</li>
+											<ul>
+											<li>среднее число обрывов соединений за отчетный период</li>
+											<li>среднее число повторных попыток установки соединения после разрыва</li>
+											<li>среднее число повторных вызовов абонентом, который повесил трубку</li>
+											<li>процент неуспешных установок соединения</li>
+											<li>процент ошибки установки соединения с абонентом находящемся в зоне действия сети</li>
+											</ul>
+										<li>Мониторинг качественных характеристик:</li>
+											<ul>
+											<li>процент успешно установленных вызовов (CSSR – Call Setup Success Rate)</li>
+											<li>процент обрывов связи (CDR - Call Drop Rate)</li>
+											<li>процент успешных «мягких» переключений между базовыми станциями (SHOSR)</li>
+											<li>процент успешных «жестких» переключений</li>
+											<li>процент успешных переключений между разными стандартами (Inter-Rat HOSR)</li>
+											</ul>
+										<li>Мониторинг количественных характеристик:</li>
+											<ul>
+											<li>общее число голосовых вызовов абонентов</li>
+											<li>среднее количество и продолжительность вызовов на абонента</li>
+											<li>нагрузка на каждом элементе сети оператора</li>
+											<li>нагрузка на каналах межоператорного взаимодействия</li>
+											</ul>
+										<li>Мониторинг состояния системы:</li>
+											<ul>
+												<li>состояние сигнальных линков подключения платформы к сети оператора</li>
+												<li>состояние IP интерфейсов на стороне подключения потребителей сервиса</li>
+											</ul>
+										<li>Аудит - контроль соответствия CDR платформы, реальному результатам обработки запросов</li>
+										</ul>
+										</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionCall" href="#collapseCallMore">
+										<span class="icon-list"></span> Подробней о решении
+										</a>
+									</div>
+									<div id="collapseCallMore" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<p>Качество голосовой связи – наиболее важный для абонентов критерий выбора оператора при подключении.</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+							</div><!-- /accordion -->
+						</div>
+					</div>
+				</div><!-- /container -->
+			</div><!-- /featureswrap -->
+		</section>
+<!-- CALL service end -->
+		<!-- Divider 2 Section -->
+		<div class="divider02">
+			<div class="container text-center">
+				<a href="#" type="button" class="btn btn-lg btn-theme2" data-toggle="modal" data-target=".bs-modal-sm">ПОПРОБОВАТЬ СЕЙЧАС >></a>
+			</div>
+		</div><!-- /divider02 -->
+
+		<!-- Copyright Wrap -->
+		<div class="copywrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<p>Copyright &copy;2015 Atalas Inc. All Rights Reserved.</p>
+					</div>
+				</div><!-- /row -->
+			</div><!-- /container -->
+		</div><!-- /copywrap (copyright) -->
+
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="assets/js/jquery-2.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script src="assets/js/jquery.easing.1.3.js"></script>
+		<script src="assets/js/detectmobilebrowser.js"></script>
+		<script src="assets/js/smoothscroll.js"></script>
+		<script src="assets/js/waypoints.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+			$('.carousel').carousel({
+				interval: 3500,
+				pause: "none"
+			})
+		</script>
+	</body>
+</html>

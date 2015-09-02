@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Bootstack - Bootstrap 3 Landing Page Theme">
+		<meta name="keywords" content="">
+		<meta name="author" content="Daniely Wright">
+		<link href="assets/img/favicon.png" rel="shortcut icon" >
+		<title>How it works</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Plugins -->
+		<link href="assets/css/social-icons.css" rel="stylesheet">
+		<link href="assets/css/icomoon.css" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="assets/css/style.css" rel="stylesheet">
+		<!-- Web Fonts -->
+		<!--link href='//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'-->
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<script src="assets/js/modernizr.custom.js"></script>
+	</head>
+
+	<body data-spy="scroll" data-offset="0" data-target="#navigation">
+
+		<!-- Fixed navbar -->
+		<nav id="navigation" class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html"><span class="icon-stack"></span> <b>ATALAS INC.</b></a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="navbar-collapse collapse" id="bs-navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="index.html" class="smoothScroll">Главная</a></li>
+						<li><a href="how_it_work.html" class="smoothScroll">Как это работает</a></li>
+						<li><a href="solutions.html" class="smoothScroll">Решения</a></li>
+						<li><a href="company.html" class="smoothScroll">О Компании</a></li>
+					</ul>
+
+					<!-- Sign In / Sign Up -->
+					<ul class="nav navbar-nav navbar-right">
+						<div class="navbar-form pull-left">
+							<a href="text.html#signup" type="button" class="btn btn-sm btn-theme" data-toggle="modal" data-target=".bs-modal-sm">Попробовать сейчас>></a>
+						</div>
+					</ul>
+				</div><!--/nav-collapse -->
+			</div><!-- /container -->
+		</nav><!-- /fixed-navbar -->
+
+
+		<!-- Sign In / Sign Up Modal -->
+		<div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<br>
+					<div class="modal-body">
+						<form class="form-horizontal" action="thankyou.html">
+							<fieldset>
+								<!-- Text input-->
+								<div class="control-group">
+									<label class="control-label" for="Email">* Email:</label>
+									<div class="controls">
+										<input required id="Email" name="Email" class="form-control input-large" type="text" placeholder="Укажите Вашу Email" >
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="nameinput">* Имя:</label>
+									<div class="controls">
+										<input required id="nameinput" name="nameinput" class="form-control input-medium" type="text" placeholder="Укажите Ваше имя">
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="companyinput">* Компания:</label>
+									<div class="controls">
+										<input required id="companyinput" name="companyinput" class="form-control input-medium" type="text" placeholder="Укажите Вашу компанию">
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="phoneinput">Телефон:</label>
+									<div class="controls">
+										<input id="phoneinput" name="phoneinput" class="form-control input-medium" type="text" placeholder="Укажите контактный телефон">
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label" for="comment">Комментарий:</label>
+									<div class="controls">
+										<textarea id="comment" name="comment" class="form-control input-medium" style="height: 100px; resize: none;" type="text" placeholder="Ваш комментарий"></textarea>
+									</div>
+								</div>
+
+								<!-- Button -->
+								<div class="control-group">
+									<label class="control-label" for="signin"></label>
+									<div class="controls">
+										<button id="signin" name="signin" class="btn btn-theme btn-block">Получить</button>
+									</div>
+								</div>
+								
+								
+							</fieldset>
+						</form>
+					</div><!-- /modal-body -->
+
+					<!--
+                    <div class="modal-footer">
+						<div class="text-center">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+                    -->
+				</div><!-- /modal-content -->
+			</div><!-- /modal-dialog -->
+		</div><!-- /modal -->
+
+
+		<!-- Header Wrap -->
+		<section id="home">
+			<div class="headerwrap">
+				<div class="container">
+					<div class="row text-center">
+						<div class="col-lg-12">
+							<h1>Как это работает?</b></h1>
+							<h3>Простота. Гибкость. Производительность.</h3>
+							<br>
+						</div>
+
+						<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+						</div>
+						<div class="col-lg-8">
+							<!--img class="img-responsive" src="assets/img/app-bg.png" alt=""-->
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+
+							<!--<h4>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h4>
+							<a href="#features" type="submit" class="btn btn-lg btn-theme smoothScroll">LEARN MORE</a>-->
+						</div>
+						<div class="col-lg-2 hidden-xs hidden-sm hidden-md">
+						</div>
+					</div>
+				</div> <!-- /container -->
+			</div><!-- /headerwrap -->
+
+
+			<!-- Intro Wrap -->
+			<div class="intro">
+				<div class="container">
+					<div class="row text-center">
+						<h2>Профильное решение</h2>
+						<hr>
+						<br>
+						<div class="col-lg-1"></div>
+						<div class="col-lg-10">
+							<p>CallAider - аналитическая платформа для улучшения качества сервисов и повышения лояльности абонентов.</p>
+							<p>В отличии от традиционных SIEM и CEM решений, CallAider является специализированным решением для операторов
+							сотовой связи, учитывающий особенности построения сети, специфику оборудования, 
+							высокие требования к надежности производительности и качеству.</p>
+							<p>Упрощенная процедура установки и интеграции позволяет безотлагательно взглянуть на бизнес-задачи с другой стороны.</p>
+						</div>
+						<div class="col-lg-1"></div>
+					</div>
+					<br>
+				</div> <!-- /container -->
+			</div><!-- /introwrap -->
+		</section>
+
+
+		<!-- Features Wrap -->
+		<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<img class="img-responsive right" src="assets/img/collect_centr.png" alt="">
+						</div>
+
+						<div class="col-lg-6">
+							
+							<h4><span class="icon-cogs"></span> Сбор и централизированное хранение данных</h4>
+							<br>
+							<p>
+Высокопроизводительные коллекторы получают копию SS7/SIGTRAN/IP траффика с каждого элемента, CDR и журналы работы 
+от элементов сети, участвующих в реализации сервиса. CallAider, отбирает необходимую информацию и сохраняют в BigData хранилище. 
+Каждый коллектор прост в установке и готов к работе без дополнительных настроек смежного оборудования, 
+вне зависимости от его производителя и используемых стандартов.
+CallAider без усилий собирает сотни гигабайт данных с элементов сети оператора сотовой связи.						</p>
+							<br><br>
+						</div>
+
+					</div>
+					<br><br><br>
+				</div><!-- /container -->
+			</div><!-- /featureswrap -->
+		</section>
+
+
+
+		<section id="features">
+			<div class="featureswrap" style="background-color:#ffffff">
+
+			<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<h4><span class="icon-cogs"></span>Анализ качества сервиса</h4>
+							<br>
+							<p>
+							Каждый сервис – это последовательность взаимодействия элементов и параметры этих взаимодействий. 
+							Сбор информации по взаимодействиям, контроль выполнения последовательности и сохранение параметров взаимодействий – ключ к оценке качества реализации сервиса.
+							<br>
+							CallAider – инструмент для построения системы оценки и контроля качества работы сервисов.
+							<br><br>
+
+						</div>
+
+						<div class="col-lg-6">
+							<img class="img-responsive right" src="assets/img/frontend_ex.png" alt="">
+							
+						</div>
+					</div>
+			</div>
+			</div><!-- /container -->
+		</section>
+
+		<!-- Features Wrap -->
+		<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<img class="img-responsive right" src="assets/img/frontend_ex1.png" alt="">
+						</div>
+
+						<div class="col-lg-6">							
+							<h4><span class="icon-cogs"></span> Обоснованные бизнес-решения</h4>
+
+							<br>
+								<p> Специалисты отдела маркетинга будут получать исчерпывающий набор отчетов о качестве каждого сервиса 
+								по всем KPI в режиме реального времени. Отчеты содержат статистические оценки параметров сервиса, его количественные и качественные характеристики, 
+								оценку вовлеченности для разных групп абонентов.</p>
+								<p>CallAider - надежная точка опоры для обоснованных бизнес-решений.</p>
+							<br><br>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+		
+				<section id="features">
+			<div class="featureswrap" style="background-color:#ffffff">
+
+			<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<h4><span class="icon-cogs"></span>Обнаружение проблем</h4>
+							<br>
+							<p>Инженеры получат полный контроль качества реализации сервиса и инструмент обнаружения, локализации проблем.</p>
+							<p>Каждый сценарий реализации сервиса, его критерии, их сочетание или количество повторений могут использоваться 
+							в качестве показателя качества сервиса. По каждому показателю качества может быть построен отчет или настроен мониторинг.</p>
+							<p>Отчеты автоматически группируются по полям, позволяя выделить наиболее частые условия возникновения ошибок.</p>
+					</p>
+							<br><br>
+
+						</div>
+
+						<div class="col-lg-6">
+							<img class="img-responsive right" src="assets/img/vlr_resp.png" alt="">
+							
+						</div>
+					</div>
+			</div>
+			</div><!-- /container -->
+		</section>
+
+			<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<img class="img-responsive right" src="assets/img/callaider_viz.png" alt="">
+						</div>
+
+						<div class="col-lg-6">							
+							<h4><span class="icon-cogs"></span>Мониторинг и визуализация</h4>
+
+							<br>
+								<p>Современный и простой интерфейс поможет вам быстро находить необходимую информацию. 
+								Сконфигурированные нами отчеты позволят наглядно визуализировать проблему. 
+								Вы сможете взглянуть на проблему с любой стороны, добавляя фильтры и детализируя каждый отчет в реальном времени!</p>
+							<br><br>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+		<!-- Divider 2 Section -->
+		<div class="divider02">
+			<div class="container text-center">
+				<a href="#" type="button" class="btn btn-lg btn-theme2" data-toggle="modal" data-target=".bs-modal-sm">ПОПРОБОВАТЬ СЕЙЧАС >></a>
+			</div>
+		</div><!-- /divider02 -->
+
+		<!-- Copyright Wrap -->
+		<div class="copywrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<p>Copyright &copy;2015 Atalas Inc. All Rights Reserved.</p>
+					</div>
+				</div><!-- /row -->
+			</div><!-- /container -->
+		</div><!-- /copywrap (copyright) -->
+
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="assets/js/jquery-2.1.1.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script src="assets/js/jquery.easing.1.3.js"></script>
+		<script src="assets/js/detectmobilebrowser.js"></script>
+		<script src="assets/js/smoothscroll.js"></script>
+		<script src="assets/js/waypoints.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+			$('.carousel').carousel({
+				interval: 3500,
+				pause: "none"
+			})
+		</script>
+	</body>
+</html>

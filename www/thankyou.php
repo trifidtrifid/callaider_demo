@@ -42,7 +42,7 @@ if( mail($_POST['to'], $newsubject, $message, $headers)){
 		<meta name="keywords" content="">
 		<meta name="author" content="Daniely Wright">
 		<link href="assets/img/favicon.png" rel="shortcut icon" >
-		<title>CallAider Main</title>
+		<title>Thank you!</title>
 
 		<!-- Bootstrap core CSS -->
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet">

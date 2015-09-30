@@ -38,11 +38,10 @@ if( mail($_POST['to'], $newsubject, $message, $headers)){
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Bootstack - Bootstrap 3 Landing Page Theme">
-		<meta name="keywords" content="">
-		<meta name="author" content="Daniely Wright">
-		<link href="assets/img/favicon.png" rel="shortcut icon" >
-		<title>Thank you!</title>
+		<meta name="description" content="CallAider аналитическая платформа медиатор для контроля  качественных характеристик ( KPI ) и антифрод ( antifraud )  для голосового сервиса, VAS сервисов ( SMS, LBS, MMS,VoIP, IVR,IP, SS7, SIGTRAN )">
+		<meta name="author" content="Atalassofrware.com">
+		<link href="assets/img/favicon.png" rel="shortcut icon"  >
+		<title>CallAider. Спасибо, за ваш интерес.</title>
 
 		<!-- Bootstrap core CSS -->
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet">

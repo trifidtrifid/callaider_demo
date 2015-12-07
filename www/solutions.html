@@ -260,15 +260,91 @@
 		</section>
 <!-- FMS  service end -->
 
-		
-<!-- LBS service begin -->
-		<a name="LBS"></a>
-
+<!-- XLS service begin -->
+		<a name="XLS"></a>
 		<!-- Features Wrap -->
 		<section id="features">
 			<div class="featureswrap" style="background-color:#ffffff">
 				<div class="container">
 					<div class="row">
+						<div class="col-lg-6">
+							<!-- Accordion -->
+							<div class="accordion ac" id="accordion2">
+								<div class="accordion-group active">
+									<h4><span class="icon-checkmark"></span>Мониторинг перемещений абонентов</h4>
+
+									<div id="collapseOne" class="accordion-body collapse in">
+										<div class="accordion-inner">
+										<p> Решение CallAider xLS - это современная платформа для построения геолокационных сервисов, сервисов оповещения 
+										и дополнительных каналов взаимодействия с собственными абонентами оператора и абонентами роуминг партнеров.</p>
+										
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseXlsList">
+										<span class="icon-bars"></span>Основные функции CallAider xLS</a>
+									</div>
+									<div id="collapseXlsList" class="accordion-body active">
+										<div class="accordion-inner">
+										<p>
+										<ul>
+										<li>Определение текущего местоположения каждого абонента и всей истории его перемещений(трекинг) за период времени</li>
+										<li>Определение абонентов находящихся в географической области</li>
+										<li>Построение тепловой карты по количеству абонентов в географической области в заданный момент времени</li>
+										<li>Массовое оповещение абонентов находящихся в определенной географической области с помощью SMS/MMS/USSD</li>
+										<li>Установка триггеров для оповещения внешних систем. Например при попадании или выходе  абонента в географическую зону, сближения абонентов на определенное расстояние и т.д.</li>
+										</ul>
+										</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseXlsAbout">
+										<span class="icon-list"></span> Подробней о решении
+										</a>
+									</div>
+									<div id="collapseXlsAbout" class="accordion-body collapse">
+										<div class="accordion-inner">
+										<br>
+										<p>CallAider xLS не создает дополнительных нагрузок на сеть оператора, потому что для определения местоположения абонентов 
+										СallAider xLS анализирует копию SIGTRAN/SS7 траффика каждого VLR.</p>
+										<p>Решение предоставляет REST интерфейс для подключения внешних приложений, авторизации и контроля доступа.</p>
+										<p>Решение CallAider xLS построено на аналитической платформе CallAider и может поставляться как отдельный продукт или как модуль расширения функциональности других платформ.</p>
+										</div><!-- /accordion-inner -->
+									</div><!-- /collapse -->
+								</div><!-- /accordion-group -->
+								<br>
+							</div><!-- /accordion -->
+						</div>
+						<div class="col-lg-6">
+							<br>
+							<img class="img-responsive right" src="assets/img/xls.png" alt="">
+						</div>
+
+					</div>
+				</div><!-- /container -->
+			</div><!-- /featureswrap -->
+		</section>
+<!-- XLS  service end -->
+
+		
+<!-- LBS service begin -->
+		<a name="LBS"></a>
+		<!-- Features Wrap -->
+		<section id="features">
+			<div class="featureswrap">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<br>
+							<img class="img-responsive right" src="assets/img/lbs.png" alt="">
+						</div>
 						<div class="col-lg-6">
 							<!-- Accordion -->
 							<div class="accordion ac" id="accordion2">
@@ -290,11 +366,11 @@
 
 								<div class="accordion-group">
 									<div class="accordion-heading">
-										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseLbsKpi">
 										<span class="icon-bars"></span> KPI которые анализирует CallAider
 										</a>
 									</div>
-									<div id="collapseThree" class="accordion-body collapse">
+									<div id="collapseLbsKpi" class="accordion-body collapse">
 										<div class="accordion-inner">
 										<p>
 										<ul>
@@ -326,11 +402,11 @@
 
 								<div class="accordion-group">
 									<div class="accordion-heading">
-										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseLbsAbout">
 										<span class="icon-list"></span> Подробней о решении
 										</a>
 									</div>
-									<div id="collapseFour" class="accordion-body collapse">
+									<div id="collapseLbsAbout" class="accordion-body collapse">
 										<div class="accordion-inner">
 										<br>
 										<iframe src="https://player.vimeo.com/video/136806994" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> 
@@ -350,11 +426,6 @@
 								<br>
 							</div><!-- /accordion -->
 						</div>
-						<div class="col-lg-6">
-							<br>
-							<img class="img-responsive right" src="assets/img/lbs.png" alt="">
-						</div>
-
 					</div>
 				</div><!-- /container -->
 			</div><!-- /featureswrap -->
@@ -363,15 +434,10 @@
 
 <!-- SMS service begin -->
 		<a name="SMS"></a>
-
 		<section id="features">
-			<div class="featureswrap">
+			<div class="featureswrap"  style="background-color:#ffffff">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-6">
-							<br>
-							<img class="img-responsive right" src="assets/img/sms.png" alt="">
-						</div>
 						<div class="col-lg-6">
 							<!-- Accordion -->
 							<div class="accordion ac" id="accordion3">
@@ -464,6 +530,10 @@
 								</div><!-- /accordion-group -->
 							</div><!-- /accordion -->
 						</div>
+						<div class="col-lg-6">
+							<br>
+							<img class="img-responsive right" src="assets/img/sms.png" alt="">
+						</div>
 					</div>
 				</div><!-- /container -->
 			</div><!-- /featureswrap -->
@@ -472,11 +542,14 @@
 
 <!-- CALL service begin -->
 		<a name="voice"></a>
-
 		<section id="features">
-			<div class="featureswrap" style="background-color:#ffffff">
+			<div class="featureswrap">
 				<div class="container">
 					<div class="row">
+						<div class="col-lg-6">
+							<br>
+							<img class="img-responsive right" src="assets/img/call.png" alt="">
+						</div>
 						<div class="col-lg-6">
 							<!-- Accordion -->
 							<div class="accordion ac" id="accordionCall">
@@ -491,10 +564,10 @@
 																					
 											<p>Для формирования сессий используются данные из:
 											<ul>
-												<li>обращений к системе тарификации (Camel/DCCA протоколы) или CDR</li>
-												<li>протоколов реализации вызова (MAP/ISUP/BSSMAP/RIL3-MM/RNAP)</li>
-												<li>протоколов взаимодействия с линиями VoIP (SIP)</li>
-												<li>протоколов связи с абонентами фиксированной связи (ISDN/PRI)</li>
+												<li>Обращений к системе тарификации (Camel/DCCA протоколы) или CDR</li>
+												<li>Протоколов реализации вызова (MAP/ISUP/BSSMAP/RIL3-MM/RNAP)</li>
+												<li>Протоколов взаимодействия с линиями VoIP (SIP)</li>
+												<li>Протоколов связи с абонентами фиксированной связи (ISDN/PRI)</li>
 											</ul>	
 											
 										</div><!-- /accordion-inner -->
@@ -585,11 +658,6 @@ CallAider формирует критерии для контроля качес
 								<br>
 							</div><!-- /accordion -->
 						</div>
-						<div class="col-lg-6">
-							<br>
-							<img class="img-responsive right" src="assets/img/call.png" alt="">
-						</div>
-
 					</div>
 				</div><!-- /container -->
 			</div><!-- /featureswrap -->
